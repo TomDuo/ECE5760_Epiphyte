@@ -227,10 +227,15 @@ module lab1 (
    assign TDO = 1'b0;
    assign UART_TXD = 1'b0;
    
+	wire clk;
+	vga_pll vga_pll(CLOCK_27,clk);
 	
-	light lv(
-		.x1(SW[0]),
-		.x2(SW[1]),
-		.f(LEDG[0])
-		);
+	lab1_dpath(
+	.clk(clk)
+	);
+//	light lv(
+//		.x1(SW[0]),
+//		.x2(SW[1]),
+//		.f(LEDG[0])
+//		);
 endmodule
