@@ -210,15 +210,7 @@ module lab1 (
    assign SRAM_UB_N = 1'b1;
    assign SRAM_WE_N = 1'b1;
 
-   //Disable VGA.
-   assign VGA_CLK   = 1'b0;
-   assign VGA_BLANK = 1'b0;
-   assign VGA_SYNC  = 1'b0;
-   assign VGA_HS    = 1'b0;
-   assign VGA_VS    = 1'b0;
-   assign VGA_R     = 10'h0;
-   assign VGA_G     = 10'h0;
-   assign VGA_B     = 10'h0;
+
 
    //Disable all other peripherals.
    assign I2C_SCLK = 1'b0;
@@ -231,11 +223,16 @@ module lab1 (
 	vga_pll vga_pll(CLOCK_27,clk);
 	
 	lab1_dpath(
-	.clk(clk)
+	.clk(clk),
+	.vga_reset(SW[0]),
+	.oVGA_R(VGA_R),
+	.oVGA_G(VGA_G),
+	.oVGA_B(VGA_B),
+	.oVGA_H_SYNC(VGA_HS),
+	.oVGA_V_SYNC(VGA_VS),
+	.oVGA_SYNC(VGA_SYNC),
+	.oVGA_BLANK(VGA_B),
+	.oVGA_CLOCK(VGA_CLK)
 	);
-//	light lv(
-//		.x1(SW[0]),
-//		.x2(SW[1]),
-//		.f(LEDG[0])
-//		);
+
 endmodule
