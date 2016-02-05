@@ -215,16 +215,29 @@ module lab1 (
    //Disable all other peripherals.
    assign I2C_SCLK = 1'b0;
    assign IRDA_TXD = 1'b0;
-   assign TD_RESET = 1'b0;
+   assign TD_RESET = 1'b1;
    assign TDO = 1'b0;
    assign UART_TXD = 1'b0;
    
-	wire clk;
-	vga_pll vga_plld(CLOCK_27,clk);
 	
+	wire		VGA_CTRL_CLK;
+	wire		AUD_CTRL_CLK;
+	wire [9:0]	mVGA_R;
+	wire [9:0]	mVGA_G;
+	wire [9:0]	mVGA_B;
+
+	wire clk;
+	wire DLY_RST;
+	Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
+	VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(CLOCK_27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+
+//	assign VGA_B = 10'h3ff;
+//	assign VGA_G = 10'h000;
+//	assign VGA_R = 10'h000;
+
 	lab1_dpath(
-	.clk(clk),
-	.vga_reset(SW[0]),
+	.clk(VGA_CTRL_CLK),
+	.vga_reset(DLY_RST),
 	.oVGA_R(VGA_R),
 	.oVGA_G(VGA_G),
 	.oVGA_B(VGA_B),
@@ -232,7 +245,7 @@ module lab1 (
 	.oVGA_V_SYNC(VGA_VS),
 	.oVGA_SYNC(VGA_SYNC),
 	.oVGA_BLANK(VGA_BLANK),
-	.oVGA_CLOCK(VGA_CLK)
+	//.oVGA_CLOCK(VGA_CLK)
 	);
 
 endmodule

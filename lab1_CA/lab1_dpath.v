@@ -28,9 +28,10 @@ wire [9:0] red;
 wire [9:0] green;  
 wire [9:0] blue;   
 	 
-	 assign red = 10'h3FF;
-	 assign green = 10'h3FF;
-	 assign blue = 10'h0; //{10{oCoord_X[0]}};
+	 assign red = 10'h000;
+	 assign green = 10'h000;
+	 assign blue = 10'h3FF; //{10{oCoord_X[0]}};
+	 
 VGA_Controller vga_driver( // Host Side
 //    .iCursor_RGB_EN(),
 //    .iCursor_X(),
