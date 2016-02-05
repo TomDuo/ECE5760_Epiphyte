@@ -1,4 +1,4 @@
-module DE2_TOP (
+module lab1 (
     // Clock Input
     input         CLOCK_27,    // 27 MHz
     input         CLOCK_50,    // 50 MHz
