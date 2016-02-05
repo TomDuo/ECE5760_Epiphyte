@@ -220,7 +220,7 @@ module lab1 (
    assign UART_TXD = 1'b0;
    
 	wire clk;
-	vga_pll vga_pll(CLOCK_27,clk);
+	vga_pll vga_plld(CLOCK_27,clk);
 	
 	lab1_dpath(
 	.clk(clk),
@@ -231,7 +231,7 @@ module lab1 (
 	.oVGA_H_SYNC(VGA_HS),
 	.oVGA_V_SYNC(VGA_VS),
 	.oVGA_SYNC(VGA_SYNC),
-	.oVGA_BLANK(VGA_B),
+	.oVGA_BLANK(VGA_BLANK),
 	.oVGA_CLOCK(VGA_CLK)
 	);
 
