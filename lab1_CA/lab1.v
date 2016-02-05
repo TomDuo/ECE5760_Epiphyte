@@ -235,17 +235,23 @@ module lab1 (
 //	assign VGA_G = 10'h000;
 //	assign VGA_R = 10'h000;
 
-	lab1_dpath(
-	.clk(VGA_CTRL_CLK),
-	.vga_reset(DLY_RST),
-	.oVGA_R(VGA_R),
-	.oVGA_G(VGA_G),
-	.oVGA_B(VGA_B),
-	.oVGA_H_SYNC(VGA_HS),
-	.oVGA_V_SYNC(VGA_VS),
-	.oVGA_SYNC(VGA_SYNC),
-	.oVGA_BLANK(VGA_BLANK),
-	//.oVGA_CLOCK(VGA_CLK)
-	);
+	VGA_Controller vga_driver( 	//	Host Side
+		.iCursor_RGB_EN(4'b0111),
+		.oCoord_X(Coord_X),
+		.oCoord_Y(Coord_Y),
+		.iRed(red),
+		.iGreen(green),
+		.iBlue(blue),
+		//	VGA Side
+		.oVGA_R(VGA_R),
+		.oVGA_G(VGA_G),
+		.oVGA_B(VGA_B),
+		.oVGA_H_SYNC(VGA_HS),
+		.oVGA_V_SYNC(VGA_VS),
+		.oVGA_SYNC(VGA_SYNC),
+		.oVGA_BLANK(VGA_BLANK),
+		//	Control Signal
+		.iCLK(VGA_CTRL_CLK),
+		.iRST_N(DLY_RST)	);
 
 endmodule
