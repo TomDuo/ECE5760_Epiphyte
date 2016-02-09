@@ -390,10 +390,8 @@ begin
 			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;
 			data_reg <= 1'b0;						
 			we <= 1'b0;
-			for (i=1;i<(SCREEN_WIDTH-1);i=i+1) begin
-				//nextGen[i+1:i-1] <= {3{currentGen[i]}};
-				nextGen[i] <= currentGen[i] | currentGen[i+1] | currentGen[i-1]; //{3{currentGen[i]}};
-
+			for (i=1;i<(639);i=i+1) begin
+				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
 			end
 			vCounter <= vCounter + 1;
 			hCounter <= 10'b0;
@@ -411,7 +409,7 @@ begin
 			hCounter <= hCounter + 1;
 			nextGen <= nextGen;
 			vCounter <= vCounter;
-			if (vCounter < SCREEN_WIDTH) begin
+			if (hCounter < SCREEN_WIDTH) begin
 			  nextState <= s_write;
 			  currentGen <= currentGen;
 			end
