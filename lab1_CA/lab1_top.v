@@ -283,17 +283,25 @@ wire [19:0]	mVGA_ADDR;			//video memory address
 wire [9:0]  Coord_X, Coord_Y;	//display coods
 
 ////////////////////////////////////
-//DLA state machine variables
+//CA state machine variables
 wire reset;
-reg [3:0] state;	//state machine
-reg [30:0] x_rand;	//shift registers for random number gen  
-reg [28:0] y_rand;
-wire seed_low_bit, x_low_bit, y_low_bit; //rand low bits for SR
-reg [8:0] x_walker; //particle coords of random walker
-reg [8:0] y_walker;
-reg [3:0] sum; //neighbor sum
+reg [1:0] state;	//state machine
+reg [1:0] nextState;
 
-assign LEDG = sum;
+
+localparam s_init = 2'b00;
+localparam s_generate = 2'b01;
+localparam s_write = 2'b10;
+
+reg [8:0] vCounter;
+reg [9:0] hCounter;
+
+localparam SCREEN_WIDTH = 10'd640;
+localparam SCREEN_HEIGHT= 10'd480;
+reg [SCREEN_WIDTH-1:0] currentGen;
+reg [SCREEN_WIDTH-1:0] nextGen;
+
+
 ////////////////////////////////////
 /*From megaWizard:
 	module vga_buffer (
@@ -310,15 +318,17 @@ assign LEDG = sum;
 // Show m4k on the VGA
 // -- use m4k a for state machine
 // -- use m4k b for VGA refresh
+
+
 wire mem_bit ; //current data from m4k to VGA
 reg disp_bit ; // registered data from m4k to VGA
 wire state_bit ; // current data from m4k to state machine
 reg we ; // write enable for a
-reg [17:0] addr_reg ; // for a
+reg [18:0] addr_reg ; // for a
 reg data_reg ; // for a
 vga_buffer display(
 	.address_a (addr_reg) , 
-	.address_b ({Coord_X[9:1],Coord_Y[9:1]}), // vga current address
+	.address_b ({Coord_X[9:0],Coord_Y[8:0]}), // vga current address
 	.clock_a (VGA_CTRL_CLK),
 	.clock_b (VGA_CTRL_CLK),
 	.data_a (data_reg),
@@ -338,13 +348,9 @@ assign reset = ~KEY[0];
 
 //right-most bit for rand number shift regs
 //your basic XOR random # gen
-assign x_low_bit = x_rand[27] ^ x_rand[30];
-assign y_low_bit = y_rand[26] ^ y_rand[28];
+
 
 //state names
-parameter init=4'd0, test1=4'd1, test2=4'd2, test3=4'd3, test4=4'd4, test5=4'd5, test6=4'd6, 
-	draw_walker=4'd7, update_walker=4'd8, new_walker=4'd9,
-	init1=4'd10, init2=4'd11, draw_walker1=4'd12, draw_walker2=4'd13 ;
 always @ (negedge VGA_CTRL_CLK)
 begin
 	// register the m4k output for better timing on VGA
@@ -352,188 +358,83 @@ begin
 	disp_bit <= mem_bit;
 end
 
+integer i;
+
 always @ (posedge VGA_CTRL_CLK)
 begin
 	// register the m4k output for better timing on VGA
 	//disp_bit <= mem_bit;
-	
-	if (reset)		//synch reset assumes KEY0 is held down 1/60 second
-	begin
-		//clear the screen
-		addr_reg <= {Coord_X[9:1],Coord_Y[9:1]} ;	// [17:0]
-		we <= 1'b1;								//write some memory
-		data_reg <= 1'b0;						//write all zeros (black)		
-		//init random number generators to alternating bits
-		x_rand <= 31'h55555555;
-		y_rand <= 29'h55555555;
-		//init a randwalker to just left of center
-		x_walker <= 9'd150;
-		y_walker <= 9'd120;
-		//
-		state <= init;	//first state in regular state machine 
-	end
-	
-	//begin state machine to modify display 
-	else if ( KEY[3])  // KEY3 is pause
-	begin
+	 state <= nextState;
 		case(state)
-			
-			// next three states write the inital dot
-			init: //write a single dot in the middle of the screen
+		s_init: begin
+			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;	// [17:0]
+			data_reg <= 1'b0;						//write all zeros (black)		
+			currentGen[639:320] <= 320'b0;
+			currentGen[319] <= 1'b1;
+			currentGen[318:0] <= 319'b0;
+			nextGen[639:0] = 640'b0;
+			vCounter <= 10'b0;
+			hCounter <= 10'b0;
+			if (reset)		//synch reset assumes KEY0 is held down 1/60 second
 			begin
-				we <= 1'b0 ;
-				addr_reg <= {9'd160,9'd120} ;	//(x,y)							
-				//write a white dot in the middle of the screen
-				data_reg <= 1'b1 ;
-				state <= init1 ;
-			end			
-			
-			init1: //delay enable 'we' to account for registering addr,data
-			begin
-				we <= 1'b1;								
-				//write a white dot in the middle of the screen
-				data_reg <= 1'b1 ;
-				state <= init2 ;
-			end	 
-			
-			init2: 
-			// finish write a single dot in the middle of the screen
-			// and set up first read
-			begin
-				we <= 1'b0;	
-				//read left neighbor
-				// use result TWO cycles later (state==test2)
-				// -- one to load the addr reg, one to read memory
-				addr_reg <= {x_walker-9'd1,y_walker};							
-				state <= test1 ;
-			end	
-					
-			test1: 
-			begin	
-				sum <= 0; 		//init sum of neighbors
-				we <= 1'b0; 	//no memory write 
-				//read right neighbor 
-				addr_reg <= {x_walker+9'd1,y_walker};
-				state <= test2 ;			
+				//clear the screen
+				we <= 1'b1;								//write some memory
+				nextState <= s_generate;	//first state in regular state machine 
 			end
-			
-			test2: 
-			begin				
-				we <= 1'b0; //no memory write 
-				sum <= sum + {3'b0, state_bit};	//use left neighbor
-				//read upper neighbor 
-				addr_reg <= {x_walker,y_walker - 9'd1};
-				state <= test3 ;	
+			else begin
+				nextState <= s_init;
+				we <= 1'b0;								//write some memory
 			end
-			
-			test3:  
-			begin
-				we <= 1'b0; //no memory write 
-				sum <= sum + {3'b0, state_bit}; //use right neighbor
-				//read lower neighbor 
-				addr_reg <= {x_walker,y_walker + 9'd1};
-				state <= test4 ;							
+		end
+		s_generate: begin
+			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;
+			data_reg <= 1'b0;						
+			we <= 1'b0;
+			for (i=1;i<(SCREEN_WIDTH-1);i=i+1) begin
+				//nextGen[i+1:i-1] <= {3{currentGen[i]}};
+				nextGen[i] <= currentGen[i] | currentGen[i+1] | currentGen[i-1]; //{3{currentGen[i]}};
+
 			end
-			
-			test4: 
-			begin
-				we <= 1'b0; //no memory write 
-				sum <= sum + {3'b0, state_bit}; // use upper neighbor
-				state <= test5 ;							
+			vCounter <= vCounter + 1;
+			hCounter <= 10'b0;
+			if (vCounter < SCREEN_HEIGHT) begin
+			  nextState <= s_write;
 			end
-			
-			test5: 
-			begin
-				we <= 1'b0; //no memory write 
-				sum <= sum + {3'b0, state_bit} ; // use lower neighbor
-				state <= test6 ;
-			end	
-			
-			test6:
-			begin
-				if (sum>0) // then there is one or more neighbors
-				begin
-					state <= draw_walker;
-				end
-				else // if get here, then no neighbors, so update position
-					state <= update_walker; 
+			else begin
+			  nextState <= s_init;
 			end
-			
-			// the next three states draw the walker in memory
-			draw_walker: //draw the walker
-			begin
-				addr_reg <= {x_walker,y_walker};
-				data_reg <= 1'b1 ;
-				state <= draw_walker1 ;	
+		end
+		s_write: begin
+			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[17:0]
+			we <= 1'b1;
+			data_reg <= currentGen[hCounter];			
+			hCounter <= hCounter + 1;
+			nextGen <= nextGen;
+			vCounter <= vCounter;
+			if (vCounter < SCREEN_WIDTH) begin
+			  nextState <= s_write;
+			  currentGen <= currentGen;
 			end
-			
-			draw_walker1:
-			begin
-				we <= 1'b1; // memory write enable 
-				state <= draw_walker2 ;
+			else begin
+			  nextState <= s_generate;
+			  currentGen <= nextGen;
 			end
-			
-			draw_walker2:
-			begin
-				we <= 1'b0; // finish memory write 
-				state <= new_walker ;
-			end		
-			
-			update_walker: //update the walker
-			begin
-				we <= 1'b0; //no mem write
-				//inc/dec x while staying on screen
-				if (x_walker<9'd316 & x_rand[30]==1)
-					x_walker <= x_walker+1;
-				else if (x_walker>9'd4 & x_rand[30]==0)
-					x_walker <= x_walker-1;
-				//inc/dec y while staying on screen
-				if (y_walker<9'd236 & y_rand[28]==1)
-					y_walker <= y_walker+1;
-				else if (y_walker>9'd4 & y_rand[28]==0)
-					y_walker <= y_walker-1;
-				//update the x,y random number gens
-				x_rand <= {x_rand[29:0], x_low_bit} ;
-				y_rand <= {y_rand[27:0], y_low_bit} ;
-				state <= init2 ;	
-			end
-			
-			new_walker: //generate a new one
-			begin
-				we <= 1'b0; // no memory write
-				//init randwalker x
-				if (x_rand[30])
-				begin
-					x_walker <= x_rand[29:22]+8'd20;
-					if (y_rand[28])
-						y_walker <= 9'd236;
-					else
-						y_walker <= 9'd4;
-				end
-				else
-				begin
-					y_walker <= x_rand[28:22]+8'd50;
-					if (y_rand[28])
-						x_walker <= 9'd316;
-					else
-						x_walker <= 9'd4;
-				end
-				//update the x,y random number gens
-				x_rand <= {x_rand[29:0], x_low_bit} ;
-				y_rand <= {y_rand[27:0], y_low_bit} ;
-				state <= init2;
-			end
+		end
+		default:
+		begin
+		addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[17:0]
+			we <= 1'b0;
+			data_reg <= 1'b0;		
+			hCounter <= 10'b0;
+			vCounter <= 9'b0;
+			nextGen <= nextGen;
+			currentGen <= currentGen;
+			nextState <= s_init;
+		end
 		endcase
-	end // else if ( KEY[3]) 
-	
-	else
-	begin
-		//update the x,y random number gens
-		// this allows the pause key to change the pattern
-		// generated
-		x_rand <= {x_rand[29:0], x_low_bit} ;
-		y_rand <= {y_rand[27:0], y_low_bit} ;
-	end
+			
+			
+
 end // always @ (posedge VGA_CTRL_CLK)
 
 endmodule //top module
