@@ -11,7 +11,7 @@
 // Improved top module written by Adam Shapiro Oct 2009
 // --------------------------------------------------------------------
 
-module DE2_TOP (
+module lab1_top (
     // Clock Input
     input         CLOCK_27,    // 27 MHz
     input         CLOCK_50,    // 50 MHz
