@@ -422,13 +422,14 @@ begin
 			for (i=1;i<(639);i=i+1) begin
 				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
 			end
-			vCounter <= vCounter + 9'b1;
 			hCounter <= 10'b0;
 			if (vCounter < SCREEN_HEIGHT) begin
 			  nextState <= s_write;
+				vCounter <= vCounter + 9'b1;
 			end
 			else begin
 			  nextState <= s_init;
+			  vCounter <= 9'b0;
 			end
 		end
 		s_write: begin
