@@ -341,8 +341,9 @@ vga_buffer display(
 	.q_b (mem_bit) ); // data used to update VGA
 
 // make the color white
-assign  mVGA_R = {10{disp_bit}} ;
-assign  mVGA_G = {10{disp_bit}} ;
+assign  mVGA_R = 10'b0;//{10{disp_bit}} ;
+assign  mVGA_G = 10'b0;//{10{disp_bit}} ;
+
 assign  mVGA_B = {10{disp_bit}} ;
 
 // DLA state machine
@@ -416,11 +417,12 @@ begin
 			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;
 			data_reg <= 1'b0;						
 			we <= 1'b0;
+			currentGen[SCREEN_WIDTH-1:0] <= currentGen[SCREEN_WIDTH-1:0];
 			LFSR <= 32'h55555555;
 			for (i=1;i<(639);i=i+1) begin
 				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
 			end
-			vCounter <= vCounter + 1;
+			vCounter <= vCounter + 9'b1;
 			hCounter <= 10'b0;
 			if (vCounter < SCREEN_HEIGHT) begin
 			  nextState <= s_write;
@@ -448,7 +450,7 @@ begin
 		end
 		default:
 		begin
-			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[17:0]
+			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	
 			we <= 1'b0;
 			data_reg <= 1'b0;		
 			hCounter <= 10'b0;
