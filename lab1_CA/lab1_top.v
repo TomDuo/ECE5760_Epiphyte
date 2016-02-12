@@ -140,8 +140,8 @@ module lab1_top (
 );
 
    //Turn off all displays.
-   assign HEX0 = 7'h7F;
-   assign HEX1 = 7'h7F;
+   //assign HEX0 = 7'h7F;
+   //assign HEX1 = 7'h7F;
    assign HEX2 = 7'h7F;
    assign HEX3 = 7'h7F;
    assign HEX4 = 7'h7F;
@@ -281,6 +281,8 @@ wire [9:0]	mVGA_G;
 wire [9:0]	mVGA_B;
 wire [19:0]	mVGA_ADDR;			//video memory address
 wire [9:0]  Coord_X, Coord_Y;	//display coods
+reg [9:0]  edit_X;
+reg [8:0]  edit_Y;	
 
 ////////////////////////////////////
 //CA state machine variables
@@ -345,12 +347,16 @@ assign  mVGA_R = 10'b0;//{10{disp_bit}} ;
 assign  mVGA_G = 10'b0;//{10{disp_bit}} ;
 
 assign  mVGA_B = {10{disp_bit}} ;
+//assign HEX0 = 7'h7F;
 
 // DLA state machine
 assign reset = ~KEY[0];
 
 //right-most bit for rand number shift regs
 //your basic XOR random # gen
+	 //Drive LEDs
+hex_7seg(SW[3:0],HEX0);
+hex_7seg(SW[7:4],HEX1);
 
 
 //state names
@@ -368,9 +374,12 @@ begin
 	// register the m4k output for better timing on VGA
 	//disp_bit <= mem_bit;
 	 state <= nextState;
+	 
+	 
+	 
 		case(state)
 		s_init: begin
-			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;	// [17:0]
+			addr_reg <= {edit_X,edit_Y} ;	// [18:0]
 			data_reg <= 1'b0;						//write all zeros (black)
 			nextGen[639:0] = 640'b0;
 			vCounter <= 9'b0;
@@ -385,7 +394,9 @@ begin
 					//currentGen[Coord_X] <= LFSR[0];
 					//currentGen[639:{Coord_X}] <= currentGen[639:{Coord_X}];
 					//currentGen[Coord_X-1:0] <= currentGen[Coord_X-1:0];
-					
+					currentGen[SCREEN_WIDTH-1:0] <= currentGen[SCREEN_WIDTH-1:0];
+
+					/*
 					for(t = 0; t < SCREEN_WIDTH; t = t + 1)
 					begin
 						if (t == Coord_X) begin
@@ -394,6 +405,8 @@ begin
 							currentGen[t] <= currentGen[t];
 						end
 					end
+					*/
+					
 					LFSR[30:0] <= LFSR[31:1];
 					LFSR[31]   <= LFSR[0]^LFSR[3];
 				end
@@ -403,6 +416,7 @@ begin
 					currentGen[319] <= 1'b1;
 					currentGen[318:0] <= 319'b0;
 				end
+				nextGen[SCREEN_WIDTH-1:0] <= {SCREEN_WIDTH{1'b0}};
 			end
 			else begin
 				nextState <= s_init;
@@ -414,33 +428,39 @@ begin
 			end
 		end
 		s_generate: begin
-			addr_reg <= {Coord_X[9:0],Coord_Y[8:0]} ;
+			addr_reg <= {edit_X,edit_Y} ;
 			data_reg <= 1'b0;						
 			we <= 1'b0;
-			currentGen[SCREEN_WIDTH-1:0] <= currentGen[SCREEN_WIDTH-1:0];
 			LFSR <= 32'h55555555;
+
+			currentGen <= currentGen;
 			for (i=1;i<(639);i=i+1) begin
 				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
 			end
+			
 			hCounter <= 10'b0;
-			if (vCounter < SCREEN_HEIGHT) begin
+			if (vCounter != SCREEN_HEIGHT) begin
 			  nextState <= s_write;
-				vCounter <= vCounter + 9'b1;
+				vCounter = vCounter;// + 9'b1;
 			end
 			else begin
 			  nextState <= s_init;
-			  vCounter <= 9'b0;
+			  vCounter  = 9'b0;
 			end
 		end
 		s_write: begin
-			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[17:0]
+			if (hCounter == 10'd0) begin
+				vCounter <= vCounter + 9'b1;
+			end
+			else begin
+				vCounter <= vCounter;
+			end
+			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[18:0]
 			we <= 1'b1;
 			LFSR <= 32'h55555555;
-			data_reg <= currentGen[hCounter];			
-			hCounter <= hCounter + 1;
-			nextGen <= nextGen;
-			vCounter <= vCounter;
-			if (hCounter < SCREEN_WIDTH) begin
+			data_reg <= nextGen[hCounter];			
+			hCounter = hCounter + 10'b1;
+			if(hCounter < SCREEN_WIDTH) begin
 			  nextState <= s_write;
 			  currentGen <= currentGen;
 			end
@@ -448,6 +468,7 @@ begin
 			  nextState <= s_generate;
 			  currentGen <= nextGen;
 			end
+
 		end
 		default:
 		begin
@@ -462,8 +483,9 @@ begin
 			nextState <= s_init;
 		end
 		endcase
-			
-			
+
+		edit_X <= (edit_X + 10'b1) >= SCREEN_WIDTH ? 0 : edit_X + 10'b1;
+		edit_Y <= (edit_Y + 9'b1) >= SCREEN_HEIGHT ? 0 : edit_Y + 9'b1;			
 
 end // always @ (posedge VGA_CTRL_CLK)
 
