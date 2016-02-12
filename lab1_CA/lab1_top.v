@@ -144,10 +144,10 @@ module lab1_top (
    //assign HEX1 = 7'h7F;
    assign HEX2 = 7'h7F;
    assign HEX3 = 7'h7F;
-   assign HEX4 = 7'h7F;
+  // assign HEX4 = 7'h7F;
    assign HEX5 = 7'h7F;
    assign HEX6 = 7'h7F;
-   assign HEX7 = 7'h7F;
+   //assign HEX7 = 7'h7F;
    assign LEDR = 18'h0;
   // assign LEDG = 9'h0;
    
@@ -287,6 +287,8 @@ reg [8:0]  edit_Y;
 ////////////////////////////////////
 //CA state machine variables
 wire reset;
+wire generation;
+assign generation = ~KEY[1];
 reg [1:0] state;	//state machine
 reg [1:0] nextState;
 
@@ -357,6 +359,10 @@ assign reset = ~KEY[0];
 	 //Drive LEDs
 hex_7seg(SW[3:0],HEX0);
 hex_7seg(SW[7:4],HEX1);
+hex_7seg({2'b00,state},HEX7);
+
+assign LEDG[7] = reset;
+assign LEDG[6] = generation;
 
 
 //state names
@@ -369,19 +375,18 @@ end
 
 integer i;
 integer t;
+
 always @ (posedge VGA_CTRL_CLK)
 begin
 	// register the m4k output for better timing on VGA
 	//disp_bit <= mem_bit;
 	 state <= nextState;
 	 
-	 
-	 
 		case(state)
 		s_init: begin
 			addr_reg <= {edit_X,edit_Y} ;	// [18:0]
 			data_reg <= 1'b0;						//write all zeros (black)
-			nextGen[639:0] = 640'b0;
+			nextGen[(SCREEN_WIDTH-1):0] = {SCREEN_WIDTH{1'b0}};
 			vCounter <= 9'b0;
 			hCounter <= 10'b0;
 			if (reset)		//synch reset assumes KEY0 is held down 1/60 second
@@ -391,12 +396,6 @@ begin
 				nextState <= s_generate;	//first state in regular state machine 
 				if (SW[17])
 				begin
-					//currentGen[Coord_X] <= LFSR[0];
-					//currentGen[639:{Coord_X}] <= currentGen[639:{Coord_X}];
-					//currentGen[Coord_X-1:0] <= currentGen[Coord_X-1:0];
-					currentGen[SCREEN_WIDTH-1:0] <= currentGen[SCREEN_WIDTH-1:0];
-
-					/*
 					for(t = 0; t < SCREEN_WIDTH; t = t + 1)
 					begin
 						if (t == Coord_X) begin
@@ -405,7 +404,7 @@ begin
 							currentGen[t] <= currentGen[t];
 						end
 					end
-					*/
+					
 					
 					LFSR[30:0] <= LFSR[31:1];
 					LFSR[31]   <= LFSR[0]^LFSR[3];
@@ -418,13 +417,14 @@ begin
 				end
 				nextGen[SCREEN_WIDTH-1:0] <= {SCREEN_WIDTH{1'b0}};
 			end
+			else if (generation) begin
+				we <= 1'b1;
+				LFSR <= 32'h55555555;
+				nextState <= s_generate;	//first state in regular state machine 
+			end
 			else begin
-				nextState <= s_init;
 				we <= 1'b0;								//write some memory
 				LFSR <= 32'h55555555;
-				currentGen[639:320] <= 320'b0;
-				currentGen[319] <= 1'b1;
-				currentGen[318:0] <= 319'b0;
 			end
 		end
 		s_generate: begin
@@ -433,7 +433,6 @@ begin
 			we <= 1'b0;
 			LFSR <= 32'h55555555;
 
-			currentGen <= currentGen;
 			for (i=1;i<(639);i=i+1) begin
 				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
 			end
@@ -441,7 +440,6 @@ begin
 			hCounter <= 10'b0;
 			if (vCounter != SCREEN_HEIGHT) begin
 			  nextState <= s_write;
-				vCounter = vCounter;// + 9'b1;
 			end
 			else begin
 			  nextState <= s_init;
@@ -452,13 +450,10 @@ begin
 			if (hCounter == 10'd0) begin
 				vCounter <= vCounter + 9'b1;
 			end
-			else begin
-				vCounter <= vCounter;
-			end
 			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[18:0]
 			we <= 1'b1;
 			LFSR <= 32'h55555555;
-			data_reg <= nextGen[hCounter];			
+			data_reg <= currentGen[hCounter];			
 			hCounter = hCounter + 10'b1;
 			if(hCounter < SCREEN_WIDTH) begin
 			  nextState <= s_write;
@@ -478,8 +473,6 @@ begin
 			hCounter <= 10'b0;
 			vCounter <= 9'b0;
 			LFSR <= 32'h55555555;
-			nextGen <= nextGen;
-			currentGen <= currentGen;
 			nextState <= s_init;
 		end
 		endcase
