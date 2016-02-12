@@ -144,7 +144,7 @@ module lab1_top (
    //assign HEX1 = 7'h7F;
    assign HEX2 = 7'h7F;
    assign HEX3 = 7'h7F;
-  // assign HEX4 = 7'h7F;
+   assign HEX4 = 7'h7F;
    assign HEX5 = 7'h7F;
    assign HEX6 = 7'h7F;
    //assign HEX7 = 7'h7F;
@@ -296,7 +296,7 @@ reg [1:0] nextState;
 localparam s_init = 2'b00;
 localparam s_generate = 2'b01;
 localparam s_write = 2'b10;
-
+localparam s_debounce = 2'b11;
 reg [8:0] vCounter;
 reg [9:0] hCounter;
 
@@ -331,7 +331,7 @@ reg we ; // write enable for a
 reg [18:0] addr_reg ; // for a
 reg data_reg ; // for a
 reg [31:0] LFSR;
-
+reg generation_old;
 vga_buffer display(
 	.address_a (addr_reg) , 
 	.address_b ({Coord_X[9:0],Coord_Y[8:0]}), // vga current address
@@ -345,10 +345,10 @@ vga_buffer display(
 	.q_b (mem_bit) ); // data used to update VGA
 
 // make the color white
-assign  mVGA_R = 10'b0;//{10{disp_bit}} ;
-assign  mVGA_G = 10'b0;//{10{disp_bit}} ;
+assign  mVGA_R = {Coord_X[9:2],2'b0} & {10{disp_bit}};
+assign  mVGA_G = {Coord_X[8:1],2'b0} & {10{disp_bit}};
 
-assign  mVGA_B = {10{disp_bit}} ;
+assign  mVGA_B = {Coord_X[7:0],2'b0} & {10{disp_bit}};
 //assign HEX0 = 7'h7F;
 
 // DLA state machine
@@ -365,13 +365,13 @@ assign LEDG[7] = reset;
 assign LEDG[6] = generation;
 
 
-//state names
 always @ (negedge VGA_CTRL_CLK)
 begin
 	// register the m4k output for better timing on VGA
 	// negedge seems to work better than posedge
 	disp_bit <= mem_bit;
 end
+
 
 integer i;
 integer t;
@@ -381,101 +381,198 @@ begin
 	// register the m4k output for better timing on VGA
 	//disp_bit <= mem_bit;
 	 state <= nextState;
-	 
-		case(state)
-		s_init: begin
+	 case(state)
+	 s_init: begin
+		 hCounter <= 10'b0;
+		 vCounter <= 9'b0;
+		 if (reset) begin
+			we <= 1'b1;
 			addr_reg <= {edit_X,edit_Y} ;	// [18:0]
 			data_reg <= 1'b0;						//write all zeros (black)
-			nextGen[(SCREEN_WIDTH-1):0] = {SCREEN_WIDTH{1'b0}};
-			vCounter <= 9'b0;
-			hCounter <= 10'b0;
-			if (reset)		//synch reset assumes KEY0 is held down 1/60 second
-			begin
-				//clear the screen
-				we <= 1'b1;								//write some memory
-				nextState <= s_generate;	//first state in regular state machine 
-				if (SW[17])
+
+			if (SW[17])begin
+				for(t = 0; t < SCREEN_WIDTH; t = t + 1)
 				begin
-					for(t = 0; t < SCREEN_WIDTH; t = t + 1)
+					if (t == Coord_X) 
 					begin
-						if (t == Coord_X) begin
-							currentGen[t] <= LFSR[0];
-						end else begin
-							currentGen[t] <= currentGen[t];
-						end
+						currentGen[t] <= LFSR[0];
+					end 
+					else begin
+						currentGen[t] <= currentGen[t];
 					end
-					
-					
-					LFSR[30:0] <= LFSR[31:1];
-					LFSR[31]   <= LFSR[0]^LFSR[3];
 				end
-				else
-				begin
-					currentGen[639:320] <= 320'b0;
-					currentGen[319] <= 1'b1;
-					currentGen[318:0] <= 319'b0;
-				end
-				nextGen[SCREEN_WIDTH-1:0] <= {SCREEN_WIDTH{1'b0}};
-			end
-			else if (generation) begin
-				we <= 1'b1;
-				LFSR <= 32'h55555555;
-				nextState <= s_generate;	//first state in regular state machine 
-			end
-			else begin
-				we <= 1'b0;								//write some memory
-				LFSR <= 32'h55555555;
-			end
-		end
-		s_generate: begin
-			addr_reg <= {edit_X,edit_Y} ;
-			data_reg <= 1'b0;						
-			we <= 1'b0;
-			LFSR <= 32'h55555555;
-
-			for (i=1;i<(639);i=i+1) begin
-				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
-			end
 			
-			hCounter <= 10'b0;
-			if (vCounter != SCREEN_HEIGHT) begin
-			  nextState <= s_write;
+				LFSR[30:0] <= LFSR[31:1];
+				LFSR[31]   <= LFSR[0]^LFSR[3];
 			end
-			else begin
-			  nextState <= s_init;
-			  vCounter  = 9'b0;
+			else
+
+			begin
+				currentGen[639:320] <= 320'b0;
+				currentGen[319] <= 1'b1;
+				currentGen[318:0] <= 319'b0;
+				
 			end
-		end
-		s_write: begin
-			if (hCounter == 10'd0) begin
-				vCounter <= vCounter + 9'b1;
+			nextState <= s_generate;
+
+		 end
+
+		 else if(generation)
+			begin
+				we <= 1'b1;
+				addr_reg <= {edit_X,edit_Y} ;	// [18:0]
+				data_reg <= 1'b0;					//write all zeros (black)
+				currentGen <= nextGen;
+				nextState <= s_generate;
 			end
-			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[18:0]
-			we <= 1'b1;
+		 else begin
+			we <= 1'b0;
 			LFSR <= 32'h55555555;
-			data_reg <= currentGen[hCounter];			
-			hCounter = hCounter + 10'b1;
-			if(hCounter < SCREEN_WIDTH) begin
-			  nextState <= s_write;
-			  currentGen <= currentGen;
-			end
-			else begin
-			  nextState <= s_generate;
-			  currentGen <= nextGen;
-			end
+		 end
+	 end
+	 
+	 s_generate: begin
+	 
+		for (i=1;i<(639);i=i+1) begin
+			nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
+		end
+			nextGen[0] <= SW[{currentGen[SCREEN_WIDTH-1],currentGen[0],currentGen[1]}];
+			nextGen[SCREEN_WIDTH-1] <= SW[{currentGen[SCREEN_WIDTH-2],currentGen[SCREEN_WIDTH-1],currentGen[0]}];
+
+		hCounter <= 10'b0;
+		if (vCounter < 480) begin
+		  nextState <= s_write;
+		end
+		else begin
+		  nextState <= s_debounce;
+		end
+	 end
+	 
+	 s_write: begin
+		if (hCounter == 10'd0) begin
+			vCounter <= vCounter + 9'b1;
+		end
+		addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[18:0]
+		we <= 1'b1;
+		data_reg <= currentGen[hCounter];			
+		hCounter = hCounter + 10'b1;
+		if(hCounter < 10'd640) begin
+		  nextState <= s_write;
+		end
+		else begin
+		  currentGen <= nextGen;
+		  nextState <= s_generate;
 
 		end
-		default:
-		begin
-			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	
-			we <= 1'b0;
-			data_reg <= 1'b0;		
-			hCounter <= 10'b0;
-			vCounter <= 9'b0;
-			LFSR <= 32'h55555555;
-			nextState <= s_init;
-		end
-		endcase
+	 end
+	 s_debounce : begin
+	 we <= 1'b0;
+	 if(!generation)
+	 begin
+	 nextState <= s_init;
+	 end
+	 end
+	 default: begin
+		we <= 1'b0;
+
+		nextState <= s_init;
+
+	 end
+	 endcase
+//		case(state)
+//		s_init: begin
+//			addr_reg <= {edit_X,edit_Y} ;	// [18:0]
+//			data_reg <= 1'b0;						//write all zeros (black)
+//			nextGen[(SCREEN_WIDTH-1):0] = {SCREEN_WIDTH{1'b0}};
+//			vCounter <= 9'b0;
+//			hCounter <= 10'b0;
+//			if (reset)		//synch reset assumes KEY0 is held down 1/60 second
+//			begin
+//				//clear the screen
+//				we <= 1'b1;								//write some memory
+//				nextState <= s_generate;	//first state in regular state machine 
+//				if (SW[17])
+//				begin
+//					for(t = 0; t < SCREEN_WIDTH; t = t + 1)
+//					begin
+//						if (t == Coord_X) begin
+//							currentGen[t] <= LFSR[0];
+//						end else begin
+//							currentGen[t] <= currentGen[t];
+//						end
+//					end
+//					
+//					
+//					LFSR[30:0] <= LFSR[31:1];
+//					LFSR[31]   <= LFSR[0]^LFSR[3];
+//				end
+//				else
+//				begin
+//					currentGen[639:320] <= 320'b0;
+//					currentGen[319] <= 1'b1;
+//					currentGen[318:0] <= 319'b0;
+//				end
+//				nextGen[SCREEN_WIDTH-1:0] <= {SCREEN_WIDTH{1'b0}};
+//			end
+//			else if (generation) begin
+//				we <= 1'b1;
+//				LFSR <= 32'h55555555;
+//				nextState <= s_generate;	//first state in regular state machine 
+//			end
+//			else begin
+//				we <= 1'b0;								//write some memory
+//				LFSR <= 32'h55555555;
+//			end
+//		end
+//		s_generate: begin
+//			addr_reg <= {edit_X,edit_Y} ;
+//			data_reg <= 1'b0;						
+//			we <= 1'b0;
+//			LFSR <= 32'h55555555;
+//
+//			for (i=1;i<(639);i=i+1) begin
+//				nextGen[i] <= SW[{currentGen[i-1],currentGen[i],currentGen[i+1]}];
+//			end
+//			
+//			hCounter <= 10'b0;
+//			if (vCounter != SCREEN_HEIGHT) begin
+//			  nextState <= s_write;
+//			end
+//			else begin
+//			  nextState <= s_init;
+//			  vCounter  = 9'b0;
+//			end
+//		end
+//		s_write: begin
+//			if (hCounter == 10'd0) begin
+//				vCounter <= vCounter + 9'b1;
+//			end
+//			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	//[18:0]
+//			we <= 1'b1;
+//			LFSR <= 32'h55555555;
+//			data_reg <= currentGen[hCounter];			
+//			hCounter = hCounter + 10'b1;
+//			if(hCounter < SCREEN_WIDTH) begin
+//			  nextState <= s_write;
+//			  currentGen <= currentGen;
+//			end
+//			else begin
+//			  nextState <= s_generate;
+//			  currentGen <= nextGen;
+//			end
+//
+//		end
+//		default:
+//		begin
+//			addr_reg <= {hCounter[9:0],vCounter[8:0]} ;	
+//			we <= 1'b0;
+//			data_reg <= 1'b0;		
+//			hCounter <= 10'b0;
+//			vCounter <= 9'b0;
+//			LFSR <= 32'h55555555;
+//			nextState <= s_init;
+//		end
+//		endcase
 
 		edit_X <= (edit_X + 10'b1) >= SCREEN_WIDTH ? 0 : edit_X + 10'b1;
 		edit_Y <= (edit_Y + 9'b1) >= SCREEN_HEIGHT ? 0 : edit_Y + 9'b1;			
