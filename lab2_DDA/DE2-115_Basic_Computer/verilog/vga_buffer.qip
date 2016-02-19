@@ -1,0 +1,8 @@
+set_global_assignment -entity "vga_buffer" -library "vga_buffer" -name IP_TOOL_NAME "altera_up_avalon_sram"
+set_global_assignment -entity "vga_buffer" -library "vga_buffer" -name IP_TOOL_VERSION "13.0"
+set_global_assignment -entity "vga_buffer" -library "vga_buffer" -name IP_TOOL_ENV "mwpim"
+set_global_assignment -library "vga_buffer" -name MISC_FILE [file join $::quartus(qip_path) "vga_buffer.cmp"]
+set_global_assignment -name SYNTHESIS_ONLY_QIP ON
+
+set_global_assignment -library "vga_buffer" -name VERILOG_FILE [file join $::quartus(qip_path) "vga_buffer.v"]
+set_global_assignment -library "vga_buffer" -name VERILOG_FILE [file join $::quartus(qip_path) "vga_buffer/vga_buffer_0002.v"]

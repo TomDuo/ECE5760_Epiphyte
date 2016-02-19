@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="vga_buffer_sim/vga_buffer.v" type="VERILOG" />
+ <topLevel name="vga_buffer" />
+ <deviceFamily name="cycloneive" />
+</simPackage>
