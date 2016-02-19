@@ -161,9 +161,7 @@ nios_system NiosII (
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
-	// the_Expansion_JP5
-	.GPIO_to_and_from_the_Expansion_JP5		({GPIO[35:19], GPIO[17], GPIO[15:3], GPIO[1]}),
-
+	
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -173,18 +171,9 @@ nios_system NiosII (
 	.HEX2_from_the_HEX3_HEX0				(HEX2),
 	.HEX3_from_the_HEX3_HEX0				(HEX3),
 	
-	// the_HEX7_HEX4
-	.HEX4_from_the_HEX7_HEX4				(HEX4),
-	.HEX5_from_the_HEX7_HEX4				(HEX5),
-	.HEX6_from_the_HEX7_HEX4				(HEX6),
-	.HEX7_from_the_HEX7_HEX4				(HEX7),
 
-	// the_Pushbuttons
-	.KEY_to_the_Pushbuttons					({KEY[3:1], 1'b1}),
 
-	// the_Red_LEDs
-	.LEDR_from_the_Red_LEDs					(LEDR),
-	
+
 	// the_SDRAM
 	.zs_addr_from_the_SDRAM					(DRAM_ADDR),
 	.zs_ba_from_the_SDRAM					(DRAM_BA),
@@ -196,22 +185,11 @@ nios_system NiosII (
 	.zs_ras_n_from_the_SDRAM				(DRAM_RAS_N),
 	.zs_we_n_from_the_SDRAM					(DRAM_WE_N),
 	
-	// the_SRAM
-	.SRAM_DQ_to_and_from_the_SRAM			(SRAM_DQ),
-	.SRAM_ADDR_from_the_SRAM				(SRAM_ADDR),
-	.SRAM_LB_N_from_the_SRAM				(SRAM_LB_N),
-	.SRAM_UB_N_from_the_SRAM				(SRAM_UB_N),
-	.SRAM_CE_N_from_the_SRAM				(SRAM_CE_N),
-	.SRAM_OE_N_from_the_SRAM				(SRAM_OE_N),
-	.SRAM_WE_N_from_the_SRAM				(SRAM_WE_N),
 
 	// the_Serial_port
 	.UART_RXD_to_the_Serial_Port			(UART_RXD),
 	.UART_TXD_from_the_Serial_Port			(UART_TXD),
-	
-	// the_Slider_switches
-	.SW_to_the_Slider_Switches				(SW)
-);
+	);
 
 sdram_pll neg_3ns (CLOCK_50, DRAM_CLK, system_clock);
 
