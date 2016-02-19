@@ -1223,4 +1223,122 @@ set_global_assignment -name VERILOG_FILE DE2_115_Basic_Computer.v
 set_global_assignment -name QIP_FILE VGA_Controller/vga_pll.qip
 set_global_assignment -name QIP_FILE vga_buffer.qip
 set_global_assignment -name SIP_FILE vga_buffer.sip
+set_location_assignment PIN_A17 -to ENET0_GTX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_GTX_CLK
+set_location_assignment PIN_A21 -to ENET0_INT_N
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_INT_N
+set_location_assignment PIN_C14 -to ENET0_LINK100
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ENET0_LINK100
+set_location_assignment PIN_C20 -to ENET0_MDC
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_MDC
+set_location_assignment PIN_B21 -to ENET0_MDIO
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_MDIO
+set_location_assignment PIN_C19 -to ENET0_RST_N
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RST_N
+set_location_assignment PIN_A15 -to ENET0_RX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_CLK
+set_location_assignment PIN_E15 -to ENET0_RX_COL
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_COL
+set_location_assignment PIN_D15 -to ENET0_RX_CRS
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_CRS
+set_location_assignment PIN_C15 -to ENET0_RX_DATA[3]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_DATA[3]
+set_location_assignment PIN_D17 -to ENET0_RX_DATA[2]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_DATA[2]
+set_location_assignment PIN_D16 -to ENET0_RX_DATA[1]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_DATA[1]
+set_location_assignment PIN_C16 -to ENET0_RX_DATA[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_DATA[0]
+set_location_assignment PIN_C17 -to ENET0_RX_DV
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_DV
+set_location_assignment PIN_D18 -to ENET0_RX_ER
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_RX_ER
+set_location_assignment PIN_B17 -to ENET0_TX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_CLK
+set_location_assignment PIN_B19 -to ENET0_TX_DATA[3]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_DATA[3]
+set_location_assignment PIN_A19 -to ENET0_TX_DATA[2]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_DATA[2]
+set_location_assignment PIN_D19 -to ENET0_TX_DATA[1]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_DATA[1]
+set_location_assignment PIN_C18 -to ENET0_TX_DATA[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_DATA[0]
+set_location_assignment PIN_A18 -to ENET0_TX_EN
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_EN
+set_location_assignment PIN_B18 -to ENET0_TX_ER
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_TX_ER
+set_location_assignment PIN_C23 -to ENET1_GTX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_GTX_CLK
+set_location_assignment PIN_D24 -to ENET1_INT_N
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_INT_N
+set_location_assignment PIN_D13 -to ENET1_LINK100
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ENET1_LINK100
+set_location_assignment PIN_D23 -to ENET1_MDC
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_MDC
+set_location_assignment PIN_D25 -to ENET1_MDIO
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_MDIO
+set_location_assignment PIN_D22 -to ENET1_RST_N
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RST_N
+set_location_assignment PIN_B15 -to ENET1_RX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_CLK
+set_location_assignment PIN_B22 -to ENET1_RX_COL
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_COL
+set_location_assignment PIN_D20 -to ENET1_RX_CRS
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_CRS
+set_location_assignment PIN_D21 -to ENET1_RX_DATA[3]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_DATA[3]
+set_location_assignment PIN_A23 -to ENET1_RX_DATA[2]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_DATA[2]
+set_location_assignment PIN_C21 -to ENET1_RX_DATA[1]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_DATA[1]
+set_location_assignment PIN_B23 -to ENET1_RX_DATA[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_DATA[0]
+set_location_assignment PIN_A22 -to ENET1_RX_DV
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_DV
+set_location_assignment PIN_C24 -to ENET1_RX_ER
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_RX_ER
+set_location_assignment PIN_C22 -to ENET1_TX_CLK
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_CLK
+set_location_assignment PIN_C26 -to ENET1_TX_DATA[3]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_DATA[3]
+set_location_assignment PIN_B26 -to ENET1_TX_DATA[2]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_DATA[2]
+set_location_assignment PIN_A26 -to ENET1_TX_DATA[1]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_DATA[1]
+set_location_assignment PIN_C25 -to ENET1_TX_DATA[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_DATA[0]
+set_location_assignment PIN_B25 -to ENET1_TX_EN
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_EN
+set_location_assignment PIN_A25 -to ENET1_TX_ER
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET1_TX_ER
+set_location_assignment PIN_A14 -to ENETCLK_25
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ENETCLK_25
+set_location_assignment PIN_D9 -to EX_IO[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[6]
+set_location_assignment PIN_E10 -to EX_IO[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[5]
+set_location_assignment PIN_F14 -to EX_IO[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[4]
+set_location_assignment PIN_H14 -to EX_IO[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[3]
+set_location_assignment PIN_H13 -to EX_IO[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[2]
+set_location_assignment PIN_J14 -to EX_IO[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[1]
+set_location_assignment PIN_J10 -to EX_IO[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to EX_IO[0]
+set_location_assignment PIN_AE11 -to FL_RST_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to FL_RST_N
+set_location_assignment PIN_B3 -to OTG_RD_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to OTG_RD_N
+set_location_assignment PIN_A4 -to OTG_WR_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to OTG_WR_N
+set_location_assignment PIN_G6 -to PS2_CLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_CLK
+set_location_assignment PIN_G5 -to PS2_CLK2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_CLK2
+set_location_assignment PIN_H5 -to PS2_DAT
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT
+set_location_assignment PIN_F5 -to PS2_DAT2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT2
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
