@@ -1,0 +1,20 @@
+2/20
+Lab notes:
+  Screen Settings:
+    Resolution:    1280x1024
+    Refresh rate:  60Hz
+    Display image: 1280x1024 at full screen alternating b&w vertical lines
+
+  Measurement Settings:
+    Sampling: 2.4MSps
+    FFT Size: 131,072
+    HW Auto Gain Control must be on
+
+  Measured Values:
+    Fundamental:      80.990MHz,  -70dBm noise floor, -53dBm signal (eyeballed)
+    Second harmonic:  161.980MHz, not visible
+    Third harmonic:   242.976MHz, -96dBm noise floor, -68dBm signal (again, visually determined)
+    Fourth harmonic:  323.960MHz, -80dBm noise floor, -48dBm signal (looking at it)
+    Fifth harmomic:   404.950MHz, -80dBm noise floor, -64dBm signal 
+    Sixth harmonic:   485.940MHz, -90dBm noise floor, -64dBm signal
+    Seventh harmonic: 566.930MHz, -96dBm noise floor, -70dBm signal
