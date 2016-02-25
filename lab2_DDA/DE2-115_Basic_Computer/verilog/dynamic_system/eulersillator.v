@@ -1,3 +1,6 @@
+`include "signed_mult.v"
+`include "integrator.v"
+
 module eulersillator
 #(
 parameter vga_width = 640

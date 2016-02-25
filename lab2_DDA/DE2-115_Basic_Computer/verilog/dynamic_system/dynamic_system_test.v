@@ -2,7 +2,7 @@
 // RandomNumberGenerator Testing, adapted from Tutorial 4: regincr-iverilog-sim.v 
 //========================================================================
 
-`include "../lab4_net/RandomNumberGenerator.v"
+`include "eulersillator.v"
 
 
  
@@ -15,13 +15,44 @@ module top;
 
   // Instaniate the design under test
 
-  logic       reset = 1;
-  logic [7:0] out;
-Random_Number_Generator #(8'h11) rng
+  logic nios_reset = 1;    
+  logic reset = 1;
+  logic w_en;
+
+  logic [17:0] k1   = 18'h1_0000; //1
+  logic [17:0] kmid = 18'h1_0000; //1
+  logic [17:0] k2   = 18'h1_0000; //1
+
+  //These initial conditions simulate x0_symm from Osc_euler.m
+  logic [17:0] x1_init =  18'h3_8000; //-.5
+  logic [17:0] v1_init =  18'h0_0000; //  0
+  
+  logic [17:0] x2_init =  18'h0_8000; // .5
+  logic [17:0] v2_init =  18'h0_0000; //  0
+  
+
+eulersillator eulers_oscillator
 (
-    .clk(clk),
+    .CLOCK_50(clk),
     .reset(reset),
-    .out(out)
+    .nios_reset(nios_reset),
+    
+    .k1(k1),
+    .kmid(kmid),
+    .k2(k2),
+    //.kcubic(kcubic),
+
+    .x1_init(x1_init),
+    .x2_init(x2_init),
+    .v1_init(v1_init),
+    .v2_init(v2_init),
+
+    .x1(x1),
+    .x2(x2),
+
+    .vga_xCoord(vga_xCoord),
+    .w_en(w_en),
+
 );
    initial begin
 
