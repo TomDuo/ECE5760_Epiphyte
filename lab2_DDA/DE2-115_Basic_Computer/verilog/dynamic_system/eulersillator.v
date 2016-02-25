@@ -1,6 +1,6 @@
 module eulersillator
 #(
-parameter vga_width = 640
+parameter vga_width = 640;
 )
 (
 input CLOCK_50,
@@ -50,7 +50,7 @@ signed wire [17:0] x2_d1;
 
 // mid term multiplication
 signed wire [17:0] kmid_x2minusx1;
-signed_mult kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
+signed_mult kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1);
 
 // x1 term multiplication
 signed wire [17:0] k1_x1;
