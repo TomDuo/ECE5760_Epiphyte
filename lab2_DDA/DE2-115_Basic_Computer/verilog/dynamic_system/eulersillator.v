@@ -77,6 +77,10 @@ begin
     w_en = 1;
     disp_bit = 0;
   end
+  else
+  begin
+    w_en = 0;
+  end
 end
 
 always @(posedge AnalogClock)

@@ -50,15 +50,15 @@ eulersillator eulers_oscillator
     .x1(x1),
     .x2(x2),
 
-    .vga_xCoord(vga_xCoord),
-    .w_en(w_en),
+    //.vga_xCoord(vga_xCoord),
+    //.w_en(w_en),
 
 );
    initial begin
 
     // Dump waveforms
 
-    $dumpfile("RNG-iverilog-sim.vcd");
+    $dumpfile("DDA-iverilog-sim.vcd");
     $dumpvars;
 
     // Reset
@@ -67,13 +67,9 @@ eulersillator eulers_oscillator
     reset = 1'b0;
 
     repeat(100000) begin 
-    //$display("out: %x",out);
-    $display("%d",out);
     #10;
     end
        // Test cases
-    
-    //$display( "*** RNG DONE ***" );
     $finish;
   end
 
