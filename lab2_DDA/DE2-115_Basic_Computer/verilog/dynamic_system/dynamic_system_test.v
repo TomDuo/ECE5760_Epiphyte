@@ -48,7 +48,7 @@ eulersillator eulers_oscillator
     .v2_init(v2_init),
 
     .x1(x1),
-    .x2(x2),
+    .x2(x2)
 
     //.vga_xCoord(vga_xCoord),
     //.w_en(w_en),
