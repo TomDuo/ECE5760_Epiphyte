@@ -160,10 +160,10 @@ end
 
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
-signed_mult5760 k1_x1_mul(k1_x1,k1,x1);
+signed_mult5760 k1_x1_mul(k1_x1,k1,(x1+18'h1_ffff));
 signed_mult5760 g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
-signed_mult5760 k2_x2_mul(k2_x2,k2,x2);
+signed_mult5760 k2_x2_mul(k2_x2,k2,(x2+18'h3_ffff));
 signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 
 assign d2_x1_dt2 = kmid_x2minusx1+k1_x1+g1_x1_d1;
