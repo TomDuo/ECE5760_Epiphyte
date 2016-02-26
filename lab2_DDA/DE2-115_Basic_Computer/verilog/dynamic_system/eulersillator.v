@@ -107,8 +107,8 @@ end
 
 reg [3:0] drawCount;
 
-wire [8:0] sign_extended_x1 = { {2{x1[17]}}, x1[17:11]};
-wire [8:0] sign_extended_x2 = { {2{x2[17]}}, x2[17:11]};
+wire [8:0] sign_extended_x1 = { {3{x1[17]}}, x1[16:11]};
+wire [8:0] sign_extended_x2 = { {3{x2[17]}}, x2[16:11]};
 
 always @(posedge AnalogClock)
 begin
@@ -118,8 +118,25 @@ begin
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
-		yTrace1 <= x1_height + sign_extended_x1; //+ x1[17:11];
-	   yTrace2 <= x2_height + sign_extended_x2;// + x2[17:11];
+        //yTrace1 <= $signed(x1_height + $signed(x1)>>>16);
+        //yTrace2 <= $signed(x2_height + $signed(x2)>>>16);
+        yTrace1 <= sign_extended_x1 + x1_height;
+        yTrace2 <= sign_extended_x2 + x2_height;
+
+        /*
+        if(x1[17]) begin
+		yTrace1 <= x1_height - x1//{4'b0, ~x1[16:13]};
+        end
+        else begin
+        yTrace1 <= x1_height + {4'b0, x1[16:13]};
+        end
+        if(x1[17]) begin
+        yTrace2 <= x2_height - {4'b0, ~x1[16:13]};
+        end
+        else begin
+        yTrace2 <= x2_height + {4'b0, x1[16:13]};
+        end
+        */
 		drawCount <= drawCount + 2'b1;
 	end
 	else begin
