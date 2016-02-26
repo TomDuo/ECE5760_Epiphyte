@@ -42,8 +42,8 @@ wire signed [17:0] g1 = 18'h0_0800;
 wire signed [17:0] g2 = 18'h0_0800;
 
 
-wire signed [17:0] d2_x1_dt2;
-wire signed [17:0] d2_x2_dt2;
+wire signed [20:0] d2_x1_dt2;
+wire signed [20:0] d2_x2_dt2;
 
 wire signed [17:0] d_x1_dt;
 wire signed [17:0] d_x2_dt;
@@ -63,7 +63,7 @@ wire signed [17:0] g2_x2_d1;
 wire signed [17:0] k1_x1;
 wire signed [17:0] g1_x1_d1;
 
-reg [3:0] drawCount;
+reg [4:0] drawCount;
 wire [19:0] positive_x1 = x1 + 19'h1_ffff;
 wire [19:0] positive_x2 = x2 + 19'h1_ffff;
 wire [8:0]  truncated_x1 = positive_x1[19:11]; 
@@ -127,7 +127,7 @@ always @(posedge AnalogClock)
 begin
 	if(reset || nios_reset) begin
 		time_index <= 10'd0;
-		drawCount  <= 4'd0;
+		drawCount  <=0;
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
@@ -169,10 +169,11 @@ signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 assign d2_x1_dt2 = kmid_x2minusx1+k1_x1+g1_x1_d1;
 assign d2_x2_dt2 = kmid_x2minusx1+k2_x2+g2_x2_d1;
 
-integrator i_x1_21(
+integrator #(.functwidth(21)) i_x1_21
+(
   .out(d_x1_dt),         //the state variable V
   .funct(d2_x1_dt2),    //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
+  .dt(4'd8),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
   .InitialOut(v1_init)
@@ -181,16 +182,17 @@ integrator i_x1_21(
 integrator i_x1_10(
   .out(x1),         //the state variable V
   .funct(d_x1_dt),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
+  .dt(4'd8),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
   .InitialOut(x1_init)
   );
 
-integrator i_x2_21(
+integrator #(.functwidth(21)) i_x2_21 
+(
   .out(d_x2_dt),         //the state variable V
   .funct(d2_x2_dt2),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
+  .dt(4'd8),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
   .InitialOut(v2_init)
@@ -199,9 +201,9 @@ integrator i_x2_21(
 integrator i_x2_10(
   .out(x2),         //the state variable V
   .funct(d_x2_dt),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
+  .dt(4'd8),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
-  .InitialOut(x1_init)
+  .InitialOut(x2_init)
   );
 endmodule
