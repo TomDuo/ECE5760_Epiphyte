@@ -112,7 +112,7 @@ begin
   else if (writeTraceSelect)
 	  begin
 	  	write_xCoord <= time_index;
-		write_yCoord <= yTrace1_vga_clk;
+		write_yCoord <= yTrace2_vga_clk;
 		disp_bit <= 2'b10;
 
 	  writeTraceSelect <= 0;
@@ -131,25 +131,8 @@ begin
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
-        //yTrace1 <= $signed(x1_height + $signed(x1)>>>16);
-        //yTrace2 <= $signed(x2_height + $signed(x2)>>>16);
-        yTrace1 <= positive_x1 >> 11; 
-        yTrace2 <= (positive_x2 >> 11) + 9'd240; 
-
-        /*
-        if(x1[17]) begin
-		yTrace1 <= x1_height - x1//{4'b0, ~x1[16:13]};
-        end
-        else begin
-        yTrace1 <= x1_height + {4'b0, x1[16:13]};
-        end
-        if(x1[17]) begin
-        yTrace2 <= x2_height - {4'b0, ~x1[16:13]};
-        end
-        else begin
-        yTrace2 <= x2_height + {4'b0, x1[16:13]};
-        end
-        */
+        yTrace1 <= x1_height + x1[17:10]; 
+        yTrace2 <= x2_height + x2[17:10];
 		drawCount <= drawCount + 2'b1;
 	end
 	else begin
@@ -160,10 +143,10 @@ end
 
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
-signed_mult5760 k1_x1_mul(k1_x1,k1,(18'h3_ffff-x1));
+signed_mult5760 k1_x1_mul(k1_x1,k1,(18'h3_0000-x1));
 signed_mult5760 g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
-signed_mult5760 k2_x2_mul(k2_x2,k2,(18'h1_ffff-x2));
+signed_mult5760 k2_x2_mul(k2_x2,k2,(18'h1_0000-x2));
 signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 
 assign d2_x1_dt2 = kmid_x2minusx1+k1_x1-g1_x1_d1;

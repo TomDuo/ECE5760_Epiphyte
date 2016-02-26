@@ -23,7 +23,7 @@ module top;
   wire  w_en;
 
   reg  [17:0] k1   = 18'h0_4000; //1
-  reg  [17:0] kmid = 18'h0_4000; //1
+  reg  [17:0] kmid = 18'h0_0000; //1
   reg  [17:0] k2   = 18'h0_4000; //1
 
   //These initial conditions simulate x0_symm from Osc_euler.m
