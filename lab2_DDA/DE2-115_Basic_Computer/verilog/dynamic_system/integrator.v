@@ -11,7 +11,7 @@ module integrator(out,funct,InitialOut,dt,clk,reset);
   
   always @ (posedge clk) 
   begin
-    if (reset==0) //reset  
+    if (reset==1) //reset  
       v1 <= InitialOut ; // 
     else 
       v1 <= v1new ;  

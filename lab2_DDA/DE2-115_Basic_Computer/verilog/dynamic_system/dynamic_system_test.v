@@ -3,7 +3,7 @@
 //========================================================================
 
 `include "eulersillator.v"
-
+`timescale 10ns/1ns
 
  
 module top;
@@ -68,7 +68,7 @@ eulersillator eulers_oscillator
     #11;
     reset = 1'b0;
 
-    repeat(100000) begin 
+    repeat(500000) begin 
     #10;
     end
        // Test cases
