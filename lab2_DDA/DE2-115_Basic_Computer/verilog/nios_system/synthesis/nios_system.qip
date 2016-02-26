@@ -2,7 +2,7 @@ set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL_VERSION "13.0"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL_ENV "Qsys"
 set_global_assignment -library "nios_system" -name SOPCINFO_FILE [file join $::quartus(qip_path) "../../nios_system.sopcinfo"]
-set_instance_assignment -entity "nios_system" -library "nios_system" -name SLD_INFO "QSYS_NAME nios_system HAS_SOPCINFO 1 GENERATION_ID 1455908844"
+set_instance_assignment -entity "nios_system" -library "nios_system" -name SLD_INFO "QSYS_NAME nios_system HAS_SOPCINFO 1 GENERATION_ID 1456523459"
 set_global_assignment -library "nios_system" -name MISC_FILE [file join $::quartus(qip_path) "../../nios_system.cmp"]
 set_global_assignment -name SYNTHESIS_ONLY_QIP ON
 set_global_assignment -library "nios_system" -name MISC_FILE [file join $::quartus(qip_path) "../../nios_system.qsys"]
@@ -31,6 +31,7 @@ set_global_assignment -library "nios_system" -name SYSTEMVERILOG_FILE [file join
 set_global_assignment -library "nios_system" -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_merlin_master_agent.sv"]
 set_global_assignment -library "nios_system" -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_merlin_slave_translator.sv"]
 set_global_assignment -library "nios_system" -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_merlin_master_translator.sv"]
+set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_DDA_Options.v"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_sysid.v"]
 set_global_assignment -library "nios_system" -name SDC_FILE [file join $::quartus(qip_path) "submodules/nios_system_CPU.sdc"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_CPU.v"]
@@ -44,11 +45,6 @@ set_global_assignment -library "nios_system" -name SOURCE_FILE [file join $::qua
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_CPU_test_bench.v"]
 set_global_assignment -library "nios_system" -name SOURCE_FILE [file join $::quartus(qip_path) "submodules/nios_system_Onchip_memory.hex"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_Onchip_memory.v"]
-set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_up_rs232_counters.v"]
-set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_up_rs232_in_deserializer.v"]
-set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_up_rs232_out_serializer.v"]
-set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/altera_up_sync_fifo.v"]
-set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_Serial_Port.v"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_HEX3_HEX0.v"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_Green_LEDs.v"]
 set_global_assignment -library "nios_system" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/nios_system_SDRAM.v"]

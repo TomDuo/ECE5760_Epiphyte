@@ -133,8 +133,8 @@ begin
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
-        yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:11] : $unsigned(x1_height)  + x1_abs[17:11]; 
-        yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:11] : $unsigned(x2_height) + x2_abs[17:11];
+        yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:11] : $unsigned(x1_height)  + x1_abs[17:10]; 
+        yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:11] : $unsigned(x2_height) + x2_abs[17:10];
 		drawCount <= drawCount + 2'b1;
 	end
 	else begin

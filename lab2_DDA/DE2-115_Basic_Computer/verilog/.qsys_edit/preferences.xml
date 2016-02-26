@@ -5,15 +5,17 @@
   <columns>
    <connections preferredWidth="127" />
    <irq preferredWidth="34" />
+   <export preferredWidth="221" />
   </columns>
  </systemtable>
  <clocktable>
   <columns>
-   <clockname preferredWidth="335" />
-   <clocksource preferredWidth="334" />
-   <frequency preferredWidth="315" />
+   <clockname preferredWidth="287" />
+   <clocksource preferredWidth="287" />
+   <frequency preferredWidth="270" />
   </columns>
  </clocktable>
- <library expandedCategories="Project,Library" />
+ <library
+   expandedCategories="Library/Qsys Interconnect,Project,Library,Library/University Program/Generic IO,Library/University Program,Library/Peripherals,Library/Configuration &amp; Programming,Library/DSP,Library/Peripherals/Debug and Performance,Library/Microcontroller Peripherals" />
  <window width="1296" height="1000" x="-8" y="-8" />
 </preferences>
