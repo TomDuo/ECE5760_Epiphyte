@@ -15,27 +15,29 @@ module top;
 
   // Instaniate the design under test
 
-  logic nios_reset = 1;    
-  logic reset = 1;
-  logic w_en;
+  reg  nios_reset = 1;    
+  reg  reset = 1;
+  wire  w_en;
 
-  logic [17:0] k1   = 18'h1_0000; //1
-  logic [17:0] kmid = 18'h1_0000; //1
-  logic [17:0] k2   = 18'h1_0000; //1
+  reg  [17:0] k1   = 18'h1_0000; //1
+  reg  [17:0] kmid = 18'h1_0000; //1
+  reg  [17:0] k2   = 18'h1_0000; //1
 
   //These initial conditions simulate x0_symm from Osc_euler.m
-  logic [17:0] x1_init =  18'h3_8000; //-.5
-  logic [17:0] v1_init =  18'h0_0000; //  0
+  reg  [17:0] x1_init =  18'h3_8000; //-.5
+  reg  [17:0] v1_init =  18'h0_0000; //  0
   
-  logic [17:0] x2_init =  18'h0_8000; // .5
-  logic [17:0] v2_init =  18'h0_0000; //  0
+  reg  [17:0] x2_init =  18'h0_8000; // .5
+  reg  [17:0] v2_init =  18'h0_0000; //  0
+  wire [17:0] x1;
+  wire [17:0] x2;
   
 
 eulersillator eulers_oscillator
 (
     .CLOCK_50(clk),
     .reset(reset),
-    .nios_reset(nios_reset),
+    .nios_reset(reset),
     
     .k1(k1),
     .kmid(kmid),

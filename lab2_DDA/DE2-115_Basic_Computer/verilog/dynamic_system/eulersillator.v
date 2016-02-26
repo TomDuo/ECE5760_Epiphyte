@@ -31,10 +31,10 @@ output wire signed   [17:0] x2,
 //VGA interface
 input  wire [9:0] o_xCoord,
 input  wire [8:0] o_yCoord,
-output wire [9:0] vga_xCoord,
-output wire [8:0] vga_yCoord,
-output wire       w_en,
-output wire       disp_bit 
+output reg  [9:0] vga_xCoord,
+output reg  [8:0] vga_yCoord,
+output reg       w_en,
+output reg       disp_bit 
 );
 
 reg [4:0] count;
@@ -44,8 +44,15 @@ wire AnalogClock;
 // analog update divided clock
 always @ (posedge CLOCK_50) 
 begin
+  if (nios_reset || reset)
+  begin
+      count <= 5'd0;
+  end
+  else begin
   count <= count + 1; 
+  end
 end  
+assign AnalogClock = (count == 5'd0);
 
 // figure out your VGA life
 always @ (posedge VGA_CTRL_CLK)
@@ -96,7 +103,6 @@ wire signed [17:0] g2 = 18'h3FF;
 reg signed  [17:0] v1 = 18'h3FF;
 reg signed  [17:0] v2 = 18'h3FF;
 
-assign w_en = vga_xCoord < vga_width;
 
 wire signed [17:0] x1_d2;
 wire signed [17:0] x1_d1;
