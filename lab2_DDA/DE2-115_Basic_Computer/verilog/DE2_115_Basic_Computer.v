@@ -17,7 +17,7 @@ module DE2_115_Basic_Computer (
   output [6:0]  HEX0,        // Seven Segment Digit 0
   output [6:0]  HEX1,        // Seven Segment Digit 1
   output [6:0]  HEX2,        // Seven Segment Digit 2
-  output [6:0]  HEX3,        // Seven Segment Digit 3
+  output [6:0]  HEX3,        // Seven S egment Digit 3
   output [6:0]  HEX4,        // Seven Segment Digit 4
   output [6:0]  HEX5,        // Seven Segment Digit 5
   output [6:0]  HEX6,        // Seven Segment Digit 6
@@ -231,12 +231,26 @@ module DE2_115_Basic_Computer (
 
 
 
+//	For Delay Timer
+wire			DLY0;
+wire			DLY1;
+wire			DLY2;
+
+
+//	Reset Delay Timer
+Reset_Delay			u3	(	.iCLK(CLOCK_50),
+							.iRST(KEY[1]),
+							.oRST_0(DLY0),  // Delay by 0.0026 sec
+							.oRST_1(DLY1),  // Delay by 0.0039 sec
+							.oRST_2(DLY2)); // Delay by 0.0838 sec
+
   ///////////////////////////////////////
   // Main program
   ///////////////////////////////////////
 
   assign TD_RESET_N = 1'b1;  // Enable 27MHz Clock
-/*****************************************************************************
+
+  /*****************************************************************************
  *                 Internal Wires and Registers Declarations                 *
  *****************************************************************************/
 // Internal Wires
@@ -303,38 +317,35 @@ nios_system NiosII (
 sdram_pll neg_3ns (CLOCK_50, DRAM_CLK, system_clock);
 
 wire	VGA_CTRL_CLK;
-wire	DLY_RST;
 
 
-Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
+vga_pll 		p1	(	.areset(~DLY0),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1());
 
-vga_pll 		p1	(	.areset(~DLY_RST),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1(VGA_CLK));
+wire		[10:0]	VGA_X;
+wire		[10:0]	VGA_Y; 				
+JULIE	julies_vga_ctrl	(	
+	//	Host Side
+	.iRed 		(mVGA_R),
+	.iGreen 	(mVGA_G),
+	.iBlue 		(mVGA_B),
+	.oCurrent_X (VGA_X),
+	.oCurrent_Y (VGA_Y),
+	//.oAddress 	(VGA_Addr_full_d0), 
+	//.oRequest 	(VGA_Read),
+	//	VGA Side
+	.oVGA_R 	(VGA_R),
+	.oVGA_G 	(VGA_G),
+	.oVGA_B 	(VGA_B),
+	.oVGA_HS 	(VGA_HS),
+	.oVGA_VS 	(VGA_VS),
+	.oVGA_SYNC 	(VGA_SYNC_N),
+	.oVGA_BLANK (VGA_BLANK_N),
+	.oVGA_CLOCK (VGA_CLK),
+	//	Control Signal
+	.iCLK 		(VGA_CTRL_CLK),
+	.iRST_N 	(DLY2)	
+);
 
-
-VGA_Controller		u1	(	//	Host Side
-							.iCursor_RGB_EN(4'b0111),
-							.oAddress(mVGA_ADDR),
-							.oCoord_X(Coord_X),
-							.oCoord_Y(Coord_Y),
-							.iRed(mVGA_R),
-							.iGreen(mVGA_G),
-							.iBlue(mVGA_B),
-							//	VGA Side
-							.oVGA_R(VGA_R),
-							.oVGA_G(VGA_G),
-							.oVGA_B(VGA_B),
-							.oVGA_H_SYNC(VGA_HS),
-							.oVGA_V_SYNC(VGA_VS),
-							.oVGA_SYNC(VGA_SYNC),
-							.oVGA_BLANK(VGA_BLANK),
-							//	Control Signal
-							.iCLK(VGA_CTRL_CLK),
-							.iRST_N(DLY_RST)	);
-wire VGA_SYNC;
-wire VGA_BLANK;
-
-assign VGA_SYNC_N = ~VGA_SYNC;
-assign VGA_BLANK_N = ~VGA_BLANK;
 wire [9:0]	mVGA_R;				//memory output to VGA
 wire [9:0]	mVGA_G;
 wire [9:0]	mVGA_B;
@@ -393,9 +404,8 @@ reg [31:0] LFSR;
 reg generation_old;
 
 // make the color white
-assign  mVGA_R = 10'd716;
-assign  mVGA_G = 10'd108;
-
+assign  mVGA_R = (VGA_X > 400) ? 10'd716 : 10'd0;
+assign  mVGA_G = (VGA_X > 400) ? 10'd0 : 10'd716;
 assign  mVGA_B = 10'd108;
 //assign HEX0 = 7'h7F;
 
@@ -405,9 +415,9 @@ assign reset = ~KEY[0];
 //right-most bit for rand number shift regs
 //your basic XOR random # gen
 	 //Drive LEDs
-hex_7seg(SW[3:0],HEX5);
-hex_7seg(SW[7:4],HEX6);
-hex_7seg({2'b00,state},HEX7);
+hex_7seg hex5_ctrl(SW[3:0],HEX5);
+hex_7seg hex6_ctrl(SW[7:4],HEX6);
+hex_7seg hex7_ctrl({2'b00,state},HEX7);
 
 assign LEDR[7] = reset;
 assign LEDR[6] = generation;

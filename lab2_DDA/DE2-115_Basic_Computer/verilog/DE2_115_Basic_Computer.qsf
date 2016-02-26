@@ -1191,7 +1191,7 @@ set_global_assignment -name USE_CONFIGURATION_DEVICE ON
 set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS64
 
 
-set_global_assignment -name LAST_QUARTUS_VERSION 12.1
+set_global_assignment -name LAST_QUARTUS_VERSION 13.0
 
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -1212,17 +1212,6 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name VERILOG_FILE hex_7seg.v
-set_global_assignment -name VERILOG_FILE VGA_Controller/vga_pll.v
-set_global_assignment -name VERILOG_FILE Reset_Delay.v
-set_global_assignment -name SOURCE_FILE VGA_Controller/VGA_Param.h
-set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
-set_global_assignment -name QIP_FILE sdram_pll.qip
-set_global_assignment -name QIP_FILE nios_system/synthesis/nios_system.qip
-set_global_assignment -name VERILOG_FILE DE2_115_Basic_Computer.v
-set_global_assignment -name QIP_FILE VGA_Controller/vga_pll.qip
-set_global_assignment -name QIP_FILE vga_buffer.qip
-set_global_assignment -name SIP_FILE vga_buffer.sip
 set_location_assignment PIN_A17 -to ENET0_GTX_CLK
 set_instance_assignment -name IO_STANDARD "2.5 V" -to ENET0_GTX_CLK
 set_location_assignment PIN_A21 -to ENET0_INT_N
@@ -1341,4 +1330,19 @@ set_location_assignment PIN_H5 -to PS2_DAT
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT
 set_location_assignment PIN_F5 -to PS2_DAT2
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT2
+set_global_assignment -name VERILOG_FILE VGA_Controller/JULIE.v
+set_global_assignment -name VERILOG_FILE dynamic_system/signed_mult5760.v
+set_global_assignment -name VERILOG_FILE dynamic_system/integrator.v
+set_global_assignment -name VERILOG_FILE dynamic_system/eulersillator.v
+set_global_assignment -name VERILOG_FILE hex_7seg.v
+set_global_assignment -name VERILOG_FILE VGA_Controller/vga_pll.v
+set_global_assignment -name VERILOG_FILE Reset_Delay.v
+set_global_assignment -name SOURCE_FILE VGA_Controller/VGA_Param.h
+set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
+set_global_assignment -name QIP_FILE sdram_pll.qip
+set_global_assignment -name QIP_FILE nios_system/synthesis/nios_system.qip
+set_global_assignment -name VERILOG_FILE DE2_115_Basic_Computer.v
+set_global_assignment -name QIP_FILE VGA_Controller/vga_pll.qip
+set_global_assignment -name QIP_FILE vga_buffer.qip
+set_global_assignment -name SIP_FILE vga_buffer.sip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

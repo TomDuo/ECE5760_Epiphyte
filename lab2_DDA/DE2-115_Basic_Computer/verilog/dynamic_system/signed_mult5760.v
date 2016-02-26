@@ -1,4 +1,5 @@
-module signed_mult (out, a, b);
+
+module signed_mult5760 (out, a, b);
 
   output     [17:0]  out;
   input   signed  [17:0]   a;

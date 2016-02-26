@@ -1,5 +1,3 @@
-`include "signed_mult.v"
-`include "integrator.v"
 
 module eulersillator
 #(
@@ -110,19 +108,19 @@ wire signed [17:0] d_x2_dt;
 
 // mid term multiplication
 wire signed [17:0] kmid_x2minusx1;
-signed_mult kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
+signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
 // x1 term multiplication
 wire signed [17:0] k1_x1;
-signed_mult k1_x1_mul(k1_x1,k1,x1);
+signed_mult5760 k1_x1_mul(k1_x1,k1,x1);
 wire signed [17:0] g1_x1_d1;
-signed_mult g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
+signed_mult5760 g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
 // x2 term multiplication
 wire signed [17:0] k2_x2;
-signed_mult k2_x2_mul(k2_x2,k2,x2);
+signed_mult5760 k2_x2_mul(k2_x2,k2,x2);
 wire signed [17:0] g2_x2_d1;
-signed_mult g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
+signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 
 assign d2_x1_dt2 = kmid_x2minusx1+k1_x1+g1_x1_d1;
 assign d2_x2_dt2 = kmid_x2minusx1+k2_x2+g2_x2_d1;
