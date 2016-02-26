@@ -246,14 +246,6 @@
          type = "long";
       }
    }
-   element DDA_Options.avalon_parallel_port_slave
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-   }
    element Expansion_JP5.avalon_parallel_port_slave
    {
       datum _lockedAddress
@@ -518,19 +510,14 @@
   <port name="HEX3_from_the_HEX3_HEX0" internal="HEX3" />
  </interface>
  <interface
-   name="dda_options_avalon_parallel_port_slave"
-   internal="DDA_Options.avalon_parallel_port_slave"
-   type="avalon"
-   dir="end" />
- <interface
    name="dda_options_external_interface"
    internal="DDA_Options.external_interface"
    type="conduit"
    dir="end" />
  <interface
-   name="dda_options_clock_reset_reset"
-   internal="DDA_Options.clock_reset_reset"
-   type="reset"
+   name="dda_options_avalon_parallel_port_slave"
+   internal="DDA_Options.avalon_parallel_port_slave"
+   type="avalon"
    dir="end" />
  <module kind="clock_source" version="13.0" enabled="1" name="clk">
   <parameter name="clockFrequency" value="50000000" />
@@ -888,7 +875,7 @@
   <parameter name="tightlyCoupledInstructionMaster2AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster3AddrWidth" value="1" />
   <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s1' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /></address-map>]]></parameter>
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='DDA_Options.avalon_parallel_port_slave' start='0x10000030' end='0x10000040' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></parameter>
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="deviceFamilyName" value="Cyclone IV E" />
   <parameter name="internalIrqMaskSystemInfo" value="256" />
@@ -1323,6 +1310,20 @@
    version="13.0"
    start="clk.clk"
    end="DDA_Options.clock_reset" />
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="CPU.data_master"
+   end="DDA_Options.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x10000030" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="reset"
+   version="13.0"
+   start="clk.clk_reset"
+   end="DDA_Options.clock_reset_reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="0" />
 </system>

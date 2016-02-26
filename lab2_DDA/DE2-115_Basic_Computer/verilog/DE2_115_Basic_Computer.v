@@ -279,12 +279,14 @@ wire				system_clock;
 /*****************************************************************************
  *                              Internal Modules                             *
  *****************************************************************************/
+ 
+ wire [21:0] dda_opts;
 nios_system NiosII (
 	// 1) global signals:
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
-	
+	.DDA_Options_external_interface(dda_opts),
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -309,9 +311,6 @@ nios_system NiosII (
 	.zs_we_n_from_the_SDRAM					(DRAM_WE_N),
 	
 
-	// the_Serial_port
-	.UART_RXD_to_the_Serial_Port			(UART_RXD),
-	.UART_TXD_from_the_Serial_Port			(UART_TXD),
 	);
 
 sdram_pll neg_3ns (CLOCK_50, DRAM_CLK, system_clock);
@@ -444,8 +443,8 @@ assign reset = ~KEY[0];
 //right-most bit for rand number shift regs
 //your basic XOR random # gen
 	 //Drive LEDs
-hex_7seg hex5_ctrl(SW[3:0],HEX5);
-hex_7seg hex6_ctrl(SW[7:4],HEX6);
+//hex_7seg hex5_ctrl(SW[3:0],HEX5);
+hex_7seg hex6_ctrl(dda_opts[3:0],HEX6);
 
 assign LEDR[7] = reset;
 

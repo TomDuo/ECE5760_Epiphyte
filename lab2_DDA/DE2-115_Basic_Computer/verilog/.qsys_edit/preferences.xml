@@ -18,4 +18,5 @@
  <library
    expandedCategories="Library/Qsys Interconnect,Project,Library,Library/University Program/Generic IO,Library/University Program,Library/Peripherals,Library/Configuration &amp; Programming,Library/DSP,Library/Peripherals/Debug and Performance,Library/Microcontroller Peripherals" />
  <window width="1296" height="1000" x="-8" y="-8" />
+ <hdlexample language="VERILOG" />
 </preferences>

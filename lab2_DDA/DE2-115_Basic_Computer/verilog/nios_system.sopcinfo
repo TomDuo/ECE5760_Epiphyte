@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="nios_system" kind="nios_system" version="1.0" fabric="QSYS">
  <!-- Format version 13.0 156 (Future versions may contain additional information.) -->
- <!-- 2016.02.26.16:50:59 -->
+ <!-- 2016.02.26.16:59:20 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1456523459</value>
+  <value>1456523960</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -5626,7 +5626,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="dataSlaveMapParam">
    <type>java.lang.String</type>
-   <value><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></value>
+   <value><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='DDA_Options.avalon_parallel_port_slave' start='0x10000030' end='0x10000040' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6227,6 +6227,14 @@ parameters are a RESULT of the module parameters. -->
     <name>Onchip_memory.s2</name>
     <baseAddress>150994944</baseAddress>
     <span>8192</span>
+   </memoryBlock>
+   <memoryBlock>
+    <isBridge>false</isBridge>
+    <moduleName>DDA_Options</moduleName>
+    <slaveName>avalon_parallel_port_slave</slaveName>
+    <name>DDA_Options.avalon_parallel_port_slave</name>
+    <baseAddress>268435504</baseAddress>
+    <span>16</span>
    </memoryBlock>
   </interface>
   <interface name="instruction_master" kind="avalon_master" version="13.0">
@@ -7154,7 +7162,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1456523459</value>
+   <value>1456523960</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.id</name>
@@ -7162,7 +7170,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1456523459</value>
+   <value>1456523960</value>
   </assignment>
   <parameter name="id">
    <type>int</type>
@@ -7174,7 +7182,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1456523459</value>
+   <value>1456523960</value>
    <derived>false</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -9550,8 +9558,86 @@ parameters are a RESULT of the module parameters. -->
   <endModule>DDA_Options</endModule>
   <endConnectionPoint>clock_reset</endConnectionPoint>
  </connection>
+ <connection
+   name="CPU.data_master/DDA_Options.avalon_parallel_port_slave"
+   kind="avalon"
+   version="13.0"
+   start="CPU.data_master"
+   end="DDA_Options.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority">
+   <type>int</type>
+   <value>1</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="baseAddress">
+   <type>java.math.BigInteger</type>
+   <value>0x10000030</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="defaultConnection">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>CPU</startModule>
+  <startConnectionPoint>data_master</startConnectionPoint>
+  <endModule>DDA_Options</endModule>
+  <endConnectionPoint>avalon_parallel_port_slave</endConnectionPoint>
+ </connection>
+ <connection
+   name="clk.clk_reset/DDA_Options.clock_reset_reset"
+   kind="reset"
+   version="13.0"
+   start="clk.clk_reset"
+   end="DDA_Options.clock_reset_reset">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>clk</startModule>
+  <startConnectionPoint>clk_reset</startConnectionPoint>
+  <endModule>DDA_Options</endModule>
+  <endConnectionPoint>clock_reset_reset</endConnectionPoint>
+ </connection>
  <plugin>
-  <instanceCount>16</instanceCount>
+  <instanceCount>17</instanceCount>
   <name>reset</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>
@@ -9647,7 +9733,7 @@ parameters are a RESULT of the module parameters. -->
   <version>13.0</version>
  </plugin>
  <plugin>
-  <instanceCount>10</instanceCount>
+  <instanceCount>11</instanceCount>
   <name>avalon</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>
