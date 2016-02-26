@@ -104,10 +104,12 @@ reg signed  [17:0] v1 = 18'h3FF;
 reg signed  [17:0] v2 = 18'h3FF;
 
 
-wire signed [17:0] x1_d2;
-wire signed [17:0] x1_d1;
-wire signed [17:0] x2_d2;
-wire signed [17:0] x2_d1;
+wire signed [17:0] d2_x1_dt2;
+wire signed [17:0] d2_x2_dt2;
+
+wire signed [17:0] d_x1_dt;
+wire signed [17:0] d_x2_dt;
+
 
 // mid term multiplication
 wire signed [17:0] kmid_x2minusx1;
@@ -117,17 +119,20 @@ signed_mult kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 wire signed [17:0] k1_x1;
 signed_mult k1_x1_mul(k1_x1,k1,x1);
 wire signed [17:0] g1_x1_d1;
-signed_mult g1_x1_d1_mul(g1_x1_d1,g1,x1_d1);
+signed_mult g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
 // x2 term multiplication
 wire signed [17:0] k2_x2;
 signed_mult k2_x2_mul(k2_x2,k2,x2);
 wire signed [17:0] g2_x2_d1;
-signed_mult g2_x2_d1_mul(g2_x2_d1,g2,x2_d1);
+signed_mult g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
+
+assign d2_x1_dt2 = kmid_x2minusx1+k1_x1+g1_x1_d1;
+assign d2_x2_dt2 = kmid_x2minusx1+k2_x2+g2_x2_d1;
 
 integrator i_x1_21(
-  .out(x1_d1),         //the state variable V
-  .funct(kmid_x2minusx1+k1_x1+g1_x1_d1),    //the dV/dt function
+  .out(d_x1_dt),         //the state variable V
+  .funct(d2_x1_dt2),    //the dV/dt function
   .dt(4'd9),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
@@ -136,7 +141,7 @@ integrator i_x1_21(
 
 integrator i_x1_10(
   .out(x1),         //the state variable V
-  .funct(x1_d1),      //the dV/dt function
+  .funct(d_x1_dt),      //the dV/dt function
   .dt(4'd9),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
@@ -144,8 +149,8 @@ integrator i_x1_10(
   );
 
 integrator i_x2_21(
-  .out(x2_d1),         //the state variable V
-  .funct(kmid_x2minusx1+k2_x2+g2_x2_d1),      //the dV/dt function
+  .out(d_x2_dt),         //the state variable V
+  .funct(d2_x2_dt2),      //the dV/dt function
   .dt(4'd9),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),
@@ -154,7 +159,7 @@ integrator i_x2_21(
 
 integrator i_x2_10(
   .out(x2),         //the state variable V
-  .funct(x2_d1),      //the dV/dt function
+  .funct(d_x2_dt),      //the dV/dt function
   .dt(4'd9),        // in units of SHIFT-right
   .clk(AnalogClock),
   .reset(nios_reset),

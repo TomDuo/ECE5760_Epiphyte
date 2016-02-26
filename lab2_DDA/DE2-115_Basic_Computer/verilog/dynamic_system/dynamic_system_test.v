@@ -1,5 +1,5 @@
 //========================================================================
-// RandomNumberGenerator Testing, adapted from Tutorial 4: regincr-iverilog-sim.v 
+// dynamic_system_test.v Testing, adapted from Tutorial 4: regincr-iverilog-sim.v 
 //========================================================================
 
 `include "eulersillator.v"
