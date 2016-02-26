@@ -123,8 +123,8 @@ begin
 		time_index <= time_index + 10'd1;
         //yTrace1 <= $signed(x1_height + $signed(x1)>>>16);
         //yTrace2 <= $signed(x2_height + $signed(x2)>>>16);
-        yTrace1 <= truncated_x1; 
-        yTrace2 <= truncated_x2 + 9'd240; 
+        yTrace1 <= positive_x1 >> 11; 
+        yTrace2 <= (positive_x2 >> 11) + 9'd240; 
 
         /*
         if(x1[17]) begin
