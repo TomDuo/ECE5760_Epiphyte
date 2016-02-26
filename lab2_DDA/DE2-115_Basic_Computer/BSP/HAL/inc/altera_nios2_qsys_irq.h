@@ -2,7 +2,7 @@
 *                                                                             *
 * License Agreement                                                           *
 *                                                                             *
-* Copyright (c) 2003,2007 Altera Corporation, San Jose, California, USA.      *
+* Copyright (c) 2009 Altera Corporation, San Jose, California, USA.           *
 * All rights reserved.                                                        *
 *                                                                             *
 * Permission is hereby granted, free of charge, to any person obtaining a     *
@@ -28,22 +28,53 @@
 *                                                                             *
 ******************************************************************************/
 
-#include "sys/alt_cache.h"
-#include "system.h"
-
-#ifdef NIOS2_MMU_PRESENT
-/* Convert KERNEL region address to IO region address */
-#define BYPASS_DCACHE_MASK   (0x1 << 29)
-#else
-/* Set bit 31 of address to bypass D-cache */
-#define BYPASS_DCACHE_MASK   (0x1 << 31)
-#endif
-
 /*
- * Free a block of uncached memory.
+ * Support for the Nios II internal interrupt controller.
  */
 
-void alt_uncached_free (volatile void* ptr)
+#ifndef __ALT_NIOS2_QSYS_IRQ_H__
+#define __ALT_NIOS2_QSYS_IRQ_H__
+
+#ifdef __cplusplus
+extern "C"
 {
-  free ((void*) (((alt_u32) ptr) & ~BYPASS_DCACHE_MASK));
+#endif /* __cplusplus */
+
+/*
+ * The macro ALTERA_NIOS2_IRQ_INSTANCE is used by the alt_irq_init()
+ * function in the auto-generated file alt_sys_init.c to create an
+ * instance of this interrupt controller device driver state if this
+ * module contains an interrupt controller.
+ * Only one instance of a Nios II is allowed so this macro is just empty.
+ */
+
+#define ALTERA_NIOS2_QSYS_IRQ_INSTANCE(name, state)
+
+/*
+ * altera_nios2_irq_init() is called by the auto-generated function 
+ * alt_irq_init() once for the Nios II if it contains an interrupt controller.
+ * The altera_nios2_irq_init() routine is called using the 
+ * ALTERA_NIOS2_IRQ_INIT macro given below.
+ *
+ * This function initializes the internal interrupt controller
+ * so is not called if the Nios II contains an external interrupt
+ * controller port (because the internal interrupt controller
+ * is removed if this port is present).
+ */
+
+extern void altera_nios2_qsys_irq_init( void );
+
+/*
+ * The macro ALTERA_NIOS2_IRQ_INIT is used by the alt_irq_init() routine
+ * in the auto-generated file alt_sys_init.c to initialize an instance
+ * of the interrupt controller device driver state.
+ */
+
+#define ALTERA_NIOS2_QSYS_IRQ_INIT(name, state) altera_nios2_qsys_irq_init()
+
+#ifdef __cplusplus
 }
+#endif /* __cplusplus */
+
+#endif /* __ALT_NIOS2_QSYS_IRQ_H__ */
+

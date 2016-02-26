@@ -1,10 +1,10 @@
 /*
  * system.h - SOPC Builder system and BSP software package information
  *
- * Machine generated for CPU 'Nios2' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/altera/15.0/University_Program/Computer_Systems/DE2-115/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
  *
- * Generated: Fri Feb 19 14:14:11 EST 2016
+ * Generated: Fri Feb 26 18:28:12 EST 2016
  */
 
 /*
@@ -60,10 +60,9 @@
  *
  */
 
-#define ALT_CPU_ARCHITECTURE "altera_nios2_gen2"
+#define ALT_CPU_ARCHITECTURE "altera_nios2_qsys"
 #define ALT_CPU_BIG_ENDIAN 0
 #define ALT_CPU_BREAK_ADDR 0x0a000020
-#define ALT_CPU_CPU_ARCH_NIOS2_R1
 #define ALT_CPU_CPU_FREQ 50000000u
 #define ALT_CPU_CPU_ID_SIZE 1
 #define ALT_CPU_CPU_ID_VALUE 0x00000000
@@ -73,8 +72,6 @@
 #define ALT_CPU_DCACHE_LINE_SIZE_LOG2 0
 #define ALT_CPU_DCACHE_SIZE 0
 #define ALT_CPU_EXCEPTION_ADDR 0x00000020
-#define ALT_CPU_FLASH_ACCELERATOR_LINES 0
-#define ALT_CPU_FLASH_ACCELERATOR_LINE_SIZE 0
 #define ALT_CPU_FLUSHDA_SUPPORTED
 #define ALT_CPU_FREQ 50000000
 #define ALT_CPU_HARDWARE_DIVIDE_PRESENT 0
@@ -82,14 +79,12 @@
 #define ALT_CPU_HARDWARE_MULX_PRESENT 0
 #define ALT_CPU_HAS_DEBUG_CORE 1
 #define ALT_CPU_HAS_DEBUG_STUB
-#define ALT_CPU_HAS_ILLEGAL_INSTRUCTION_EXCEPTION
 #define ALT_CPU_HAS_JMPI_INSTRUCTION
 #define ALT_CPU_ICACHE_LINE_SIZE 0
 #define ALT_CPU_ICACHE_LINE_SIZE_LOG2 0
 #define ALT_CPU_ICACHE_SIZE 0
 #define ALT_CPU_INST_ADDR_WIDTH 0x1c
-#define ALT_CPU_NAME "Nios2"
-#define ALT_CPU_OCI_VERSION 1
+#define ALT_CPU_NAME "CPU"
 #define ALT_CPU_RESET_ADDR 0x00000000
 
 
@@ -100,7 +95,6 @@
 
 #define NIOS2_BIG_ENDIAN 0
 #define NIOS2_BREAK_ADDR 0x0a000020
-#define NIOS2_CPU_ARCH_NIOS2_R1
 #define NIOS2_CPU_FREQ 50000000u
 #define NIOS2_CPU_ID_SIZE 1
 #define NIOS2_CPU_ID_VALUE 0x00000000
@@ -110,32 +104,32 @@
 #define NIOS2_DCACHE_LINE_SIZE_LOG2 0
 #define NIOS2_DCACHE_SIZE 0
 #define NIOS2_EXCEPTION_ADDR 0x00000020
-#define NIOS2_FLASH_ACCELERATOR_LINES 0
-#define NIOS2_FLASH_ACCELERATOR_LINE_SIZE 0
 #define NIOS2_FLUSHDA_SUPPORTED
 #define NIOS2_HARDWARE_DIVIDE_PRESENT 0
 #define NIOS2_HARDWARE_MULTIPLY_PRESENT 0
 #define NIOS2_HARDWARE_MULX_PRESENT 0
 #define NIOS2_HAS_DEBUG_CORE 1
 #define NIOS2_HAS_DEBUG_STUB
-#define NIOS2_HAS_ILLEGAL_INSTRUCTION_EXCEPTION
 #define NIOS2_HAS_JMPI_INSTRUCTION
 #define NIOS2_ICACHE_LINE_SIZE 0
 #define NIOS2_ICACHE_LINE_SIZE_LOG2 0
 #define NIOS2_ICACHE_SIZE 0
 #define NIOS2_INST_ADDR_WIDTH 0x1c
-#define NIOS2_OCI_VERSION 1
 #define NIOS2_RESET_ADDR 0x00000000
 
 
 /*
- * Custom instruction macros
+ * DDA_Options configuration
  *
  */
 
-#define ALT_CI_NIOS2_FLOATING_POINT(n,A,B) __builtin_custom_inii(ALT_CI_NIOS2_FLOATING_POINT_N+(n&ALT_CI_NIOS2_FLOATING_POINT_N_MASK),(A),(B))
-#define ALT_CI_NIOS2_FLOATING_POINT_N 0xfc
-#define ALT_CI_NIOS2_FLOATING_POINT_N_MASK ((1<<2)-1)
+#define ALT_MODULE_CLASS_DDA_Options altera_up_avalon_parallel_port
+#define DDA_OPTIONS_BASE 0x10000030
+#define DDA_OPTIONS_IRQ -1
+#define DDA_OPTIONS_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define DDA_OPTIONS_NAME "/dev/DDA_Options"
+#define DDA_OPTIONS_SPAN 16
+#define DDA_OPTIONS_TYPE "altera_up_avalon_parallel_port"
 
 
 /*
@@ -145,27 +139,10 @@
 
 #define __ALTERA_AVALON_JTAG_UART
 #define __ALTERA_AVALON_NEW_SDRAM_CONTROLLER
+#define __ALTERA_AVALON_ONCHIP_MEMORY2
 #define __ALTERA_AVALON_SYSID_QSYS
-#define __ALTERA_AVALON_TIMER
-#define __ALTERA_NIOS2_GEN2
-#define __ALTERA_NIOS_CUSTOM_INSTR_FLOATING_POINT
+#define __ALTERA_NIOS2_QSYS
 #define __ALTERA_UP_AVALON_PARALLEL_PORT
-#define __ALTERA_UP_AVALON_RS232
-#define __ALTERA_UP_AVALON_SRAM
-
-
-/*
- * Expansion_JP5 configuration
- *
- */
-
-#define ALT_MODULE_CLASS_Expansion_JP5 altera_up_avalon_parallel_port
-#define EXPANSION_JP5_BASE 0x10000060
-#define EXPANSION_JP5_IRQ 11
-#define EXPANSION_JP5_IRQ_INTERRUPT_CONTROLLER_ID 0
-#define EXPANSION_JP5_NAME "/dev/Expansion_JP5"
-#define EXPANSION_JP5_SPAN 16
-#define EXPANSION_JP5_TYPE "altera_up_avalon_parallel_port"
 
 
 /*
@@ -197,46 +174,6 @@
 
 
 /*
- * HEX7_HEX4 configuration
- *
- */
-
-#define ALT_MODULE_CLASS_HEX7_HEX4 altera_up_avalon_parallel_port
-#define HEX7_HEX4_BASE 0x10000030
-#define HEX7_HEX4_IRQ -1
-#define HEX7_HEX4_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define HEX7_HEX4_NAME "/dev/HEX7_HEX4"
-#define HEX7_HEX4_SPAN 16
-#define HEX7_HEX4_TYPE "altera_up_avalon_parallel_port"
-
-
-/*
- * Interval_Timer configuration
- *
- */
-
-#define ALT_MODULE_CLASS_Interval_Timer altera_avalon_timer
-#define INTERVAL_TIMER_ALWAYS_RUN 0
-#define INTERVAL_TIMER_BASE 0x10002000
-#define INTERVAL_TIMER_COUNTER_SIZE 32
-#define INTERVAL_TIMER_FIXED_PERIOD 0
-#define INTERVAL_TIMER_FREQ 50000000
-#define INTERVAL_TIMER_IRQ 0
-#define INTERVAL_TIMER_IRQ_INTERRUPT_CONTROLLER_ID 0
-#define INTERVAL_TIMER_LOAD_VALUE 6249999
-#define INTERVAL_TIMER_MULT 0.001
-#define INTERVAL_TIMER_NAME "/dev/Interval_Timer"
-#define INTERVAL_TIMER_PERIOD 125.0
-#define INTERVAL_TIMER_PERIOD_UNITS "ms"
-#define INTERVAL_TIMER_RESET_OUTPUT 0
-#define INTERVAL_TIMER_SNAPSHOT 1
-#define INTERVAL_TIMER_SPAN 32
-#define INTERVAL_TIMER_TICKS_PER_SEC 8
-#define INTERVAL_TIMER_TIMEOUT_PULSE_OUTPUT 0
-#define INTERVAL_TIMER_TYPE "altera_avalon_timer"
-
-
-/*
  * JTAG_UART configuration
  *
  */
@@ -255,31 +192,32 @@
 
 
 /*
- * Pushbuttons configuration
+ * Onchip_memory configuration
  *
  */
 
-#define ALT_MODULE_CLASS_Pushbuttons altera_up_avalon_parallel_port
-#define PUSHBUTTONS_BASE 0x10000050
-#define PUSHBUTTONS_IRQ 1
-#define PUSHBUTTONS_IRQ_INTERRUPT_CONTROLLER_ID 0
-#define PUSHBUTTONS_NAME "/dev/Pushbuttons"
-#define PUSHBUTTONS_SPAN 16
-#define PUSHBUTTONS_TYPE "altera_up_avalon_parallel_port"
-
-
-/*
- * Red_LEDs configuration
- *
- */
-
-#define ALT_MODULE_CLASS_Red_LEDs altera_up_avalon_parallel_port
-#define RED_LEDS_BASE 0x10000000
-#define RED_LEDS_IRQ -1
-#define RED_LEDS_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define RED_LEDS_NAME "/dev/Red_LEDs"
-#define RED_LEDS_SPAN 16
-#define RED_LEDS_TYPE "altera_up_avalon_parallel_port"
+#define ALT_MODULE_CLASS_Onchip_memory altera_avalon_onchip_memory2
+#define ONCHIP_MEMORY_ALLOW_IN_SYSTEM_MEMORY_CONTENT_EDITOR 0
+#define ONCHIP_MEMORY_ALLOW_MRAM_SIM_CONTENTS_ONLY_FILE 0
+#define ONCHIP_MEMORY_BASE 0x9000000
+#define ONCHIP_MEMORY_CONTENTS_INFO ""
+#define ONCHIP_MEMORY_DUAL_PORT 1
+#define ONCHIP_MEMORY_GUI_RAM_BLOCK_TYPE "AUTO"
+#define ONCHIP_MEMORY_INIT_CONTENTS_FILE "nios_system_Onchip_memory"
+#define ONCHIP_MEMORY_INIT_MEM_CONTENT 1
+#define ONCHIP_MEMORY_INSTANCE_ID "NONE"
+#define ONCHIP_MEMORY_IRQ -1
+#define ONCHIP_MEMORY_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define ONCHIP_MEMORY_NAME "/dev/Onchip_memory"
+#define ONCHIP_MEMORY_NON_DEFAULT_INIT_FILE_ENABLED 0
+#define ONCHIP_MEMORY_RAM_BLOCK_TYPE "AUTO"
+#define ONCHIP_MEMORY_READ_DURING_WRITE_MODE "DONT_CARE"
+#define ONCHIP_MEMORY_SINGLE_CLOCK_OP 0
+#define ONCHIP_MEMORY_SIZE_MULTIPLE 1
+#define ONCHIP_MEMORY_SIZE_VALUE 8192
+#define ONCHIP_MEMORY_SPAN 8192
+#define ONCHIP_MEMORY_TYPE "altera_avalon_onchip_memory2"
+#define ONCHIP_MEMORY_WRITABLE 1
 
 
 /*
@@ -308,7 +246,7 @@
 #define SDRAM_SDRAM_NUM_CHIPSELECTS 1
 #define SDRAM_SDRAM_ROW_WIDTH 13
 #define SDRAM_SHARED_DATA 0
-#define SDRAM_SIM_MODEL_BASE 1
+#define SDRAM_SIM_MODEL_BASE 0
 #define SDRAM_SPAN 134217728
 #define SDRAM_STARVATION_INDICATOR 0
 #define SDRAM_TRISTATE_BRIDGE_SLAVE ""
@@ -322,71 +260,13 @@
 
 
 /*
- * SRAM configuration
- *
- */
-
-#define ALT_MODULE_CLASS_SRAM altera_up_avalon_sram
-#define SRAM_BASE 0x8000000
-#define SRAM_IRQ -1
-#define SRAM_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define SRAM_NAME "/dev/SRAM"
-#define SRAM_SPAN 2097152
-#define SRAM_TYPE "altera_up_avalon_sram"
-
-
-/*
- * Serial_Port configuration
- *
- */
-
-#define ALT_MODULE_CLASS_Serial_Port altera_up_avalon_rs232
-#define SERIAL_PORT_BASE 0x10001010
-#define SERIAL_PORT_IRQ 10
-#define SERIAL_PORT_IRQ_INTERRUPT_CONTROLLER_ID 0
-#define SERIAL_PORT_NAME "/dev/Serial_Port"
-#define SERIAL_PORT_SPAN 8
-#define SERIAL_PORT_TYPE "altera_up_avalon_rs232"
-
-
-/*
- * Slider_Switches configuration
- *
- */
-
-#define ALT_MODULE_CLASS_Slider_Switches altera_up_avalon_parallel_port
-#define SLIDER_SWITCHES_BASE 0x10000040
-#define SLIDER_SWITCHES_IRQ -1
-#define SLIDER_SWITCHES_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define SLIDER_SWITCHES_NAME "/dev/Slider_Switches"
-#define SLIDER_SWITCHES_SPAN 16
-#define SLIDER_SWITCHES_TYPE "altera_up_avalon_parallel_port"
-
-
-/*
- * SysID configuration
- *
- */
-
-#define ALT_MODULE_CLASS_SysID altera_avalon_sysid_qsys
-#define SYSID_BASE 0x10002020
-#define SYSID_ID 0
-#define SYSID_IRQ -1
-#define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define SYSID_NAME "/dev/SysID"
-#define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1433781685
-#define SYSID_TYPE "altera_avalon_sysid_qsys"
-
-
-/*
  * System configuration
  *
  */
 
 #define ALT_DEVICE_FAMILY "Cyclone IV E"
+#define ALT_ENHANCED_INTERRUPT_API_PRESENT
 #define ALT_IRQ_BASE NULL
-#define ALT_LEGACY_INTERRUPT_API_PRESENT
 #define ALT_LOG_PORT "/dev/null"
 #define ALT_LOG_PORT_BASE 0x0
 #define ALT_LOG_PORT_DEV null
@@ -420,9 +300,24 @@
  *
  */
 
-#define ALT_INCLUDE_INSTRUCTION_RELATED_EXCEPTION_API
 #define ALT_MAX_FD 32
-#define ALT_SYS_CLK INTERVAL_TIMER
+#define ALT_SYS_CLK none
 #define ALT_TIMESTAMP_CLK none
+
+
+/*
+ * sysid configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_sysid altera_avalon_sysid_qsys
+#define SYSID_BASE 0x10002020
+#define SYSID_ID 0
+#define SYSID_IRQ -1
+#define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define SYSID_NAME "/dev/sysid"
+#define SYSID_SPAN 8
+#define SYSID_TIMESTAMP 1456528145
+#define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 #endif /* __SYSTEM_H_ */

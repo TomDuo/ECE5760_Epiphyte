@@ -220,19 +220,6 @@
          type = "long";
       }
    }
-   element Red_LEDs.avalon_parallel_port_slave
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "268435456";
-         type = "long";
-      }
-   }
    element HEX3_HEX0.avalon_parallel_port_slave
    {
       datum _lockedAddress
@@ -246,7 +233,7 @@
          type = "long";
       }
    }
-   element Expansion_JP5.avalon_parallel_port_slave
+   element Red_LEDs.avalon_parallel_port_slave
    {
       datum _lockedAddress
       {
@@ -255,7 +242,7 @@
       }
       datum baseAddress
       {
-         value = "268435552";
+         value = "268435456";
          type = "long";
       }
    }
@@ -272,7 +259,7 @@
          type = "long";
       }
    }
-   element Green_LEDs.avalon_parallel_port_slave
+   element HEX7_HEX4.avalon_parallel_port_slave
    {
       datum _lockedAddress
       {
@@ -281,7 +268,20 @@
       }
       datum baseAddress
       {
-         value = "268435472";
+         value = "268435504";
+         type = "long";
+      }
+   }
+   element Expansion_JP5.avalon_parallel_port_slave
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "268435552";
          type = "long";
       }
    }
@@ -298,7 +298,7 @@
          type = "long";
       }
    }
-   element HEX7_HEX4.avalon_parallel_port_slave
+   element Green_LEDs.avalon_parallel_port_slave
    {
       datum _lockedAddress
       {
@@ -307,7 +307,7 @@
       }
       datum baseAddress
       {
-         value = "268435504";
+         value = "268435472";
          type = "long";
       }
    }
@@ -332,20 +332,20 @@
          type = "boolean";
       }
    }
-   element clk.clk
-   {
-      datum clock_domain
-      {
-         value = "clk";
-         type = "String";
-      }
-   }
    element clk
    {
       datum _sortIndex
       {
          value = "15";
          type = "int";
+      }
+   }
+   element clk.clk
+   {
+      datum clock_domain
+      {
+         value = "clk";
+         type = "String";
       }
    }
    element sysid.control_slave
@@ -374,19 +374,6 @@
          type = "long";
       }
    }
-   element Onchip_memory.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "150994944";
-         type = "long";
-      }
-   }
    element SDRAM.s1
    {
       datum _lockedAddress
@@ -410,6 +397,19 @@
       datum baseAddress
       {
          value = "268443648";
+         type = "long";
+      }
+   }
+   element Onchip_memory.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "150994944";
          type = "long";
       }
    }
@@ -449,7 +449,7 @@
  <parameter name="projectName">DE2_115_Basic_Computer.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1456523063492" />
+ <parameter name="timeStamp" value="1456528033064" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="SDRAM_wire" internal="SDRAM.wire" type="conduit" dir="end">
@@ -513,11 +513,6 @@
    name="dda_options_external_interface"
    internal="DDA_Options.external_interface"
    type="conduit"
-   dir="end" />
- <interface
-   name="dda_options_avalon_parallel_port_slave"
-   internal="DDA_Options.avalon_parallel_port_slave"
-   type="avalon"
    dir="end" />
  <module kind="clock_source" version="13.0" enabled="1" name="clk">
   <parameter name="clockFrequency" value="50000000" />
@@ -1311,6 +1306,11 @@
    start="clk.clk"
    end="DDA_Options.clock_reset" />
  <connection
+   kind="reset"
+   version="13.0"
+   start="clk.clk_reset"
+   end="DDA_Options.clock_reset_reset" />
+ <connection
    kind="avalon"
    version="13.0"
    start="CPU.data_master"
@@ -1319,11 +1319,6 @@
   <parameter name="baseAddress" value="0x10000030" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection
-   kind="reset"
-   version="13.0"
-   start="clk.clk_reset"
-   end="DDA_Options.clock_reset_reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="0" />
 </system>

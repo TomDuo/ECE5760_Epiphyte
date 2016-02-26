@@ -286,7 +286,7 @@ nios_system NiosII (
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
-	.DDA_Options_external_interface(dda_opts),
+	.dda_options_external_interface_export(dda_opts),
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 

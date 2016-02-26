@@ -1,10 +1,10 @@
 /*
  * linker.x - Linker script
  *
- * Machine generated for CPU 'Nios2' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/altera/15.0/University_Program/Computer_Systems/DE2-115/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
  *
- * Generated: Fri Feb 19 14:14:11 EST 2016
+ * Generated: Fri Feb 26 18:28:12 EST 2016
  */
 
 /*
@@ -52,10 +52,12 @@ MEMORY
 {
     reset : ORIGIN = 0x0, LENGTH = 32
     SDRAM : ORIGIN = 0x20, LENGTH = 134217696
+    Onchip_memory : ORIGIN = 0x9000000, LENGTH = 8192
 }
 
 /* Define symbols for each memory base-address */
 __alt_mem_SDRAM = 0x0;
+__alt_mem_Onchip_memory = 0x9000000;
 
 OUTPUT_FORMAT( "elf32-littlenios2",
                "elf32-littlenios2",
@@ -319,6 +321,23 @@ SECTIONS
     } > SDRAM
 
     PROVIDE (_alt_partition_SDRAM_load_addr = LOADADDR(.SDRAM));
+
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .Onchip_memory : AT ( LOADADDR (.SDRAM) + SIZEOF (.SDRAM) )
+    {
+        PROVIDE (_alt_partition_Onchip_memory_start = ABSOLUTE(.));
+        *(.Onchip_memory .Onchip_memory. Onchip_memory.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_Onchip_memory_end = ABSOLUTE(.));
+    } > Onchip_memory
+
+    PROVIDE (_alt_partition_Onchip_memory_load_addr = LOADADDR(.Onchip_memory));
 
     /*
      * Stabs debugging sections.

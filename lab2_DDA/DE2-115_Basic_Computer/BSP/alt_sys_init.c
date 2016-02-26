@@ -1,10 +1,10 @@
 /*
  * alt_sys_init.c - HAL initialization source
  *
- * Machine generated for CPU 'Nios2' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/altera/15.0/University_Program/Computer_Systems/DE2-115/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
  *
- * Generated: Fri Feb 19 14:14:11 EST 2016
+ * Generated: Fri Feb 26 18:28:12 EST 2016
  */
 
 /*
@@ -58,29 +58,21 @@
  * Device headers
  */
 
-#include "altera_nios2_gen2_irq.h"
+#include "altera_nios2_qsys_irq.h"
 #include "altera_avalon_jtag_uart.h"
 #include "altera_avalon_sysid_qsys.h"
-#include "altera_avalon_timer.h"
 #include "altera_up_avalon_parallel_port.h"
-#include "altera_up_avalon_rs232.h"
 
 /*
  * Allocate the device storage
  */
 
-ALTERA_NIOS2_GEN2_IRQ_INSTANCE ( NIOS2, Nios2);
+ALTERA_NIOS2_QSYS_IRQ_INSTANCE ( CPU, CPU);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART, JTAG_UART);
-ALTERA_AVALON_SYSID_QSYS_INSTANCE ( SYSID, SysID);
-ALTERA_AVALON_TIMER_INSTANCE ( INTERVAL_TIMER, Interval_Timer);
-ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( EXPANSION_JP5, Expansion_JP5);
+ALTERA_AVALON_SYSID_QSYS_INSTANCE ( SYSID, sysid);
+ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( DDA_OPTIONS, DDA_Options);
 ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( GREEN_LEDS, Green_LEDs);
 ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( HEX3_HEX0, HEX3_HEX0);
-ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( HEX7_HEX4, HEX7_HEX4);
-ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( PUSHBUTTONS, Pushbuttons);
-ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( RED_LEDS, Red_LEDs);
-ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( SLIDER_SWITCHES, Slider_Switches);
-ALTERA_UP_AVALON_RS232_INSTANCE ( SERIAL_PORT, Serial_Port);
 
 /*
  * Initialize the interrupt controller devices
@@ -92,7 +84,7 @@ ALTERA_UP_AVALON_RS232_INSTANCE ( SERIAL_PORT, Serial_Port);
 
 void alt_irq_init ( const void* base )
 {
-    ALTERA_NIOS2_GEN2_IRQ_INIT ( NIOS2, Nios2);
+    ALTERA_NIOS2_QSYS_IRQ_INIT ( CPU, CPU);
     alt_irq_cpu_enable_interrupts();
 }
 
@@ -103,15 +95,9 @@ void alt_irq_init ( const void* base )
 
 void alt_sys_init( void )
 {
-    ALTERA_AVALON_TIMER_INIT ( INTERVAL_TIMER, Interval_Timer);
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART, JTAG_UART);
-    ALTERA_AVALON_SYSID_QSYS_INIT ( SYSID, SysID);
-    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( EXPANSION_JP5, Expansion_JP5);
+    ALTERA_AVALON_SYSID_QSYS_INIT ( SYSID, sysid);
+    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( DDA_OPTIONS, DDA_Options);
     ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( GREEN_LEDS, Green_LEDs);
     ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( HEX3_HEX0, HEX3_HEX0);
-    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( HEX7_HEX4, HEX7_HEX4);
-    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( PUSHBUTTONS, Pushbuttons);
-    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( RED_LEDS, Red_LEDs);
-    ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( SLIDER_SWITCHES, Slider_Switches);
-    ALTERA_UP_AVALON_RS232_INIT ( SERIAL_PORT, Serial_Port);
 }

@@ -1,10 +1,10 @@
 /*
  * linker.h - Linker script mapping information
  *
- * Machine generated for CPU 'Nios2' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/altera/15.0/University_Program/Computer_Systems/DE2-115/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
  *
- * Generated: Fri Feb 19 14:14:11 EST 2016
+ * Generated: Fri Feb 26 18:28:12 EST 2016
  */
 
 /*
@@ -65,6 +65,8 @@
  *
  */
 
+#define ONCHIP_MEMORY_REGION_BASE 0x9000000
+#define ONCHIP_MEMORY_REGION_SPAN 8192
 #define RESET_REGION_BASE 0x0
 #define RESET_REGION_SPAN 32
 #define SDRAM_REGION_BASE 0x20
