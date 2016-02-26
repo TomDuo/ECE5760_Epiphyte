@@ -77,7 +77,7 @@ eulersillator eulers_oscillator
     #11;
     reset = 1'b0;
 
-    repeat(2000000) begin 
+    repeat(1000000) begin 
     #10;
     vga_x = vga_x + 10'd1;
     if(vga_x >= 640) begin
