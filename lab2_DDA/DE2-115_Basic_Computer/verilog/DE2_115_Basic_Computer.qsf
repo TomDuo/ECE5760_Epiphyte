@@ -1330,6 +1330,7 @@ set_location_assignment PIN_H5 -to PS2_DAT
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT
 set_location_assignment PIN_F5 -to PS2_DAT2
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to PS2_DAT2
+set_global_assignment -name VERILOG_FILE dynamic_system/cross_clocker.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/JULIE.v
 set_global_assignment -name VERILOG_FILE dynamic_system/signed_mult5760.v
 set_global_assignment -name VERILOG_FILE dynamic_system/integrator.v

@@ -4,13 +4,13 @@ module integrator #(
 parameter functwidth = 18
 )
 (
-  output [17:0] out,         //the state variable V
+  output wire signed [17:0] out,         //the state variable V
   input signed [functwidth-1:0] funct,      //the dV/dt function
   input [3:0] dt ,        // in units of SHIFT-right
   input clk, reset,
   input signed [17:0] InitialOut //the initial state variable V
   );  
-  wire signed  [17:0] out, v1new ;
+  wire signed  [17:0]  v1new ;
   reg signed  [17:0] v1 ;
   
   always @ (posedge clk) 
