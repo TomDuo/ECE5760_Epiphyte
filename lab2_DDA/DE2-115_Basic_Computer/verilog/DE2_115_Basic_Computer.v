@@ -321,8 +321,8 @@ wire	VGA_CTRL_CLK;
 
 vga_pll 		p1	(	.areset(~DLY0),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1());
 
-wire		[10:0]	VGA_X;
-wire		[10:0]	VGA_Y; 				
+wire		[9:0]	VGA_X;
+wire		[8:0]	VGA_Y; 				
 JULIE	julies_vga_ctrl	(	
 	//	Host Side
 	.iRed 		(mVGA_R),
@@ -346,29 +346,15 @@ JULIE	julies_vga_ctrl	(
 	.iRST_N 	(DLY2)	
 );
 
-wire [9:0]	mVGA_R;				//memory output to VGA
-wire [9:0]	mVGA_G;
-wire [9:0]	mVGA_B;
-wire [19:0]	mVGA_ADDR;			//video memory address
-wire [9:0]  Coord_X, Coord_Y;	//display coods
-reg [9:0]  edit_X;
-reg [8:0]  edit_Y;	
+reg [7:0]	mVGA_R;				//memory output to VGA
+reg [7:0]	mVGA_G;
+reg [7:0]	mVGA_B;
+
 
 ////////////////////////////////////
 //CA state machine variables
 wire reset;
-wire generation;
-assign generation = ~KEY[1];
-reg [1:0] state;	//state machine
-reg [1:0] nextState;
 
-
-localparam s_init = 2'b00;
-localparam s_generate = 2'b01;
-localparam s_write = 2'b10;
-localparam s_debounce = 2'b11;
-reg [8:0] vCounter;
-reg [9:0] hCounter;
 
 localparam SCREEN_WIDTH = 10'd640;
 localparam SCREEN_HEIGHT= 10'd480;
@@ -393,20 +379,63 @@ reg [SCREEN_WIDTH-1:0] nextGen;
 // -- use m4k a for state machine
 // -- use m4k b for VGA refresh
 
+wire [9:0] eulers_Xcoord;
+wire [8:0] eulers_Ycoord;
+hotter_buffer buffbuffbuff(
+	.address_a({eulers_Xcoord,eulers_Ycoord}),
+	.address_b({VGA_X,VGA_Y}),
+	.clock(VGA_CTRL_CLK),
+	.data_a(disp_bits),
+	//.data_b,
+	.wren_a(wren_a),
+	.wren_b(1'b0),
+	//.q_a,
+	.q_b(buff_out)
+);
+wire wren_a;
+wire [1:0] buff_out;
+wire [1:0] mem_bits ; //current data from m4k to VGA
+reg  [1:0] disp_bits ; // registered data from m4k to VGA
 
-wire mem_bit ; //current data from m4k to VGA
-reg disp_bit ; // registered data from m4k to VGA
 wire state_bit ; // current data from m4k to state machine
 reg we ; // write enable for a
 reg [18:0] addr_reg ; // for a
 reg data_reg ; // for a
 reg [31:0] LFSR;
 reg generation_old;
+localparam bufwhite = 2'b00;
+localparam buftrace1 = 2'b01;
+localparam buftrace2 = 2'b10;
+localparam special = 2'b11;
 
 // make the color white
-assign  mVGA_R = (VGA_X > 400) ? 10'd716 : 10'd0;
-assign  mVGA_G = (VGA_X > 400) ? 10'd0 : 10'd716;
-assign  mVGA_B = 10'd108;
+always @(*) begin
+case(buff_out)
+	bufwhite: begin
+	mVGA_R <= 8'd255;
+	mVGA_G <= 8'd255;
+	mVGA_B <= 8'd255;
+	end
+	buftrace1: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd255;
+	end
+	buftrace2: begin
+	mVGA_R <= 8'd255;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd0;
+	end
+	default: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd0;
+	end
+endcase
+end
+
+
+
 //assign HEX0 = 7'h7F;
 
 // DLA state machine
@@ -417,17 +446,41 @@ assign reset = ~KEY[0];
 	 //Drive LEDs
 hex_7seg hex5_ctrl(SW[3:0],HEX5);
 hex_7seg hex6_ctrl(SW[7:4],HEX6);
-hex_7seg hex7_ctrl({2'b00,state},HEX7);
 
 assign LEDR[7] = reset;
-assign LEDR[6] = generation;
 
+eulersillator snoopDoggWiggleWiggle (
+.CLOCK_50(CLOCK_50),
+.VGA_CTRL_CLK(VGA_CTRL_CLK),
+.reset(reset),
+
+//NIOS II Inputs
+.nios_reset(reset),
+
+.k1(18'h1_0000),
+.kmid(18'h1_0000),
+.k2(18'h1_0000),
+.kcubic(18'd0),
+
+.x1_init(18'h3_8000),
+.x2_init(18'h0_8000),
+.v1_init(18'h1_0000),
+.v2_init(18'h1_0000),
+
+//VGA interface
+.display_xCoord(VGA_X),
+.display_yCoord(VGA_Y),
+.write_xCoord(eulers_Xcoord),
+.write_yCoord(eulers_Ycoord),
+.w_en(wren_a),
+.disp_bit(mem_bits) 
+);
 
 always @ (negedge VGA_CTRL_CLK)
 begin
 	// register the m4k output for better timing on VGA
 	// negedge seems to work better than posedge
-	disp_bit <= mem_bit;
+	disp_bits <= mem_bits;
 end
 
 

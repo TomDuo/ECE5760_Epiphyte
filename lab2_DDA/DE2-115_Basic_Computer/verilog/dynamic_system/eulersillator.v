@@ -2,8 +2,8 @@
 module eulersillator
 #(
 parameter vga_width = 640,
-parameter x1_height = 160,
-parameter x2_height = 480
+parameter x1_height = 120,
+parameter x2_height = 360
 )
 (
 input CLOCK_50,
@@ -27,18 +27,37 @@ output wire signed   [17:0] x1,
 output wire signed   [17:0] x2,
 
 //VGA interface
-input  wire [9:0] o_xCoord,
-input  wire [8:0] o_yCoord,
-output reg  [9:0] vga_xCoord,
-output reg  [8:0] vga_yCoord,
-output reg       w_en,
-output reg       disp_bit 
+input  wire [9:0] display_xCoord,
+input  wire [8:0] display_yCoord,
+output reg  [9:0] write_xCoord,
+output reg  [8:0] write_yCoord,
+output reg        w_en,
+output reg  [1:0] disp_bit 
 );
 
 reg [4:0] count;
-reg [1:0] VGA_flag;
 wire AnalogClock;
 
+wire signed [17:0] g1 = 18'h0_0800;
+wire signed [17:0] g2 = 18'h0_0800;
+
+
+wire signed [17:0] d2_x1_dt2;
+wire signed [17:0] d2_x2_dt2;
+
+wire signed [17:0] d_x1_dt;
+wire signed [17:0] d_x2_dt;
+
+
+// mid term multiplication
+wire signed [17:0] kmid_x2minusx1;
+
+reg [8:0] yTrace1 ;
+reg [8:0] yTrace2 ;
+
+reg [9:0] time_index ;
+
+reg writeTraceSelect;
 // analog update divided clock
 always @ (posedge CLOCK_50) 
 begin
@@ -56,58 +75,53 @@ assign AnalogClock = (count == 5'd0);
 always @ (posedge VGA_CTRL_CLK)
 begin
   if (nios_reset || reset)
-  begin
-    w_en <= 1;
-    vga_xCoord <= o_xCoord;
-    vga_yCoord <= o_yCoord;
-    disp_bit <= 1;
-    vga_xCoord <= 0;
-  end
-  else if (vga_xCoord > 640)
-  begin
-    w_en <= 0;
-  end
-  else if (VGA_flag == 2'd2)
-  begin
-    VGA_flag <= 2'd1;
-    vga_xCoord <= vga_xCoord + 1;
-    vga_yCoord <= x1_height + x1[17:13];
-    w_en <= 1;
-    disp_bit <= 0;
-  end
-  else if (VGA_flag == 2'd1)
-  begin
-    VGA_flag <= 2'd0;
-    vga_yCoord <= x2_height + x2[17:13];
-    w_en <= 1;
-    disp_bit <= 0;
-  end
+	  begin
+		 w_en <= 1;
+		 write_xCoord <= display_xCoord;
+		 write_yCoord <= display_yCoord;
+		 disp_bit <= 2'b00;
+		 writeTraceSelect <= 0;
+		 //vga_xCoord <= 0;
+	  end
+  else if (~writeTraceSelect)
+	  begin
+		write_xCoord <= time_index;
+		write_yCoord <= yTrace2;
+		 disp_bit <= 2'b01;
+
+		writeTraceSelect <= 1;
+	  end
+  else if (writeTraceSelect)
+	  begin
+	  	write_xCoord <= time_index;
+		write_yCoord <= yTrace1;
+		disp_bit <= 2'b10;
+
+	  writeTraceSelect <= 0;
+	  end
   else
-  begin
-    w_en <= 0;
-  end
+	  begin
+		 w_en <= 0;
+	  end
 end
 
+reg [1:0] drawCount;
 always @(posedge AnalogClock)
 begin
-  VGA_flag <= 2'd2;  
+	if(reset || nios_reset) begin
+		time_index <= 10'd0;
+	end
+	else if (time_index < vga_width && drawCount == 0) begin
+		time_index <= time_index + 10'd1;
+		yTrace1 <= x1_height; //+ x1[17:11];
+	   yTrace2 <= x2_height;// + x2[17:11];
+	end
+	else begin
+		drawCount <= drawCount + 2'b1;
+	end
 end
 
-assign AnalogClock = (count==0);  
 
-wire signed [17:0] g1 = 18'h0_0800;
-wire signed [17:0] g2 = 18'h0_0800;
-
-
-wire signed [17:0] d2_x1_dt2;
-wire signed [17:0] d2_x2_dt2;
-
-wire signed [17:0] d_x1_dt;
-wire signed [17:0] d_x2_dt;
-
-
-// mid term multiplication
-wire signed [17:0] kmid_x2minusx1;
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
 // x1 term multiplication
