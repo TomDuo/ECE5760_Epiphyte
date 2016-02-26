@@ -3,15 +3,18 @@
 //========================================================================
 
 `include "eulersillator.v"
-`timescale 10ns/1ns
+`timescale 10ps/1ps
 
  
 module top;
 
   // Clocking
 
-  logic clk = 1;
+  reg clk = 1;
   always #5 clk = ~clk;
+
+  reg clk27 = 1;
+  always #2 clk27 = ~clk27;
 
   // Instaniate the design under test
 
@@ -32,10 +35,13 @@ module top;
   wire [17:0] x1;
   wire [17:0] x2;
   
+  reg  [9:0]  vga_x;
+  reg  [8:0]  vga_y;
 
 eulersillator eulers_oscillator
 (
     .CLOCK_50(clk),
+    .VGA_CTRL_CLK(clk27),
     .reset(reset),
     .nios_reset(reset),
     
@@ -50,8 +56,10 @@ eulersillator eulers_oscillator
     .v2_init(v2_init),
 
     .x1(x1),
-    .x2(x2)
+    .x2(x2),
 
+    .display_xCoord(vga_x),
+    .display_yCoord(vga_y)
     //.vga_xCoord(vga_xCoord),
     //.w_en(w_en),
 
@@ -59,7 +67,8 @@ eulersillator eulers_oscillator
    initial begin
 
     // Dump waveforms
-
+    vga_x = 10'd0;
+    vga_y = 9'd0;
     $dumpfile("DDA-iverilog-sim.vcd");
     $dumpvars;
 
@@ -70,6 +79,16 @@ eulersillator eulers_oscillator
 
     repeat(500000) begin 
     #10;
+    vga_x = vga_x + 10'd1;
+    if(vga_x >= 640) begin
+        vga_x = 10'd0;
+        if(vga_y >= 480) begin
+            vga_y = 9'd0;
+        end
+        else begin
+            vga_y = vga_y + 9'd1;
+        end
+    end
     end
        // Test cases
     $finish;

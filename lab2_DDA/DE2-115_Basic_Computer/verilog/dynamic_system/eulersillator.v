@@ -56,6 +56,20 @@ reg [8:0] yTrace1 ;
 reg [8:0] yTrace2 ;
 
 reg [9:0] time_index ;
+// x2 term multiplication
+wire signed [17:0] k2_x2;
+wire signed [17:0] g2_x2_d1;
+// x1 term multiplication
+wire signed [17:0] k1_x1;
+wire signed [17:0] g1_x1_d1;
+
+reg [3:0] drawCount;
+wire [19:0] positive_x1 = x1 + 19'h1_ffff;
+wire [19:0] positive_x2 = x2 + 19'h1_ffff;
+wire [8:0]  truncated_x1 = positive_x1[19:11]; 
+wire [8:0]  truncated_x2 = positive_x2[19:11];
+
+
 
 reg writeTraceSelect;
 // analog update divided clock
@@ -71,6 +85,10 @@ begin
 end  
 assign AnalogClock = (count == 5'd0);
 
+wire [8:0] yTrace1_vga_clk;
+wire [8:0] yTrace2_vga_clk;
+cross_clocker cc1(VGA_CTRL_CLK,yTrace1,yTrace1_vga_clk);
+cross_clocker cc2(VGA_CTRL_CLK,yTrace2,yTrace2_vga_clk);
 // figure out your VGA life
 always @ (posedge VGA_CTRL_CLK)
 begin
@@ -86,7 +104,7 @@ begin
   else if (~writeTraceSelect)
 	  begin
 		write_xCoord <= time_index;
-		write_yCoord <= yTrace2;
+		write_yCoord <= yTrace1_vga_clk;
 		 disp_bit <= 2'b01;
 
 		writeTraceSelect <= 1;
@@ -94,7 +112,7 @@ begin
   else if (writeTraceSelect)
 	  begin
 	  	write_xCoord <= time_index;
-		write_yCoord <= yTrace1;
+		write_yCoord <= yTrace1_vga_clk;
 		disp_bit <= 2'b10;
 
 	  writeTraceSelect <= 0;
@@ -104,14 +122,6 @@ begin
 		 w_en <= 0;
 	  end
 end
-
-reg [3:0] drawCount;
-
-
-wire [19:0] positive_x1 = x1 + 19'h1_ffff;
-wire [19:0] positive_x2 = x2 + 19'h1_ffff;
-wire [8:0]  truncated_x1 = positive_x1[19:11]; 
-wire [8:0]  truncated_x2 = positive_x2[19:11];
 
 always @(posedge AnalogClock)
 begin
@@ -150,16 +160,10 @@ end
 
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
-// x1 term multiplication
-wire signed [17:0] k1_x1;
 signed_mult5760 k1_x1_mul(k1_x1,k1,x1);
-wire signed [17:0] g1_x1_d1;
 signed_mult5760 g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
-// x2 term multiplication
-wire signed [17:0] k2_x2;
 signed_mult5760 k2_x2_mul(k2_x2,k2,x2);
-wire signed [17:0] g2_x2_d1;
 signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 
 assign d2_x1_dt2 = kmid_x2minusx1+k1_x1+g1_x1_d1;
