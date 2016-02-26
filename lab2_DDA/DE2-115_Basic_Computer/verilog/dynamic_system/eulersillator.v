@@ -85,6 +85,8 @@ begin
 end  
 assign AnalogClock = (count == 5'd0);
 
+wire [17:0] x1_abs = x1[17] ? 17'd1 + ~x1 : x1;
+wire [17:0] x2_abs = x2[17] ? 17'd1 + ~x2 : x2;
 wire [8:0] yTrace1_vga_clk;
 wire [8:0] yTrace2_vga_clk;
 cross_clocker cc1(VGA_CTRL_CLK,yTrace1,yTrace1_vga_clk);
@@ -131,8 +133,8 @@ begin
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
-        yTrace1 <= x1_height + x1[17:10]; 
-        yTrace2 <= x2_height + x2[17:10];
+        yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:11] : $unsigned(x1_height)  + x1_abs[17:11]; 
+        yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:11] : $unsigned(x2_height) + x2_abs[17:11];
 		drawCount <= drawCount + 2'b1;
 	end
 	else begin

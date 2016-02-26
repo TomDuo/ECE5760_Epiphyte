@@ -22,16 +22,16 @@ module top;
   reg  reset = 1;
   wire  w_en;
 
-  reg  [17:0] k1   = 18'h0_4000; //1
-  reg  [17:0] kmid = 18'h0_0000; //1
-  reg  [17:0] k2   = 18'h0_4000; //1
+  reg  [17:0] k1   = 18'h1_0000; //1
+  reg  [17:0] kmid = 18'h1_0000; //1
+  reg  [17:0] k2   = 18'h1_0000; //1
 
   //These initial conditions simulate x0_symm from Osc_euler.m
-  reg  [17:0] x1_init =  18'h3_C000; //-.5
-  reg  [17:0] v1_init =  18'h0_0000; //  0
+  reg  [17:0] x1_init =  18'h3_8000; //-.5
+  reg  [17:0] v1_init =  18'h1_0000; //  0
   
-  reg  [17:0] x2_init =  18'h0_4000; // .5
-  reg  [17:0] v2_init =  18'h0_0000; //  0
+  reg  [17:0] x2_init =  18'h0_8000; // .5
+  reg  [17:0] v2_init =  18'h1_0000; //  0
   wire [17:0] x1;
   wire [17:0] x2;
   
