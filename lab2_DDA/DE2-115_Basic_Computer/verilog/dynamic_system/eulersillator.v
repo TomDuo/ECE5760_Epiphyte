@@ -107,8 +107,11 @@ end
 
 reg [3:0] drawCount;
 
-wire [8:0] sign_extended_x1 = { {3{x1[17]}}, x1[16:11]};
-wire [8:0] sign_extended_x2 = { {3{x2[17]}}, x2[16:11]};
+
+wire [19:0] positive_x1 = x1 + 19'h1_ffff;
+wire [19:0] positive_x2 = x2 + 19'h1_ffff;
+wire [8:0]  truncated_x1 = positive_x1[19:11]; 
+wire [8:0]  truncated_x2 = positive_x2[19:11];
 
 always @(posedge AnalogClock)
 begin
@@ -120,8 +123,8 @@ begin
 		time_index <= time_index + 10'd1;
         //yTrace1 <= $signed(x1_height + $signed(x1)>>>16);
         //yTrace2 <= $signed(x2_height + $signed(x2)>>>16);
-        yTrace1 <= sign_extended_x1 + x1_height;
-        yTrace2 <= sign_extended_x2 + x2_height;
+        yTrace1 <= truncated_x1; 
+        yTrace2 <= truncated_x2 + 9'd240; 
 
         /*
         if(x1[17]) begin
