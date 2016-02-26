@@ -97,11 +97,8 @@ end
 
 assign AnalogClock = (count==0);  
 
-wire signed [17:0] g1 = 18'h3FF;
-wire signed [17:0] g2 = 18'h3FF;
-
-reg signed  [17:0] v1 = 18'h3FF;
-reg signed  [17:0] v2 = 18'h3FF;
+wire signed [17:0] g1 = 18'h0_0800;
+wire signed [17:0] g2 = 18'h0_0800;
 
 
 wire signed [17:0] d2_x1_dt2;
