@@ -105,16 +105,22 @@ begin
 	  end
 end
 
-reg [1:0] drawCount;
+reg [3:0] drawCount;
+
+wire [8:0] sign_extended_x1 = { {2{x1[17]}}, x1[17:11]};
+wire [8:0] sign_extended_x2 = { {2{x2[17]}}, x2[17:11]};
+
 always @(posedge AnalogClock)
 begin
 	if(reset || nios_reset) begin
 		time_index <= 10'd0;
+		drawCount  <= 4'd0;
 	end
 	else if (time_index < vga_width && drawCount == 0) begin
 		time_index <= time_index + 10'd1;
-		yTrace1 <= x1_height; //+ x1[17:11];
-	   yTrace2 <= x2_height;// + x2[17:11];
+		yTrace1 <= x1_height + sign_extended_x1; //+ x1[17:11];
+	   yTrace2 <= x2_height + sign_extended_x2;// + x2[17:11];
+		drawCount <= drawCount + 2'b1;
 	end
 	else begin
 		drawCount <= drawCount + 2'b1;
