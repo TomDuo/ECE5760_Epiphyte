@@ -67,6 +67,8 @@ ABS_BSP_ROOT := $(call adjust-path-mixed,$(shell pwd))
 # Stash all BSP object files here
 OBJ_DIR := ./obj
 
+NEWLIB_DIR = $(BSP_ROOT_DIR)/newlib
+
 
 #------------------------------------------------------------------------------
 #                              MANAGED CONTENT
@@ -93,12 +95,12 @@ OBJ_DIR := ./obj
 
 # This following VERSION comment indicates the version of the tool used to 
 # generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 15.0
-ACDS_VERSION := 15.0
+# ACDS_VERSION: 13.0
+ACDS_VERSION := 13.0
 
 # This following BUILD_NUMBER comment indicates the build number of the tool 
 # used to generate this makefile. 
-# BUILD_NUMBER: 145
+# BUILD_NUMBER: 156
 
 SETTINGS_FILE := settings.bsp
 SOPC_FILE := C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
@@ -240,7 +242,6 @@ altera_nios2_qsys_hal_driver_C_LIB_SRCS := \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_dcache_flush.c \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_dcache_flush_all.c \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_dcache_flush_no_writeback.c \
-	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_ecc_fatal_exception.c \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_instruction_exception_entry.c \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_irq_register.c \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_iic.c \
@@ -253,7 +254,6 @@ altera_nios2_qsys_hal_driver_C_LIB_SRCS := \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_gmon.c
 
 altera_nios2_qsys_hal_driver_ASM_LIB_SRCS := \
-	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_ecc_fatal_entry.S \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_exception_entry.S \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_exception_trap.S \
 	$(altera_nios2_qsys_hal_driver_SRCS_ROOT)/src/alt_exception_muldiv.S \
@@ -743,8 +743,12 @@ ifneq ($(COMPILE_NEWLIB),)
 NEWLIB_FLAGS += $(BSP_CFLAGS)
 endif
 
-ifneq ($(NEWLIB_DIR),)
+ifneq ($(NEWLIB_FLAGS),)
+ALT_LIBRARY_DIRS += $(NEWLIB_DIR)/nios2-elf/lib
+endif
+
 $(NEWLIB_DIR):
+ifneq ($(NEWLIB_FLAGS),)
 	@$(ECHO) Creating $(NEWLIB_DIR)...
 	nios2-newlib-gen --no-multilib $(NEWLIB_DIR)-build-tmp $(NEWLIB_DIR) --custom "$(NEWLIB_FLAGS)"		
 	@$(ECHO) Removing $(NEWLIB_DIR)-build-tmp...

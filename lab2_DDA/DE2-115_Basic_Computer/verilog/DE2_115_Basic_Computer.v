@@ -433,7 +433,13 @@ case(buff_out)
 endcase
 end
 
-
+reg [3:0] saved_dda_select;
+always @(dda_opts[3:0])
+begin
+if (dda_opts[3:0] != 4'd0) begin
+saved_dda_select <= dda_opts[3:0];
+end
+end
 
 //assign HEX0 = 7'h7F;
 
@@ -444,7 +450,7 @@ assign reset = ~KEY[0];
 //your basic XOR random # gen
 	 //Drive LEDs
 //hex_7seg hex5_ctrl(SW[3:0],HEX5);
-hex_7seg hex6_ctrl(dda_opts[3:0],HEX6);
+hex_7seg hex6_ctrl(saved_dda_select,HEX6);
 
 assign LEDR[7] = reset;
 
@@ -474,19 +480,19 @@ eulersillator snoopDoggWiggleWiggle (
 .CLOCK_50(CLOCK_50),
 .VGA_CTRL_CLK(VGA_CTRL_CLK),
 .reset(reset),
-
+.triggerDraw(~KEY[3]),
 //NIOS II Inputs
 .nios_reset(~KEY[2]),
 
-.k1(18'h1_0000),
-.kmid(18'h1_0000),
-.k2(18'h1_0000),
-.kcubic(18'd0),
+.k1(k1),
+.kmid(kmid),
+.k2(k2),
+.kcubic(kcubic),
 
-.x1_init(18'h3_8000),
-.x2_init(18'h0_8000),
-.v1_init(18'h1_0000),
-.v2_init(18'h1_0000),
+.x1_init(x1_init),
+.x2_init(x2_init),
+.v1_init(v1_init),
+.v2_init(v2_init),
 
 //VGA interface
 .display_xCoord(VGA_X),

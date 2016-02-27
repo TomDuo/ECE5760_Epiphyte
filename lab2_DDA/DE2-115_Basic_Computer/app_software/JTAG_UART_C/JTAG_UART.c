@@ -112,13 +112,13 @@ int main(void)
 				}
 				else
 				{
-					select_line = 0x0;
+					//select_line = 0x0;
 				}
 
 				dataLine = FLOAT2_DDA_FIXED(tempFloat);
 				// after reading a value, zero the index and clear the command string
 
-				dda_ptr= (dataLine << 4) | select_line;
+				*(dda_ptr)= (dataLine << 4) | select_line;
 				command_index = 0;
 				for (n=0;n<20;n++){
 					command_string[n] = '\0';

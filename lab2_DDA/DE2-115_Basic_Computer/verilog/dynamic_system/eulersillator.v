@@ -12,7 +12,7 @@ input reset,
 
 //NIOS II Inputs
 input nios_reset,
-
+input triggerDraw,
 input signed [17:0] k1,
 input signed [17:0] kmid,
 input signed [17:0] k2,
@@ -127,7 +127,7 @@ end
 
 always @(posedge AnalogClock)
 begin
-	if(reset || nios_reset) begin
+	if(triggerDraw || reset || nios_reset) begin
 		time_index <= 10'd0;
 		drawCount  <=0;
 	end

@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
  *
- * Generated: Fri Feb 26 18:28:12 EST 2016
+ * Generated: Fri Feb 26 19:56:25 EST 2016
  */
 
 /*
@@ -93,7 +93,6 @@ SECTIONS
         KEEP (*(.irq));
         KEEP (*(.exceptions.entry.label));
         KEEP (*(.exceptions.entry.user));
-        KEEP (*(.exceptions.entry.ecc_fatal));
         KEEP (*(.exceptions.entry));
         KEEP (*(.exceptions.irqtest.user));
         KEEP (*(.exceptions.irqtest));
@@ -197,7 +196,7 @@ SECTIONS
         PROVIDE (__fini_array_end = ABSOLUTE(.));
         SORT(CONSTRUCTORS)
         KEEP (*(.eh_frame))
-        *(.gcc_except_table .gcc_except_table.*)
+        *(.gcc_except_table)
         *(.dynamic)
         PROVIDE (__CTOR_LIST__ = ABSOLUTE(.));
         KEEP (*(.ctors))
@@ -209,7 +208,7 @@ SECTIONS
         PROVIDE (__DTOR_END__ = ABSOLUTE(.));
         KEEP (*(.jcr))
         . = ALIGN(4);
-    } > SDRAM = 0x3a880100 /* NOP instruction (always in big-endian byte ordering) */
+    } > SDRAM = 0x3a880100 /* Nios II NOP instruction */
 
     .rodata :
     {
@@ -312,7 +311,7 @@ SECTIONS
     .SDRAM LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
     {
         PROVIDE (_alt_partition_SDRAM_start = ABSOLUTE(.));
-        *(.SDRAM .SDRAM. SDRAM.*)
+        *(.SDRAM. SDRAM.*)
         . = ALIGN(4);
         PROVIDE (_alt_partition_SDRAM_end = ABSOLUTE(.));
         _end = ABSOLUTE(.);
@@ -332,7 +331,7 @@ SECTIONS
     .Onchip_memory : AT ( LOADADDR (.SDRAM) + SIZEOF (.SDRAM) )
     {
         PROVIDE (_alt_partition_Onchip_memory_start = ABSOLUTE(.));
-        *(.Onchip_memory .Onchip_memory. Onchip_memory.*)
+        *(.Onchip_memory. Onchip_memory.*)
         . = ALIGN(4);
         PROVIDE (_alt_partition_Onchip_memory_end = ABSOLUTE(.));
     } > Onchip_memory
