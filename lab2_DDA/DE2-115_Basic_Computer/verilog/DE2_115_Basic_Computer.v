@@ -308,7 +308,7 @@ nios_system NiosII (
 	.zs_dq_to_and_from_the_SDRAM			(DRAM_DQ),
 	.zs_dqm_from_the_SDRAM					(DRAM_DQM),
 	.zs_ras_n_from_the_SDRAM				(DRAM_RAS_N),
-	.zs_we_n_from_the_SDRAM					(DRAM_WE_N),
+	.zs_we_n_from_the_SDRAM					(DRAM_WE_N)
 	
 
 	);
@@ -448,13 +448,35 @@ hex_7seg hex6_ctrl(dda_opts[3:0],HEX6);
 
 assign LEDR[7] = reset;
 
+wire signed [17:0] k1;
+wire signed [17:0] kmid;
+wire signed [17:0] k2;
+wire signed [17:0] kcubic;
+wire signed [17:0] x1_init;
+wire signed [17:0] x2_init;
+wire signed [17:0] v1_init;
+wire signed [17:0] v2_init;
+
+dda_param_driver dpd(
+	 .clk(CLOCK_50),
+	 .reset(reset),
+    .niosDDA_cmd(dda_opts),
+	 .k1(k1),
+	 .kmid(kmid),
+	 .k2(k2),
+	 .kcubic(kcubic),
+	 .x1_init(x1_init),
+	 .x2_init(x2_init),
+	 .v1_init(v1_init),
+	 .v2_init(v2_init)
+);
 eulersillator snoopDoggWiggleWiggle (
 .CLOCK_50(CLOCK_50),
 .VGA_CTRL_CLK(VGA_CTRL_CLK),
 .reset(reset),
 
 //NIOS II Inputs
-.nios_reset(reset),
+.nios_reset(~KEY[2]),
 
 .k1(18'h1_0000),
 .kmid(18'h1_0000),
