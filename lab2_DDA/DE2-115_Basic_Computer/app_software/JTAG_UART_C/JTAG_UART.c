@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../../BSP/system.h"
+#include "../../BSP/system.h"
+
 #include <stdio.h>
 
 #include <stdint.h>
@@ -17,6 +19,7 @@ void put_jtag(volatile int *, char);
  * 	2. reads character data from the JTAG UART
  * 	3. echos the character data back to the JTAG UART
 ********************************************************************************/
+volatile int * dda_ptr = (int *) DDA_OPTIONS_BASE;
 int main(void)
 {
 	/* Declare volatile pointers to I/O registers (volatile means that IO load
@@ -25,8 +28,9 @@ int main(void)
 	volatile int * JTAG_UART_ptr 	= (int *) 0x10001000;	// JTAG UART address
 	char select_line = 0x0;
 
-	double tempFloat; //strtod returns a double
+	float tempFloat; //strtod returns a double
 	uint32_t dataLine;
+
 	int data, i, n;
 	int k1, k2, k13, kmid, x1, v1, x2, v2;
 	char command_index = 0;
@@ -54,7 +58,7 @@ int main(void)
 			/* echo the character */
 
 			// Add the data to the current command string if not return
-			if ((data != '\0') && (command_index <19))
+			if ((data != '\n') && (data != '\r') && (command_index <19))
 			{
 				command_string[command_index] = data;
 				command_index++;
@@ -113,6 +117,8 @@ int main(void)
 
 				dataLine = FLOAT2_DDA_FIXED(tempFloat);
 				// after reading a value, zero the index and clear the command string
+
+				dda_ptr= (dataLine << 4) | select_line;
 				command_index = 0;
 				for (n=0;n<20;n++){
 					command_string[n] = '\0';
