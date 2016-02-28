@@ -239,7 +239,7 @@ wire			DLY2;
 
 //	Reset Delay Timer
 Reset_Delay			u3	(	.iCLK(CLOCK_50),
-							.iRST(KEY[1]),
+							.iRST(KEY[0]),
 							.oRST_0(DLY0),  // Delay by 0.0026 sec
 							.oRST_1(DLY1),  // Delay by 0.0039 sec
 							.oRST_2(DLY2)); // Delay by 0.0838 sec
@@ -318,7 +318,7 @@ sdram_pll neg_3ns (CLOCK_50, DRAM_CLK, system_clock);
 wire	VGA_CTRL_CLK;
 
 
-vga_pll 		p1	(	.areset(~DLY0),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1());
+vga_pll 		p1	(	.areset(),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1());
 
 wire		[9:0]	VGA_X;
 wire		[8:0]	VGA_Y; 				
@@ -400,8 +400,6 @@ wire state_bit ; // current data from m4k to state machine
 reg we ; // write enable for a
 reg [18:0] addr_reg ; // for a
 reg data_reg ; // for a
-reg [31:0] LFSR;
-reg generation_old;
 localparam bufwhite = 2'b00;
 localparam buftrace1 = 2'b01;
 localparam buftrace2 = 2'b10;
@@ -434,11 +432,67 @@ endcase
 end
 
 reg [3:0] saved_dda_select;
-always @(dda_opts[3:0])
+reg [1:0] dda_param_first_byte;
+reg [3:0] dda_param_second_byte;
+reg [3:0] dda_param_third_byte;
+reg [3:0] dda_param_fourth_byte;
+always @(posedge VGA_CTRL_CLK)
 begin
-if (dda_opts[3:0] != 4'd0) begin
-saved_dda_select <= dda_opts[3:0];
-end
+	case(dda_opts[3:0])
+	4'b0000 : ; //Do nothing!
+	4'd1 :  begin
+		dda_param_first_byte <= k1[17:16];
+		dda_param_second_byte <= k1[15:12];
+		dda_param_third_byte <= k1[11:8];
+		dda_param_fourth_byte <= k1[7:4];
+	end
+	4'd2 :begin
+		dda_param_first_byte <= kmid[17:16];
+		dda_param_second_byte <= kmid[15:12];
+		dda_param_third_byte <= kmid[11:8];
+		dda_param_fourth_byte <= kmid[7:4];
+	end	
+	4'd3 : begin
+		dda_param_first_byte <= k2[17:16];
+		dda_param_second_byte <= k2[15:12];
+		dda_param_third_byte <= k2[11:8];
+		dda_param_fourth_byte <= k2[7:4];
+	end
+	4'd4 : begin 
+		dda_param_first_byte <= kcubic[17:16];
+		dda_param_second_byte <= kcubic[15:12];
+		dda_param_third_byte <= kcubic[11:8];
+		dda_param_fourth_byte <= kcubic[7:4];
+	end		
+	4'd5 :  begin
+		dda_param_first_byte <= x1_init[17:16];
+		dda_param_second_byte <= x1_init[15:12];
+		dda_param_third_byte <= x1_init[11:8];
+		dda_param_fourth_byte <= x1_init[7:4];
+	end
+	4'd6 :  begin 
+		dda_param_first_byte <= x2_init[17:16];
+		dda_param_second_byte <= x2_init[15:12];
+		dda_param_third_byte <= x2_init[11:8];
+		dda_param_fourth_byte <= x2_init[7:4];
+	end
+	4'd7 :  begin 
+		dda_param_first_byte <= v1_init[17:16];
+		dda_param_second_byte <= v1_init[15:12];
+		dda_param_third_byte <= v1_init[11:8];
+		dda_param_fourth_byte <= v1_init[7:4];
+	end
+	4'd8 :  begin 
+		dda_param_first_byte <= v2_init[17:16];
+		dda_param_second_byte <= v2_init[15:12];
+		dda_param_third_byte <= v2_init[11:8];
+		dda_param_fourth_byte <= v2_init[7:4];
+	end
+	endcase
+	if (dda_opts[3:0] != 4'd0) begin
+	saved_dda_select <= dda_opts[3:0];
+
+	end
 end
 
 //assign HEX0 = 7'h7F;
@@ -449,8 +503,10 @@ assign reset = ~KEY[0];
 //right-most bit for rand number shift regs
 //your basic XOR random # gen
 	 //Drive LEDs
-//hex_7seg hex5_ctrl(SW[3:0],HEX5);
-hex_7seg hex6_ctrl(saved_dda_select,HEX6);
+hex_7seg hex4_ctrl(dda_param_fourth_byte,HEX4);
+hex_7seg hex5_ctrl(dda_param_third_byte,HEX5);
+hex_7seg hex6_ctrl(dda_param_second_byte,HEX6);
+hex_7seg hex7_ctrl(dda_param_first_byte,HEX7);
 
 assign LEDR[7] = reset;
 
@@ -465,7 +521,7 @@ wire signed [17:0] v2_init;
 
 dda_param_driver dpd(
 	 .clk(CLOCK_50),
-	 .reset(reset),
+	 .reset(DLY0),
     .niosDDA_cmd(dda_opts),
 	 .k1(k1),
 	 .kmid(kmid),
@@ -480,10 +536,10 @@ eulersillator snoopDoggWiggleWiggle (
 .CLOCK_50(CLOCK_50),
 .VGA_CTRL_CLK(VGA_CTRL_CLK),
 .reset(reset),
-.triggerDraw(~KEY[3]),
+.triggerDraw(),
 //NIOS II Inputs
 .nios_reset(~KEY[2]),
-
+.cube(SW[3]), // use switch 3 to turn on and off cubic term
 .k1(k1),
 .kmid(kmid),
 .k2(k2),

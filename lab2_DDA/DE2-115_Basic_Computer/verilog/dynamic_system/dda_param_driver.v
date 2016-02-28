@@ -18,7 +18,7 @@ if (reset) begin
 k1 <= 18'h1_0000;
 k2 <= 18'h1_0000;
 kmid <= 18'h1_0000;
-kcubic <= 18'd0;
+kcubic <= 18'h0_8000;
 
 x1_init <= 18'h3_8000;
 x2_init <= 18'h0_8000;

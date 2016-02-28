@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include <stdint.h>
-#define FLOAT2_DDA_FIXED(t) (((uint32_t)((t) *(65536.0)))  & 0x03FFFF)
+#define FLOAT2_DDA_FIXED(t) (((int32_t)((t) *(65536.0)))  & 0x03FFFF)
 
 /* function prototypes */
 void put_jtag(volatile int *, char);
@@ -34,7 +34,7 @@ int main(void)
 	int data, i, n;
 	int k1, k2, k13, kmid, x1, v1, x2, v2;
 	char command_index = 0;
-	char text_string[] = "\nJTAG UART example code\n> \0";
+	char text_string[] = "\nInput Spring-Mass System Parameters\n> \0";
 	char command_string[20];
 	char k1_string[] = "k1:";
 	char k2_string[] = "k2:";
