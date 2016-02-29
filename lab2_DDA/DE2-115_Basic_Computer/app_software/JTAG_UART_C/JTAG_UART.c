@@ -120,6 +120,21 @@ int main(void)
 
 				*(dda_ptr)= (dataLine << 4) | select_line;
 				command_index = 0;
+				// print out the value sent to ports on JTAG
+				for (n=0;n<18;n++){
+					if (dataline & (1<<n))
+					{
+						put_jtag(JTAG_UART_ptr,'1');
+					}
+					else
+					{
+						put_jtag(JTAG_UART_ptr,'0');
+					}
+				}
+
+				put_jtag(JTAG_UART_ptr,'\n');
+				
+				// zero the command string
 				for (n=0;n<20;n++){
 					command_string[n] = '\0';
 				}
