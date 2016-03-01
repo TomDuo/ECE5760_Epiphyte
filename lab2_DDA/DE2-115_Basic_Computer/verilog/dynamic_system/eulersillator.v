@@ -135,8 +135,8 @@ begin
 		time_index <= time_index + 10'd1;
         //yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:12] : $unsigned(x1_height)  + x1_abs[17:11]; 
         //yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:12] : $unsigned(x2_height) + x2_abs[17:11];
-		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:10] : $unsigned(18'd240)  + x1_abs[17:10];
-		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:10] : $unsigned(18'd240) + x2_abs[17:10];
+		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:9] : $unsigned(18'd240)  + x1_abs[17:9];
+		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:9] : $unsigned(18'd240) + x2_abs[17:9];
 		drawCount <= drawCount + 2'b1;
 	end
 	else begin
