@@ -438,6 +438,8 @@ reg [3:0] dda_param_third_byte;
 reg [3:0] dda_param_fourth_byte;
 always @(posedge VGA_CTRL_CLK)
 begin
+if (SW[17]) // show dda_param_driver outputs
+begin
 	case(dda_opts[3:0])
 	4'b0000 : ; //Do nothing!
 	4'd1 :  begin
@@ -489,6 +491,14 @@ begin
 		dda_param_fourth_byte <= v2_init[7:4];
 	end
 	endcase
+end
+else 
+begin
+	dda_param_first_byte <= dda_opts[21:20];
+	dda_param_second_byte <= dda_opts[19:16];
+	dda_param_third_byte <= dda_opts[15:12];
+	dda_param_fourth_byte <= dda_opts[11:8];
+end
 	if (dda_opts[3:0] != 4'd0) begin
 	saved_dda_select <= dda_opts[3:0];
 
