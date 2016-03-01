@@ -29,12 +29,12 @@ else begin
 case(niosDDA_cmd[3:0])
 4'b0000 : ; //Do nothing!
 4'd1 :  k1 <= niosDDA_cmd[21:4];
-4'd2 :  kmid <= niosDDA_cmd[21:4];
-4'd3 :  k2 <= niosDDA_cmd[21:4];
-4'd4 :  kcubic <= niosDDA_cmd[21:4];
+4'd2 :  k2 <= niosDDA_cmd[21:4];
+4'd3 :  kcubic <= niosDDA_cmd[21:4];
+4'd4 :  kmid <= niosDDA_cmd[21:4];
 4'd5 :  x1_init <= niosDDA_cmd[21:4];
-4'd6 :  x2_init <= niosDDA_cmd[21:4];
-4'd7 :  v1_init <= niosDDA_cmd[21:4];
+4'd6 :  v1_init <= niosDDA_cmd[21:4];
+4'd7 :  x2_init <= niosDDA_cmd[21:4];
 4'd8 :  v2_init <= niosDDA_cmd[21:4];
 default : ;// Do nothing!
 endcase

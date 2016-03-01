@@ -572,7 +572,7 @@ eulersillator snoopDoggWiggleWiggle (
 
 always @ (negedge VGA_CTRL_CLK)
 begin
-	// register the m4k output for better timing on VGA
+	// register the m9k output for better timing on VGA
 	// negedge seems to work better than posedge
 	disp_bits <= mem_bits;
 end

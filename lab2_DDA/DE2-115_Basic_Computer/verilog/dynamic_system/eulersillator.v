@@ -68,7 +68,7 @@ wire signed [17:0] x1minusLW;
 wire signed [17:0] x1minusLW_sq;
 wire signed [17:0] x1minusLW_cu;
 wire signed [17:0] kcu_x1LWcu;
-
+wire signed [17:0] k1_x1_cu;
 reg [4:0] drawCount;
 wire [19:0] positive_x1 = x1 + 19'h1_ffff;
 wire [19:0] positive_x2 = x2 + 19'h1_ffff;
@@ -81,13 +81,7 @@ reg writeTraceSelect;
 // analog update divided clock
 always @ (posedge CLOCK_50) 
 begin
-  if (nios_reset || reset)
-  begin
-      count <= 5'd0;
-  end
-  else begin
   count <= count + 1; 
-  end
 end  
 assign AnalogClock = (count == 5'd0);
 
@@ -151,7 +145,9 @@ end
 
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
 
+
 signed_mult5760 k1_x1_mul(k1_x1,k1,x1minusLW);
+signed_mult5760 k1_x1_cu_mul(k1_x1_cu,k1,(x1minusLW+kcu_x1LWcu));
 signed_mult5760 g1_x1_d1_mul(g1_x1_d1,g1,d_x1_dt);
 
 signed_mult5760 k2_x2_mul(k2_x2,k2,(18'h1_0000-x2));
@@ -160,9 +156,9 @@ signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 signed_mult5760 kcu1(x1minusLW_sq,x1minusLW,x1minusLW);
 signed_mult5760 kcu2(x1minusLW_cu,x1minusLW_sq,x1minusLW);
 signed_mult5760 kcu3(kcu_x1LWcu,x1minusLW_cu,kcubic);
-assign x1minusLW = (18'h3_0000-x1);
+assign x1minusLW = (x1-18'h3_0000);
 // based on position of switch 3 include cubic term for x1
-assign d2_x1_dt2 = cube ? kmid_x2minusx1+k1_x1-g1_x1_d1 : kmid_x2minusx1+k1_x1+kcu_x1LWcu-g1_x1_d1;
+assign d2_x1_dt2 = cube ? kmid_x2minusx1-k1_x1-g1_x1_d1 : kmid_x2minusx1-k1_x1_cu-g1_x1_d1;
 assign d2_x2_dt2 = k2_x2-g2_x2_d1-kmid_x2minusx1;
 
 integrator #(.functwidth(21)) i_x1_21
