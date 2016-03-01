@@ -122,7 +122,7 @@ int main(void)
 				command_index = 0;
 				// print out the value sent to ports on JTAG
 				for (n=0;n<18;n++){
-					if (dataline & (1<<n))
+					if (dataLine & (1<<n))
 					{
 						put_jtag(JTAG_UART_ptr,'1');
 					}
