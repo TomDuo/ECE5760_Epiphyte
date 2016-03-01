@@ -24,6 +24,7 @@ x1_init <= 18'h3_8000;
 x2_init <= 18'h0_8000;
 v1_init <= 18'h1_0000;
 v2_init <= 18'h1_0000;
+
 end
 else begin
 case(niosDDA_cmd[3:0])
