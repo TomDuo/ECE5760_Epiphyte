@@ -130,6 +130,10 @@ int main(void)
 					{
 						put_jtag(JTAG_UART_ptr,'0');
 					}
+					if (n==2) put_jtag(JTAG_UART_ptr,'_');
+					if (n==6) put_jtag(JTAG_UART_ptr,' ');
+					if (n==10) put_jtag(JTAG_UART_ptr,' ');
+					if (n==14) put_jtag(JTAG_UART_ptr,' ');
 				}
 
 				put_jtag(JTAG_UART_ptr,'\n');
