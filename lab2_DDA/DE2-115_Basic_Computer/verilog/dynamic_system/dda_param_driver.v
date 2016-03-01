@@ -10,7 +10,8 @@ module dda_param_driver
 	 output reg signed [17:0] x1_init,
 	 output reg signed [17:0] x2_init,
 	 output reg signed [17:0] v1_init,
-	 output reg signed [17:0] v2_init
+	 output reg signed [17:0] v2_init,
+	 output reg               start_stop
 );
 
 always @(posedge clk) begin
@@ -24,7 +25,7 @@ x1_init <= 18'h3_8000;
 x2_init <= 18'h0_8000;
 v1_init <= 18'h1_0000;
 v2_init <= 18'h1_0000;
-
+start_stop <= 1'b0;
 end
 else begin
 case(niosDDA_cmd[3:0])
@@ -37,6 +38,8 @@ case(niosDDA_cmd[3:0])
 4'd6 :  v1_init <= niosDDA_cmd[21:4];
 4'd7 :  x2_init <= niosDDA_cmd[21:4];
 4'd8 :  v2_init <= niosDDA_cmd[21:4];
+4'd9 :  start_stop <= 1'b1;
+4'd10 :  start_stop <= 1'b0;
 default : ;// Do nothing!
 endcase
 end

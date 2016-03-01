@@ -36,8 +36,8 @@ int main(void)
 	char command_index = 0;
 	char text_string[] = "\nInput Spring-Mass System Parameters\n> \0";
 	char * command_string;//[20];
-	char go_string[] = "go:"
-	char stop_string[] = "st:"
+	char go_string[] = "go:";
+	char stop_string[] = "st:";
 	char k1_string[] = "k1:";
 	char k2_string[] = "k2:";
 	char kmid_string[] = "km:";

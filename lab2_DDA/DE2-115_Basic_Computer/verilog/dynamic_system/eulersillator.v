@@ -23,7 +23,7 @@ input signed [17:0] x1_init,
 input signed [17:0] x2_init,
 input signed [17:0] v1_init,
 input signed [17:0] v2_init,
-
+input  wire                                   start_stop, //Fuk batten
 output wire signed   [17:0] x1,
 output wire signed   [17:0] x2,
 
@@ -77,7 +77,7 @@ wire [8:0]  truncated_x2 = positive_x2[19:11];
 
 
 
-reg writeTraceSelect;
+reg [1:0] writeTraceSelect;
 // analog update divided clock
 always @ (posedge CLOCK_50) 
 begin
@@ -95,36 +95,54 @@ cross_clocker cc2(VGA_CTRL_CLK,yTrace2,yTrace2_vga_clk);
 always @ (posedge VGA_CTRL_CLK)
 begin
   if (nios_reset || reset)
-	  begin
+  begin
 		 w_en <= 1;
 		 write_xCoord <= display_xCoord;
 		 write_yCoord <= display_yCoord;
 		 disp_bit <= 2'b00;
 		 writeTraceSelect <= 0;
 		 //vga_xCoord <= 0;
-	  end
-  else if (~writeTraceSelect)
-	  begin
+  end
+  else if (writeTraceSelect == 2'b00)
+  begin
 		write_xCoord <= time_index;
 		write_yCoord <= yTrace1_vga_clk;
 		 disp_bit <= 2'b01;
 
-		writeTraceSelect <= 1;
-	  end
-  else if (writeTraceSelect)
+		writeTraceSelect <= 2'b01;
+  end
+  else if (writeTraceSelect == 2'b01)
 	  begin
 	  	write_xCoord <= time_index;
 		write_yCoord <= yTrace2_vga_clk;
 		disp_bit <= 2'b10;
-
-	  writeTraceSelect <= 0;
-	  end
-  else
-	  begin
-		 w_en <= 0;
-	  end
+		writeTraceSelect <= 2'b10;
+	end
+	else if (writeTraceSelect == 2'b10)
+	begin
+		// remove old x1
+		writeTraceSelect <= 2'b11;
+		write_xCoord <= time_index;
+		write_yCoord <= prevX1[time_index][8:0];
+		disp_bit <= 2'b00;
+		prevX1[time_index][8:0] <= yTrace1_vga_clk;
+	end
+	else if (writeTraceSelect == 2'b11)
+	begin
+		// remove old x2
+		writeTraceSelect <= 2'b00;
+		write_xCoord <= time_index;
+		write_yCoord <= prevX2[time_index][8:0];
+		disp_bit <= 2'b00;
+		prevX1[time_index][8:0] <= yTrace2_vga_clk;
+	end
+	else
+	begin
+		w_en <= 0;
+	end
 end
-
+reg signed [639:0] prevX1 [8:0];
+reg signed [639:0] prevX2 [8:0];
 always @(posedge AnalogClock)
 begin
 	if(triggerDraw || reset || nios_reset) begin
@@ -138,6 +156,9 @@ begin
 		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:9] : $unsigned(18'd240)  + x1_abs[17:9];
 		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:9] : $unsigned(18'd240) + x2_abs[17:9];
 		drawCount <= drawCount + 2'b1;
+	end
+	else if (time_index >= 640 && start_stop) begin
+		time_index <= 10'd0;
 	end
 	else begin
 		drawCount <= drawCount + 2'b1;

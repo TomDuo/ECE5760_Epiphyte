@@ -529,7 +529,8 @@ wire signed [17:0] x1_init;
 wire signed [17:0] x2_init;
 wire signed [17:0] v1_init;
 wire signed [17:0] v2_init;
-
+wire            start_stop;
+assign LEDR[2] = start_stop;
 dda_param_driver dpd(
 	 .clk(CLOCK_50),
 	 .reset(~DLY0),
@@ -541,7 +542,8 @@ dda_param_driver dpd(
 	 .x1_init(x1_init),
 	 .x2_init(x2_init),
 	 .v1_init(v1_init),
-	 .v2_init(v2_init)
+	 .v2_init(v2_init),
+	 .start_stop(start_stop)
 );
 eulersillator snoopDoggWiggleWiggle (
 .CLOCK_50(CLOCK_50),
@@ -555,7 +557,7 @@ eulersillator snoopDoggWiggleWiggle (
 .kmid(kmid),
 .k2(k2),
 .kcubic(kcubic),
-
+.start_stop(start_stop),
 .x1_init(x1_init),
 .x2_init(x2_init),
 .v1_init(v1_init),
