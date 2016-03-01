@@ -1,10 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../../BSP/system.h"
-#include "../../BSP/system.h"
-
 #include <stdio.h>
-
+#include <math.h>
+#include <float.h>
+#include "floating_point.h"
 #include <stdint.h>
 #define FLOAT2_DDA_FIXED(t) (((int32_t)((t) *(65536.0)))  & 0x03FFFF)
 
@@ -28,14 +28,14 @@ int main(void)
 	volatile int * JTAG_UART_ptr 	= (int *) 0x10001000;	// JTAG UART address
 	char select_line = 0x0;
 
-	float tempFloat; //strtod returns a double
+	volatile float tempFloat; //strtod returns a double
 	uint32_t dataLine;
 
 	int data, i, n;
 	int k1, k2, k13, kmid, x1, v1, x2, v2;
 	char command_index = 0;
 	char text_string[] = "\nInput Spring-Mass System Parameters\n> \0";
-	char command_string[20];
+	char * command_string;//[20];
 	char k1_string[] = "k1:";
 	char k2_string[] = "k2:";
 	char kmid_string[] = "km:";
@@ -44,7 +44,9 @@ int main(void)
 	char v1_string[] = "v1:";
 	char x2_string[] = "x2:";
 	char v2_string[] = "v2:";
+  	char* pEnd;
 
+	command_string = malloc( sizeof(char)*20);
 	/* print a text string */
 	for (i = 0; text_string[i] != 0; ++i)
 		put_jtag (JTAG_UART_ptr, text_string[i]);
@@ -66,13 +68,19 @@ int main(void)
 			// clear the command string if there is a return
 			else
 			{
+				command_string[command_index] = '\0';
 				// check for a match on any of the special strings in the command string
 				if (strstr(command_string,k1_string) == command_string)
 				{
-					tempFloat = strtod(command_string + 3,NULL);
+
+					printf("\nfound k1 match\n");
+					tempFloat = atof(&command_string[3]); //strtod(&command_string[3],&pEnd);
+					printf("completed strtod call\n");
+					//sscanf(command_string,"%f", &tempFloat);
 					select_line = 0x1;
 
 				}
+				
 				else if (strstr(command_string,k2_string) == command_string)
 				{
 					tempFloat = strtod(command_string + 3,NULL);
@@ -114,29 +122,30 @@ int main(void)
 				{
 					//select_line = 0x0;
 				}
-
+				printf("about to convert to fixed\n");
 				dataLine = FLOAT2_DDA_FIXED(tempFloat);
 				// after reading a value, zero the index and clear the command string
-
+				//printf("tempFloat = %f\ndataLine = ",tempFloat);
 				*(dda_ptr)= (dataLine << 4) | select_line;
 				command_index = 0;
+				printf("converted to fixed and sent to ports\ndataLine = ");
+
 				// print out the value sent to ports on JTAG
-				for (n=0;n<18;n++){
+				for (n=17;n>=0;n--){
 					if (dataLine & (1<<n))
 					{
-						put_jtag(JTAG_UART_ptr,'1');
+						printf("1");
 					}
 					else
 					{
-						put_jtag(JTAG_UART_ptr,'0');
+						printf("0");
 					}
-					if (n==2) put_jtag(JTAG_UART_ptr,'_');
-					if (n==6) put_jtag(JTAG_UART_ptr,' ');
-					if (n==10) put_jtag(JTAG_UART_ptr,' ');
-					if (n==14) put_jtag(JTAG_UART_ptr,' ');
+					if (n==16) {printf("_");}
+					if (n==12) {printf(" ");}
+					if (n==8) {printf(" ");}
+					if (n==4) {printf(" ");}
 				}
-
-				put_jtag(JTAG_UART_ptr,'\n');
+				printf("\nPort output displayed above\n");
 				
 				// zero the command string
 				for (n=0;n<20;n++){
@@ -144,7 +153,6 @@ int main(void)
 				}
 			}
 
-			
 			put_jtag (JTAG_UART_ptr, (char) data & 0xFF );
 		}
 	}

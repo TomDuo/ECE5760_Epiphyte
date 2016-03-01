@@ -68,7 +68,7 @@ module nios_system_CPU_test_bench (
   input   [  4: 0] R_dst_regnum;
   input            R_wr_dst_reg;
   input            W_valid;
-  input   [ 55: 0] W_vinst;
+  input   [271: 0] W_vinst;
   input   [ 31: 0] W_wr_data;
   input   [ 31: 0] av_ld_data_aligned_unfiltered;
   input            clk;
@@ -143,6 +143,7 @@ module nios_system_CPU_test_bench (
   wire             D_op_mulxsu;
   wire             D_op_mulxuu;
   wire             D_op_nextpc;
+  wire             D_op_nios_custom_instr_floating_point_0;
   wire             D_op_nor;
   wire             D_op_opx;
   wire             D_op_or;
@@ -371,6 +372,7 @@ module nios_system_CPU_test_bench (
   assign D_op_rsvx56 = D_op_opx & (D_iw_opx == 56);
   assign D_op_rsvx60 = D_op_opx & (D_iw_opx == 60);
   assign D_op_rsvx63 = D_op_opx & (D_iw_opx == 63);
+  assign D_op_nios_custom_instr_floating_point_0 = D_op_custom & 1'b1;
   assign D_op_opx = D_iw_op == 58;
   assign D_op_custom = D_iw_op == 50;
   always @(posedge clk or negedge reset_n)

@@ -438,67 +438,68 @@ reg [3:0] dda_param_third_byte;
 reg [3:0] dda_param_fourth_byte;
 always @(posedge VGA_CTRL_CLK)
 begin
-if (SW[17]) // show dda_param_driver outputs
-begin
-	case(dda_opts[3:0])
-	4'b0000 : ; //Do nothing!
-	4'd1 :  begin
-		dda_param_first_byte <= k1[17:16];
-		dda_param_second_byte <= k1[15:12];
-		dda_param_third_byte <= k1[11:8];
-		dda_param_fourth_byte <= k1[7:4];
+	if (SW[17]) // show dda_param_driver outputs
+	begin
+		case(dda_opts[3:0])
+		4'b0000 : ; //Do nothing!
+		4'd1 :  begin
+			dda_param_first_byte <= k1[17:16];
+			dda_param_second_byte <= k1[15:12];
+			dda_param_third_byte <= k1[11:8];
+			dda_param_fourth_byte <= k1[7:4];
+		end
+		4'd2 :begin
+			dda_param_first_byte <= kmid[17:16];
+			dda_param_second_byte <= kmid[15:12];
+			dda_param_third_byte <= kmid[11:8];
+			dda_param_fourth_byte <= kmid[7:4];
+		end	
+		4'd3 : begin
+			dda_param_first_byte <= k2[17:16];
+			dda_param_second_byte <= k2[15:12];
+			dda_param_third_byte <= k2[11:8];
+			dda_param_fourth_byte <= k2[7:4];
+		end
+		4'd4 : begin 
+			dda_param_first_byte <= kcubic[17:16];
+			dda_param_second_byte <= kcubic[15:12];
+			dda_param_third_byte <= kcubic[11:8];
+			dda_param_fourth_byte <= kcubic[7:4];
+		end		
+		4'd5 :  begin
+			dda_param_first_byte <= x1_init[17:16];
+			dda_param_second_byte <= x1_init[15:12];
+			dda_param_third_byte <= x1_init[11:8];
+			dda_param_fourth_byte <= x1_init[7:4];
+		end
+		4'd6 :  begin 
+			dda_param_first_byte <= x2_init[17:16];
+			dda_param_second_byte <= x2_init[15:12];
+			dda_param_third_byte <= x2_init[11:8];
+			dda_param_fourth_byte <= x2_init[7:4];
+		end
+		4'd7 :  begin 
+			dda_param_first_byte <= v1_init[17:16];
+			dda_param_second_byte <= v1_init[15:12];
+			dda_param_third_byte <= v1_init[11:8];
+			dda_param_fourth_byte <= v1_init[7:4];
+		end
+		4'd8 :  begin 
+			dda_param_first_byte <= v2_init[17:16];
+			dda_param_second_byte <= v2_init[15:12];
+			dda_param_third_byte <= v2_init[11:8];
+			dda_param_fourth_byte <= v2_init[7:4];
+		end
+		endcase
 	end
-	4'd2 :begin
-		dda_param_first_byte <= kmid[17:16];
-		dda_param_second_byte <= kmid[15:12];
-		dda_param_third_byte <= kmid[11:8];
-		dda_param_fourth_byte <= kmid[7:4];
-	end	
-	4'd3 : begin
-		dda_param_first_byte <= k2[17:16];
-		dda_param_second_byte <= k2[15:12];
-		dda_param_third_byte <= k2[11:8];
-		dda_param_fourth_byte <= k2[7:4];
+	// if SW[17] is low, then show the output from the NIOS 
+	else 
+	begin
+		dda_param_first_byte <= dda_opts[21:20];
+		dda_param_second_byte <= dda_opts[19:16];
+		dda_param_third_byte <= dda_opts[15:12];
+		dda_param_fourth_byte <= dda_opts[11:8];
 	end
-	4'd4 : begin 
-		dda_param_first_byte <= kcubic[17:16];
-		dda_param_second_byte <= kcubic[15:12];
-		dda_param_third_byte <= kcubic[11:8];
-		dda_param_fourth_byte <= kcubic[7:4];
-	end		
-	4'd5 :  begin
-		dda_param_first_byte <= x1_init[17:16];
-		dda_param_second_byte <= x1_init[15:12];
-		dda_param_third_byte <= x1_init[11:8];
-		dda_param_fourth_byte <= x1_init[7:4];
-	end
-	4'd6 :  begin 
-		dda_param_first_byte <= x2_init[17:16];
-		dda_param_second_byte <= x2_init[15:12];
-		dda_param_third_byte <= x2_init[11:8];
-		dda_param_fourth_byte <= x2_init[7:4];
-	end
-	4'd7 :  begin 
-		dda_param_first_byte <= v1_init[17:16];
-		dda_param_second_byte <= v1_init[15:12];
-		dda_param_third_byte <= v1_init[11:8];
-		dda_param_fourth_byte <= v1_init[7:4];
-	end
-	4'd8 :  begin 
-		dda_param_first_byte <= v2_init[17:16];
-		dda_param_second_byte <= v2_init[15:12];
-		dda_param_third_byte <= v2_init[11:8];
-		dda_param_fourth_byte <= v2_init[7:4];
-	end
-	endcase
-end
-else 
-begin
-	dda_param_first_byte <= dda_opts[21:20];
-	dda_param_second_byte <= dda_opts[19:16];
-	dda_param_third_byte <= dda_opts[15:12];
-	dda_param_fourth_byte <= dda_opts[11:8];
-end
 	if (dda_opts[3:0] != 4'd0) begin
 	saved_dda_select <= dda_opts[3:0];
 
@@ -531,7 +532,7 @@ wire signed [17:0] v2_init;
 
 dda_param_driver dpd(
 	 .clk(CLOCK_50),
-	 .reset(DLY0),
+	 .reset(~DLY0),
     .niosDDA_cmd(dda_opts),
 	 .k1(k1),
 	 .kmid(kmid),
