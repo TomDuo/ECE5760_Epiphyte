@@ -39,8 +39,8 @@ output reg  [1:0] disp_bit
 reg [4:0] count;
 wire AnalogClock;
 
-wire signed [17:0] g1 = 18'h0_0800;
-wire signed [17:0] g2 = 18'h0_0800;
+wire signed [17:0] g1 = 18'h0_01a0;
+wire signed [17:0] g2 = 18'h0_01a0;
 
 
 wire signed [20:0] d2_x1_dt2;
@@ -69,7 +69,7 @@ wire signed [17:0] x1minusLW_sq;
 wire signed [17:0] x1minusLW_cu;
 wire signed [17:0] kcu_x1LWcu;
 wire signed [17:0] k1_x1_cu;
-reg [4:0] drawCount;
+reg [2:0] drawCount;
 wire [19:0] positive_x1 = x1 + 19'h1_ffff;
 wire [19:0] positive_x2 = x2 + 19'h1_ffff;
 wire [8:0]  truncated_x1 = positive_x1[19:11]; 
@@ -77,7 +77,7 @@ wire [8:0]  truncated_x2 = positive_x2[19:11];
 
 
 
-reg [1:0] writeTraceSelect;
+reg [2:0] writeTraceSelect;
 // analog update divided clock
 always @ (posedge CLOCK_50) 
 begin
@@ -87,10 +87,10 @@ assign AnalogClock = (count == 5'd0);
 
 wire [17:0] x1_abs = x1[17] ? 17'd1 + ~x1 : x1;
 wire [17:0] x2_abs = x2[17] ? 17'd1 + ~x2 : x2;
-wire [8:0] yTrace1_vga_clk;
-wire [8:0] yTrace2_vga_clk;
-cross_clocker cc1(VGA_CTRL_CLK,yTrace1,yTrace1_vga_clk);
-cross_clocker cc2(VGA_CTRL_CLK,yTrace2,yTrace2_vga_clk);
+wire [8:0] yTrace1_vga_clk = yTrace1;
+wire [8:0] yTrace2_vga_clk = yTrace2;
+//cross_clocker cc1(VGA_CTRL_CLK,yTrace1,yTrace1_vga_clk);
+//cross_clocker cc2(VGA_CTRL_CLK,yTrace2,yTrace2_vga_clk);
 // figure out your VGA life
 always @ (posedge VGA_CTRL_CLK)
 begin
@@ -100,59 +100,89 @@ begin
 		 write_xCoord <= display_xCoord;
 		 write_yCoord <= display_yCoord;
 		 disp_bit <= 2'b00;
-		 writeTraceSelect <= 0;
 		 //vga_xCoord <= 0;
+		   writeTraceSelect <= 3'b111;
+
   end
-  else if (writeTraceSelect == 2'b00)
+  if (AnalogClock == 1'b1)
   begin
+  w_en <= 1;
+  writeTraceSelect <= 3'b000;
+  end
+  else if (writeTraceSelect == 3'b000)
+  begin
+  		prevX1[time_index]= yTrace1_vga_clk;
 		write_xCoord <= time_index;
 		write_yCoord <= yTrace1_vga_clk;
 		 disp_bit <= 2'b01;
 
-		writeTraceSelect <= 2'b01;
+		writeTraceSelect <= 3'b001;
   end
-  else if (writeTraceSelect == 2'b01)
+  else if (writeTraceSelect == 3'b001)
 	  begin
+	  	prevX2[time_index] = yTrace2_vga_clk;
+
 	  	write_xCoord <= time_index;
 		write_yCoord <= yTrace2_vga_clk;
 		disp_bit <= 2'b10;
-		writeTraceSelect <= 2'b10;
+		writeTraceSelect <= 3'b010;
 	end
-	else if (writeTraceSelect == 2'b10)
+	else if (writeTraceSelect == 3'b010)
 	begin
 		// remove old x1
-		writeTraceSelect <= 2'b11;
-		write_xCoord <= time_index;
-		write_yCoord <= prevX1[time_index][8:0];
+
+		write_xCoord <= time_index+1;
+		write_yCoord <= prevX1[time_index+1];
 		disp_bit <= 2'b00;
-		prevX1[time_index][8:0] <= yTrace1_vga_clk;
+		writeTraceSelect <= 3'b011;
+
 	end
-	else if (writeTraceSelect == 2'b11)
+	else if (writeTraceSelect == 3'b011)
 	begin
 		// remove old x2
-		writeTraceSelect <= 2'b00;
-		write_xCoord <= time_index;
-		write_yCoord <= prevX2[time_index][8:0];
+		write_xCoord <= time_index+1;
+		write_yCoord <= prevX2[time_index+1];
 		disp_bit <= 2'b00;
-		prevX1[time_index][8:0] <= yTrace2_vga_clk;
+		writeTraceSelect <= 3'b111;
+
 	end
 	else
 	begin
 		w_en <= 0;
 	end
 end
-reg signed [639:0] prevX1 [8:0];
-reg signed [639:0] prevX2 [8:0];
+
+reg signed [8:0] prevX1 [0:639];
+reg signed [8:0] prevX2 [0:639];
+/*
+reg [4:0] updateCount;
+wire drawClk;
+always @(posedge AnalogClock) 
+begin
+	if (reset) begin
+		updateCount <= 0;
+	end 
+	else begin
+		updateCount = updateCount + 1;
+	end
+end
+
+
+assign drawClk = (updateCount==5'd0);
+*/
 always @(posedge AnalogClock)
 begin
 	if(triggerDraw || reset || nios_reset) begin
 		time_index <= 10'd0;
 		drawCount  <=0;
 	end
-	else if (time_index < vga_width && drawCount == 0) begin
-		time_index <= time_index + 10'd1;
+	else if (time_index < vga_width && start_stop) begin
+	//else if (time_index < vga_width && start_stop) begin
+
         //yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:12] : $unsigned(x1_height)  + x1_abs[17:11]; 
         //yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:12] : $unsigned(x2_height) + x2_abs[17:11];
+		time_index = time_index + 10'd1;
+
 		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:9] : $unsigned(18'd240)  + x1_abs[17:9];
 		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:9] : $unsigned(18'd240) + x2_abs[17:9];
 		drawCount <= drawCount + 2'b1;
