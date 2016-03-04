@@ -39,8 +39,8 @@ output reg  [1:0] disp_bit
 reg [4:0] count;
 wire AnalogClock;
 
-wire signed [17:0] g1 = 18'h0_01a0;
-wire signed [17:0] g2 = 18'h0_01a0;
+wire signed [17:0] g1 = 18'h0_04a0;
+wire signed [17:0] g2 = 18'h0_04a0;
 
 
 wire signed [20:0] d2_x1_dt2;
@@ -69,7 +69,7 @@ wire signed [17:0] x1minusLW_sq;
 wire signed [17:0] x1minusLW_cu;
 wire signed [17:0] kcu_x1LWcu;
 wire signed [17:0] k1_x1_cu;
-reg [2:0] drawCount;
+reg [3:0] drawCount;
 wire [19:0] positive_x1 = x1 + 19'h1_ffff;
 wire [19:0] positive_x2 = x2 + 19'h1_ffff;
 wire [8:0]  truncated_x1 = positive_x1[19:11]; 
@@ -78,12 +78,19 @@ wire [8:0]  truncated_x2 = positive_x2[19:11];
 
 
 reg [2:0] writeTraceSelect;
+reg [6:0] count2;
 // analog update divided clock
-always @ (posedge CLOCK_50) 
+always @ (posedge VGA_CTRL_CLK) 
 begin
   count <= count + 1; 
 end  
 assign AnalogClock = (count == 5'd0);
+
+always @ (posedge AnalogClock)
+begin
+	count2 <= count2 + 1;
+end
+assign drawClock = (count2 == 7'd0);
 
 wire [17:0] x1_abs = x1[17] ? 17'd1 + ~x1 : x1;
 wire [17:0] x2_abs = x2[17] ? 17'd1 + ~x2 : x2;
@@ -101,42 +108,42 @@ begin
 		 write_yCoord <= display_yCoord;
 		 disp_bit <= 2'b00;
 		 //vga_xCoord <= 0;
-		   writeTraceSelect <= 3'b111;
-
+		 writeTraceSelect <= 3'b011;
   end
-  if (AnalogClock == 1'b1)
+  
+  if (drawCount == 4'b0)
   begin
-  w_en <= 1;
-  writeTraceSelect <= 3'b000;
+	  w_en <= 1;
+	  writeTraceSelect <= 3'b000;
   end
+  
   else if (writeTraceSelect == 3'b000)
   begin
   		prevX1[time_index]= yTrace1_vga_clk;
 		write_xCoord <= time_index;
 		write_yCoord <= yTrace1_vga_clk;
-		 disp_bit <= 2'b01;
-
+		disp_bit <= 2'b01;
 		writeTraceSelect <= 3'b001;
   end
+  
   else if (writeTraceSelect == 3'b001)
-	  begin
+  begin
 	  	prevX2[time_index] = yTrace2_vga_clk;
-
 	  	write_xCoord <= time_index;
 		write_yCoord <= yTrace2_vga_clk;
 		disp_bit <= 2'b10;
 		writeTraceSelect <= 3'b010;
 	end
+	
 	else if (writeTraceSelect == 3'b010)
 	begin
 		// remove old x1
-
 		write_xCoord <= time_index+1;
 		write_yCoord <= prevX1[time_index+1];
 		disp_bit <= 2'b00;
 		writeTraceSelect <= 3'b011;
-
 	end
+	
 	else if (writeTraceSelect == 3'b011)
 	begin
 		// remove old x2
@@ -144,8 +151,8 @@ begin
 		write_yCoord <= prevX2[time_index+1];
 		disp_bit <= 2'b00;
 		writeTraceSelect <= 3'b111;
-
 	end
+	
 	else
 	begin
 		w_en <= 0;
@@ -154,29 +161,14 @@ end
 
 reg signed [8:0] prevX1 [0:639];
 reg signed [8:0] prevX2 [0:639];
-/*
-reg [4:0] updateCount;
-wire drawClk;
-always @(posedge AnalogClock) 
-begin
-	if (reset) begin
-		updateCount <= 0;
-	end 
-	else begin
-		updateCount = updateCount + 1;
-	end
-end
 
-
-assign drawClk = (updateCount==5'd0);
-*/
-always @(posedge AnalogClock)
+always @(posedge drawClock)
 begin
 	if(triggerDraw || reset || nios_reset) begin
 		time_index <= 10'd0;
 		drawCount  <=0;
 	end
-	else if (time_index < vga_width && start_stop) begin
+	else if (time_index < vga_width && start_stop & (drawCount == 4'b0)) begin
 	//else if (time_index < vga_width && start_stop) begin
 
         //yTrace1 <= x1[17] ? $unsigned(x1_height) - x1_abs[17:12] : $unsigned(x1_height)  + x1_abs[17:11]; 
@@ -185,19 +177,18 @@ begin
 
 		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:9] : $unsigned(18'd240)  + x1_abs[17:9];
 		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:9] : $unsigned(18'd240) + x2_abs[17:9];
-		drawCount <= drawCount + 2'b1;
+		drawCount <= drawCount + 4'b1;
 	end
 	else if (time_index >= 640 && start_stop) begin
 		time_index <= 10'd0;
 	end
 	else begin
-		drawCount <= drawCount + 2'b1;
+		drawCount <= drawCount + 4'b1;
 	end
 end
 
 
 signed_mult5760 kmid_x2minusx1_mul(kmid_x2minusx1,kmid,(x2-x1));
-
 
 signed_mult5760 k1_x1_mul(k1_x1,k1,x1minusLW);
 signed_mult5760 k1_x1_cu_mul(k1_x1_cu,k1,(x1minusLW+kcu_x1LWcu));
@@ -209,6 +200,7 @@ signed_mult5760 g2_x2_d1_mul(g2_x2_d1,g2,d_x2_dt);
 signed_mult5760 kcu1(x1minusLW_sq,x1minusLW,x1minusLW);
 signed_mult5760 kcu2(x1minusLW_cu,x1minusLW_sq,x1minusLW);
 signed_mult5760 kcu3(kcu_x1LWcu,x1minusLW_cu,kcubic);
+
 assign x1minusLW = (x1-18'h3_0000);
 // based on position of switch 3 include cubic term for x1
 assign d2_x1_dt2 = cube ? kmid_x2minusx1-k1_x1-g1_x1_d1 : kmid_x2minusx1-k1_x1_cu-g1_x1_d1;
@@ -218,8 +210,8 @@ integrator #(.functwidth(21)) i_x1_21
 (
   .out(d_x1_dt),         //the state variable V
   .funct(d2_x1_dt2),    //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
-  .clk(AnalogClock),
+  .dt(4'd8),        // in units of SHIFT-right
+  .clk(drawClock),
   .reset(nios_reset),
   .InitialOut(v1_init)
   );
@@ -227,8 +219,8 @@ integrator #(.functwidth(21)) i_x1_21
 integrator i_x1_10(
   .out(x1),         //the state variable V
   .funct(d_x1_dt),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
-  .clk(AnalogClock),
+  .dt(4'd8),        // in units of SHIFT-right
+  .clk(drawClock),
   .reset(nios_reset),
   .InitialOut(x1_init)
   );
@@ -237,8 +229,8 @@ integrator #(.functwidth(21)) i_x2_21
 (
   .out(d_x2_dt),         //the state variable V
   .funct(d2_x2_dt2),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
-  .clk(AnalogClock),
+  .dt(4'd8),        // in units of SHIFT-right
+  .clk(drawClock),
   .reset(nios_reset),
   .InitialOut(v2_init)
   );
@@ -246,8 +238,8 @@ integrator #(.functwidth(21)) i_x2_21
 integrator i_x2_10(
   .out(x2),         //the state variable V
   .funct(d_x2_dt),      //the dV/dt function
-  .dt(4'd9),        // in units of SHIFT-right
-  .clk(AnalogClock),
+  .dt(4'd8),        // in units of SHIFT-right
+  .clk(drawClock),
   .reset(nios_reset),
   .InitialOut(x2_init)
   );
