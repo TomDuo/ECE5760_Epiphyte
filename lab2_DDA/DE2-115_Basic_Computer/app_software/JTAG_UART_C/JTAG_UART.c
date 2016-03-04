@@ -75,9 +75,9 @@ int main(void)
 				if (strstr(command_string,k1_string) == command_string)
 				{
 
-					printf("\nfound k1 match\n");
+					//printf("\nfound k1 match\n");
 					tempFloat = atof(&command_string[3]); //strtod(&command_string[3],&pEnd);
-					printf("completed strtod call\n");
+					//printf("completed strtod call\n");
 					//sscanf(command_string,"%f", &tempFloat);
 					select_line = 0x1;
 
@@ -132,15 +132,16 @@ int main(void)
 				{
 					//select_line = 0x0;
 				}
-				printf("about to convert to fixed\n");
+				//printf("about to convert to fixed\n");
 				dataLine = FLOAT2_DDA_FIXED(tempFloat);
 				// after reading a value, zero the index and clear the command string
 				//printf("tempFloat = %f\ndataLine = ",tempFloat);
 				*(dda_ptr)= (dataLine << 4) | select_line;
 				command_index = 0;
-				printf("converted to fixed and sent to ports\ndataLine = ");
+				//printf("converted to fixed and sent to ports\ndataLine = ");
 
 				// print out the value sent to ports on JTAG
+				/*
 				for (n=17;n>=0;n--){
 					if (dataLine & (1<<n))
 					{
@@ -155,7 +156,8 @@ int main(void)
 					if (n==8) {printf(" ");}
 					if (n==4) {printf(" ");}
 				}
-				printf("\nPort output displayed above\n");
+				*/
+				//printf("\nPort output displayed above\n");
 				
 				// zero the command string
 				for (n=0;n<20;n++){

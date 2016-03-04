@@ -175,8 +175,8 @@ begin
         //yTrace2 <= x2[17] ? $unsigned(x2_height) - x2_abs[17:12] : $unsigned(x2_height) + x2_abs[17:11];
 		time_index = time_index + 10'd1;
 
-		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:9] : $unsigned(18'd240)  + x1_abs[17:9];
-		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:9] : $unsigned(18'd240) + x2_abs[17:9];
+		yTrace1 <= x1[17] ? $unsigned(18'd240) - x1_abs[17:8] : $unsigned(18'd240)  + x1_abs[17:8];
+		yTrace2 <= x2[17] ? $unsigned(18'd240) - x2_abs[17:8] : $unsigned(18'd240) + x2_abs[17:8];
 		drawCount <= drawCount + 4'b1;
 	end
 	else if (time_index >= 640 && start_stop) begin
@@ -211,7 +211,7 @@ integrator #(.functwidth(21)) i_x1_21
   .out(d_x1_dt),         //the state variable V
   .funct(d2_x1_dt2),    //the dV/dt function
   .dt(4'd8),        // in units of SHIFT-right
-  .clk(drawClock),
+  .clk(drawClock&(start_stop|nios_reset)),
   .reset(nios_reset),
   .InitialOut(v1_init)
   );
@@ -220,7 +220,7 @@ integrator i_x1_10(
   .out(x1),         //the state variable V
   .funct(d_x1_dt),      //the dV/dt function
   .dt(4'd8),        // in units of SHIFT-right
-  .clk(drawClock),
+  .clk(drawClock&(start_stop|nios_reset)),
   .reset(nios_reset),
   .InitialOut(x1_init)
   );
@@ -230,7 +230,7 @@ integrator #(.functwidth(21)) i_x2_21
   .out(d_x2_dt),         //the state variable V
   .funct(d2_x2_dt2),      //the dV/dt function
   .dt(4'd8),        // in units of SHIFT-right
-  .clk(drawClock),
+  .clk(drawClock&(start_stop|nios_reset)),
   .reset(nios_reset),
   .InitialOut(v2_init)
   );
@@ -239,7 +239,7 @@ integrator i_x2_10(
   .out(x2),         //the state variable V
   .funct(d_x2_dt),      //the dV/dt function
   .dt(4'd8),        // in units of SHIFT-right
-  .clk(drawClock),
+  .clk(drawClock&(start_stop|nios_reset)),
   .reset(nios_reset),
   .InitialOut(x2_init)
   );
