@@ -95,7 +95,7 @@ module compNode
     sInit:
     begin
       // consider adding code here to only change the value based on the x and y ID
-      u <= 18'h3_0000; // allow for the drum to be struck by setting u to -1
+      u <= 18'h3_8100; // allow for the drum to be struck by setting u to -1
     end
 
     mul0:
