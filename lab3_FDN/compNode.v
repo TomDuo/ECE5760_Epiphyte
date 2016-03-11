@@ -99,7 +99,7 @@ module compNode
       rhoMultSum <= multOut;
     end
 
-    mul1;
+    mul1:
     begin
       muxASel <= 2'b01;
       muxBSel <= 2'b01;
@@ -111,7 +111,7 @@ module compNode
       muxASel <= 2'b10;
       muxBSel <= 2'b10;
       uPrev   <= u;
-      u       <= rhoSumMultOneMinusEta + (u<<1) - multOut // add tension effect here
+      u       <= rhoSumMultOneMinusEta + (u<<1) - multOut; // add tension effect here
     end
     endcase
   end
