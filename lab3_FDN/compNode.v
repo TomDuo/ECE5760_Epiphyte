@@ -77,7 +77,9 @@ module compNode
 
   // State Machine Transitions
   always @(posedge clk) begin
-    if (reset) nextState <= sInit;
+    if (reset) begin
+      nextState <= sInit;
+    end  
     else begin
       case(state)
         sInit: nextState <= mul0;
@@ -95,7 +97,8 @@ module compNode
     sInit:
     begin
       // consider adding code here to only change the value based on the x and y ID
-      u <= 18'h3_8100; // allow for the drum to be struck by setting u to -1
+      u     <= 18'h3_8100; // allow for the drum to be struck by setting u to -1
+      uPrev <= 18'h0_0000;
     end
 
     mul0:
