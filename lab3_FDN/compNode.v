@@ -50,7 +50,12 @@ module compNode
   reg         [1:0]  muxASel;
   reg         [1:0]  muxBSel;
 
-  signed_mult5760(multOut,multInA,multInB);
+  fixed_mult5760 multy_the_multiplier_who_only_loves(
+      .a(multInA),
+      .b(multInB),
+      .out(multOut)
+  );
+
 
   vc_Mux3 #(18) muxA (
     .in0(rho),
@@ -60,7 +65,7 @@ module compNode
     .out(multInA)
   );
 
-  c_Mux3 #(18) muxB (
+  vc_Mux3 #(18) muxB (
     .in0(sumNeighbors),
     .in1(rhoMultSum),
     .in2(uPrev),
