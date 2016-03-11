@@ -53,7 +53,8 @@ module compNode
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
   reg signed [17:0] state2_out;
-  fixed_mult5760 multy_the_multiplier_who_only_loves(
+  fixed_clocked_mult5760 multy_the_multiplier_who_only_loves(
+      .clk(clk),
       .a(multInA),
       .b(multInB),
       .out(multOut)
@@ -72,11 +73,11 @@ module compNode
         sInit:
         begin
           // consider adding code here to only change the value based on the x and y ID
-          u     <= 18'h3_9000; // allow for the drum to be struck by setting u to -1
+          u     <= 18'h0_2000; // allow for the drum to be struck by setting u to -1
           uprev <= 18'h0_0000;
           state2_out <= 18'h0_0000;
           nextState <= mul1;
-          multInA <= 18'h3_9000;
+          multInA <= 18'h1_0000;
           multInB <= 18'h1_0000;
         end
 
@@ -90,20 +91,20 @@ module compNode
         mul2:
         begin
           multInA <= multOut; 
-          multInB <= (1-eta);
+          multInB <= (18'h1_0000-eta);
           nextState <= mul3;
         end
 
         mul3:
         begin
           state2_out <= multOut;
-          multInA <= (1-eta);
+          multInA <= (18'h1_0000-eta);
           multInB <= uprev;
           nextState <= sUpdate;
         end
         sUpdate:
         begin
-          u <= state2_out + (u<<1) +  multOut;
+          u <= state2_out + (u<<1) -  multOut;
           uprev <= u;
           nextState <= mul1;
         end
