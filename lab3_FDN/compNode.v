@@ -20,7 +20,8 @@ module compNode
     input [2:0]         tensionSel,
 
   // Output Values
-    output reg signed [17:0] u
+    output reg signed [17:0] u,
+    output                   validOut
   );
 
   // Registers to track current state
@@ -120,4 +121,6 @@ module compNode
     end
     endcase
   end
+
+  assign validOut = (state == mul2);
 endmodule
