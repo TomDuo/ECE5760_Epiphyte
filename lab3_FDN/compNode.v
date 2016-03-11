@@ -25,32 +25,34 @@ module compNode
   );
 
   // Registers to track current state
-  reg [1:0] state;
-  reg [1:0] nextState;
+  reg [2:0] state;
+  reg [2:0] nextState;
 
   // State machine parameters
-  localparam sInit = 2'd0;  
-  localparam mul0  = 2'd1;
-  localparam mul1  = 2'd2;
-  localparam mul2  = 2'd3;
+  localparam sInit = 3'd0;  
+  localparam mul1  = 3'd1;
+  localparam mul2  = 3'd2;
+  localparam mul3  = 3'd3;
+  localparam sUpdate = 3'd4;
 
   // Registers to hold intermediate values
-  wire signed [17:0] oneMinusEta;
-  wire signed [17:0] sumNeighbors;
-  reg  signed [17:0] uPrev;
-  reg  signed [17:0] rhoMultSum;
-  reg  signed [17:0] rhoSumMultOneMinusEta;
+  //wire signed [17:0] oneMinusEta;
+  //wire signed [17:0] sumNeighbors;
+  reg  signed [17:0] uprev;
+  //reg  signed [17:0] rhoMultSum;
+  //reg  signed [17:0] rhoSumMultOneMinusEta;
 
-  assign oneMinusEta  = 1-eta;
-  assign sumNeighbors = uNorth + uSouth + uEast + uWest - (u << 2); 
+  //assign oneMinusEta  = (1-eta)>>1;
+  //assign sumNeighbors = uNorth + uSouth + uEast + uWest - (u << 2); 
+
 
   // Multiplier and Multiplexor Datapath
   wire signed [17:0] multOut;
-  wire signed [17:0] multInA;
-  wire signed [17:0] multInB;
-  reg         [1:0]  muxASel;
-  reg         [1:0]  muxBSel;
-
+  wire [31:0]  multOutfloat;
+  fixed_to_float ff_multOut(multOut,multOutfloat);
+  reg signed [17:0] multInA;
+  reg signed [17:0] multInB;
+  reg signed [17:0] state2_out;
   fixed_mult5760 multy_the_multiplier_who_only_loves(
       .a(multInA),
       .b(multInB),
@@ -58,72 +60,61 @@ module compNode
   );
 
 
-  vc_Mux3 #(18) muxA (
-    .in0(rho),
-    .in1(oneMinusEta),
-    .in2(oneMinusEta),
-    .sel(muxASel),
-    .out(multInA)
-  );
-
-  vc_Mux3 #(18) muxB (
-    .in0(sumNeighbors),
-    .in1(rhoMultSum),
-    .in2(uPrev),
-    .sel(muxBSel),
-    .out(multInB)
-  );
-
-
-  // State Machine Transitions
-  always @(posedge clk) begin
-    if (reset) begin
-      nextState <= sInit;
-    end  
-    else begin
-      case(state)
-        sInit: nextState <= mul0;
-        mul0:  nextState <= mul1;
-        mul1:  nextState <= mul2;
-        mul2:  nextState <= mul0;
-      endcase
-    end
-  end
 
   // State Machine Actions
   always @(posedge clk) begin
-    state <= nextState;
-    case(state)
-    sInit:
-    begin
-      // consider adding code here to only change the value based on the x and y ID
-      u     <= 18'h3_8100; // allow for the drum to be struck by setting u to -1
-      uPrev <= 18'h0_0000;
+    state = nextState;
+    if (reset) begin
+      nextState <= sInit;
     end
+    else begin
+        case(state)
+        sInit:
+        begin
+          // consider adding code here to only change the value based on the x and y ID
+          u     <= 18'h3_9000; // allow for the drum to be struck by setting u to -1
+          uprev <= 18'h0_0000;
+          state2_out <= 18'h0_0000;
+          nextState <= mul1;
+          multInA <= 18'h3_9000;
+          multInB <= 18'h1_0000;
+        end
 
-    mul0:
-    begin
-      muxASel <= 2'b00;
-      muxBSel <= 2'b00;
-      rhoMultSum <= multOut;
-    end
+        mul1:
+        begin
+         multInA <= rho;
+         multInB <= (uNorth + uSouth + uEast  + uWest - (u<<2));
+         nextState <= mul2;
+        end
 
-    mul1:
-    begin
-      muxASel <= 2'b01;
-      muxBSel <= 2'b01;
-      rhoSumMultOneMinusEta <= multOut;
-    end
+        mul2:
+        begin
+          multInA <= multOut; 
+          multInB <= (1-eta);
+          nextState <= mul3;
+        end
 
-    mul2:
-    begin
-      muxASel <= 2'b10;
-      muxBSel <= 2'b10;
-      uPrev   <= u;
-      u       <= rhoSumMultOneMinusEta + (u<<1) - multOut; // add tension effect here
-    end
-    endcase
+        mul3:
+        begin
+          state2_out <= multOut;
+          multInA <= (1-eta);
+          multInB <= uprev;
+          nextState <= sUpdate;
+        end
+        sUpdate:
+        begin
+          u <= state2_out + (u<<1) +  multOut;
+          uprev <= u;
+          nextState <= mul1;
+        end
+        default:
+        begin
+            nextState <= sInit;
+        end
+        endcase
+     end
   end
 
   assign validOut = (state == mul2);
 endmodule
+
