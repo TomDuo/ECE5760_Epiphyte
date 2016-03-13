@@ -191,8 +191,8 @@ module DE2_115_Basic_Computer (
   assign EX_IO = 7'hzzzzzzzzz;
 
   // Disable audio codec.
-  // assign AUD_DACDAT = 1'b0;
-  // assign AUD_XCK    = 1'b0;
+  // assign AUD_DACDAT = 1'b1;
+  // assign AUD_XCK    = 1'b1;
 
 
   // Disable flash.
@@ -227,10 +227,69 @@ module DE2_115_Basic_Computer (
   assign SD_DAT = 4'bzzzz;
   assign SD_CLK = 1'b0;
   assign SD_CMD = 1'b0;
+  
+  
+reg unsigned LOW_FREQ_CLK;
+wire	AUD_CTRL_CLK;
+wire	DLY_RST;
 
+assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
+assign	AUD_ADCLRCK	=	AUD_DACLRCK;
+assign	AUD_XCK		=	AUD_CTRL_CLK;
+reg unsigned [14:0] count;
 
+always @ (posedge AUD_CTRL_CLK) begin
+	if(count < 15'd9200) begin
+	count = count + 1;
+	end
+	else begin
+	count <= 0;
+	LOW_FREQ_CLK <= ~LOW_FREQ_CLK;
+	end
+end
+reg DEBUG_CLK;
+reg [11:0] debug_count;
 
+always @ (posedge LOW_FREQ_CLK) begin
+	if(debug_count < 12'd2000) begin
+	debug_count = debug_count + 1;
+	end
+	else begin
+	debug_count <= 0;
+	DEBUG_CLK <= ~DEBUG_CLK;
+	end
+end
 
+assign LEDG[0] = DEBUG_CLK;
+assign LEDG[1] = KEY[0];
+//assign LEDG[2] = DLY_RST;
+assign LEDG[2] = DLY_RST;
+assign LEDG[3] = KEY[0] && DLY_RST;
+
+Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
+
+//VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(CLOCK_27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+Audio_PLL         p1 (  .areset(~DLY_RST), .inclk0(CLOCK_50),.c0(AUD_CTRL_CLK ));
+I2C_AV_Config 		u3	(	//	Host Side
+							.iCLK(CLOCK_50),
+							.iRST_N(KEY[0] && DLY_RST),
+							//	I2C Side
+							.I2C_SCLK(I2C_SCLK),
+							.I2C_SDAT(I2C_SDAT)	);
+
+AUDIO_DAC_ADC 			u4	(	//	Audio Side
+							.oAUD_BCK(AUD_BCLK),
+							.oAUD_DATA(AUD_DACDAT),
+							.oAUD_LRCK(AUD_DACLRCK),
+							.oAUD_inL(), // audio data from ADC 
+							.oAUD_inR(), // audio data from ADC 
+							.iAUD_ADCDAT(AUD_ADCDAT),
+							.iAUD_extL((LOW_FREQ_CLK<<13)), // audio data to DAC
+							.iAUD_extR((LOW_FREQ_CLK<<15)), // audio data to DAC
+							//	Control Signals
+				           		 .iCLK_18_4(AUD_CTRL_CLK),
+							.iRST_N(DLY_RST)
+							);
 
 endmodule //top module
 
