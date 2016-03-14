@@ -42,7 +42,7 @@ module compNode
   // Multiplier and Multiplexor Datapath
   wire signed [17:0] multOut;
   wire [31:0]  multOutfloat;
-  fixed_to_float ff_multOut(multOut,multOutfloat);
+  //fixed_to_float ff_multOut(multOut,multOutfloat);
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
   reg signed [17:0] state2_out;
