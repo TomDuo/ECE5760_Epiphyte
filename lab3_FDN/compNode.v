@@ -36,15 +36,7 @@ module compNode
   localparam sUpdate = 3'd4;
 
   // Registers to hold intermediate values
-  //wire signed [17:0] oneMinusEta;
-  //wire signed [17:0] sumNeighbors;
   reg  signed [17:0] uprev;
-  //reg  signed [17:0] rhoMultSum;
-  //reg  signed [17:0] rhoSumMultOneMinusEta;
-
-  //assign oneMinusEta  = (1-eta)>>1;
-  //assign sumNeighbors = uNorth + uSouth + uEast + uWest - (u << 2); 
-
 
   // Multiplier and Multiplexor Datapath
   wire signed [17:0] multOut;
@@ -53,14 +45,13 @@ module compNode
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
   reg signed [17:0] state2_out;
+
   fixed_clocked_mult5760 multy_the_multiplier_who_only_loves(
-      .clk(clk),
-      .a(multInA),
-      .b(multInB),
-      .out(multOut)
+    .clk(clk),
+    .a(multInA),
+    .b(multInB),
+    .out(multOut)
   );
-
-
 
   // State Machine Actions
   always @(posedge clk) begin
