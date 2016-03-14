@@ -6,7 +6,7 @@ module fixed_clocked_mult5760 (
   );
 
   reg   signed  [35:0]  mult_out;
-  always @(negedge clk)
+  always @(posedge clk)
   begin
   mult_out <= a * b;
   end

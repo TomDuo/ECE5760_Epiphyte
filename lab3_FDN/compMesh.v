@@ -1,7 +1,7 @@
 module compMesh
 #(
-  parameter xSize = 10,
-  parameter ySize = 10
+  parameter xSize = 16,
+  parameter ySize = 16
 )(
 
   // Clocks and Resets
@@ -31,9 +31,12 @@ generate
             wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : boundaryValue ;    
             wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : boundaryValue ;    
             wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : boundaryValue ;    
+            wire signed [17:0] dist = $sqrt(((xSize-x)-1)^2 + ((ySize - y)-1)^2); //Using manhattan distance for now
+            wire signed [17:0] uInit = dist >= 15 ? 0 : ~((1<<dist)+18'd1);
             compNode #(x,y) cn (
                 .clk(clk),
                 .reset(reset),
+                .uInit(uInit),
                 .uNorth(uNorth),
                 .uSouth(uSouth),
                 .uEast(uEast),

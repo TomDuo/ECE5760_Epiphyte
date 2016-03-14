@@ -9,6 +9,7 @@ module compNode
     input reset,
 
   // Neighbors NOTE: inputs might be boundaries depending on xID and yID
+    input signed [17:0] uInit,
     input signed [17:0] uNorth,
     input signed [17:0] uSouth,
     input signed [17:0] uEast,
@@ -45,12 +46,10 @@ module compNode
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
   reg signed [17:0] state2_out;
-
-  fixed_clocked_mult5760 multy_the_multiplier_who_only_loves(
-    .clk(clk),
-    .a(multInA),
-    .b(multInB),
-    .out(multOut)
+  fixed_comb_mult5760 multy_the_multiplier_who_only_loves(
+      .a(multInA),
+      .b(multInB),
+      .out(multOut)
   );
 
   // State Machine Actions
@@ -75,7 +74,7 @@ module compNode
         mul1:
         begin
          multInA <= rho;
-         multInB <= uNorth - u + uSouth - u + uEast - u  + uWest - u;
+         multInB <= (uNorth -u + uSouth -u + uEast - u + uWest - u);
          nextState <= mul2;
         end
 
