@@ -23,29 +23,29 @@ mul2s = [];
 mul3s = [];
 
 while cycleNum <  limit
-    mul1 = rho*(uN+uS+uW+uE - 4*u);
-    mul1s = [mul1s mul1]
+    mul1 = rho*(uN+uS+uW+uE - 4*u)
+    mul1s = [mul1s mul1];
     cycleNum=cycleNum+1
     
-    pause;
-    mul2 = (1-eta)*mul1;
-    mul2s = [mul2s mul2]
+    %pause;
+    mul2 = (1-eta)*mul1
+    mul2s = [mul2s mul2];
 
     cycleNum=cycleNum+1
     
-    pause;
-    mul3 =  (1-eta)*uprev;
-    mul3s = [mul3s mul3]
+    %pause;
+    mul3 =  (1-eta)*uprev
+    mul3s = [mul3s mul3];
     cycleNum=cycleNum+1
     
-    pause;
-    uprev = u;
-    u = mul2 + 2*u - mul3
+    %pause;
+    uprev = u
+    u = mul2 + 2*u - mul3;
     cycleNum=cycleNum+1
     
-    pause;
-    y = [y u]
+    %pause;
+    y = [y u];
     cycleNum=cycleNum+1
 end
-
+y
 plot(y)
