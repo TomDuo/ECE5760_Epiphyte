@@ -1,7 +1,10 @@
 module compMesh
 #(
   parameter xSize = 16,
-  parameter ySize = 16
+  parameter ySize = 16,
+  parameter amplitudeInit = 0.1,
+  parameter alpha = -0.05,
+  parameter boundary_value = 0.0
 )(
 
   // Clocks and Resets
@@ -19,9 +22,7 @@ module compMesh
   );
 
 wire [17:0] mesh_u [0:ySize-1][0:xSize-1];
-reg signed [17:0] boundaryValue = 18'd0;
 wire [xSize*ySize-1:0] validOuts ;
-
 assign allValid = &validOuts;
 genvar x;
 genvar y;
@@ -29,21 +30,29 @@ generate
     for(x=0; x<xSize; x=x+1) begin : xloop
         for(y=0; y<ySize;y=y+1) begin : yloop
 
+            /*
             wire signed [17:0] uNorth = y != 0 ? mesh_u[y-1][x] : boundaryValue ;    
             wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : boundaryValue ;    
             wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : boundaryValue ;    
             wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : boundaryValue ;    
              //Boundary conditions for no tiling
-            /* 
-            wire signed [17:0] uNorth = y != 0 ? mesh_u[y-1][x] : boundaryValue ;    
-            wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : mesh_u[y][x] ;    
-            wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : boundaryValue ;    
-            wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : mesh_u[y][x] ;    
             */
+              
+            wire signed [17:0] uNorth = y != 0 ? mesh_u[y-1][x] : 0 ;    
+            wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : mesh_u[y][x] ;    
+            wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : 0 ;    
+            wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : mesh_u[y][x] ;    
+            real drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
             //Boundary conditions for full tiling           
-            wire signed [17:0] dist = $sqrt(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) ) ; //Using euclidean distance for now
-
-            wire signed [17:0] uInit = dist >= 15 ? 0 : ~((18'h0_8000>>dist)+18'd1);
+            /*
+            if( (x == 0) || (y == 0) ) begin
+                drum_init_r = boundary_gain;
+            end
+            else begin 
+                drum_init_r= 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; //Using euclidean distance for now
+            end
+            */
+            wire signed [17:0] uInit = $rtoi(drum_init_r);//dist >= 15 ? 0 : ~((18'h0_1800>>dist)+18'd1);
             compNode #(x,y) cn (
                 .clk(clk),
                 .reset(reset),
