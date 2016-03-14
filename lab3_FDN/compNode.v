@@ -84,7 +84,7 @@ module compNode
         mul1:
         begin
          multInA <= rho;
-         multInB <= (uNorth + uSouth + uEast  + uWest - (u<<2));
+         multInB <= uNorth - u + uSouth - u + uEast - u  + uWest - u;
          nextState <= mul2;
         end
 
