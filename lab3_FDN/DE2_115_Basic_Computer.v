@@ -175,104 +175,123 @@ module DE2_115_Basic_Computer (
   output [7:0]  VGA_B       // VGA Blue[9:0]
 );
 
-/*
-  // Turn off all displays.
-  assign HEX0 = 7'h7F;
-  assign HEX1 = 7'h7F;
-  assign HEX2 = 7'h7F;
-  assign HEX3 = 7'h7F;
-  assign HEX4 = 7'h7F;
-  assign HEX5 = 7'h7F;
-  assign HEX6 = 7'h7F;
-  assign HEX7 = 7'h7F;
-*/
-  // Set all GPIO to tri-state.
-  assign GPIO = 36'hzzzzzzzzz;
-  assign EX_IO = 7'hzzzzzzzzz;
+   //Turn off all displays.
+   assign HEX0 = 7'h7F;
+   assign HEX1 = 7'h7F;
+   assign HEX2 = 7'h7F;
+   assign HEX3 = 7'h7F;
+   assign HEX4 = 7'h7F;
+   assign HEX5 = 7'h7F;
+   assign HEX6 = 7'h7F;
+   assign HEX7 = 7'h7F;
+   //assign LEDR = 18'h0;
+   assign LEDG = 9'h0;
+   
+   //Set all GPIO to tri-state.
+   assign GPIO_0 = 36'hzzzzzzzzz;
+   assign GPIO_1 = 36'hzzzzzzzzz;
 
-  // Disable audio codec.
-  // assign AUD_DACDAT = 1'b1;
-  // assign AUD_XCK    = 1'b1;
+   //Disable audio codec.
+   //assign AUD_DACDAT = 1'b0;
+   //assign AUD_XCK    = 1'b0;
 
+   //Disable DRAM.
+   assign DRAM_ADDR  = 12'h0;
+   assign DRAM_BA_0  = 1'b0;
+   assign DRAM_BA_1  = 1'b0;
+   assign DRAM_CAS_N = 1'b1;
+   assign DRAM_CKE   = 1'b0;
+   assign DRAM_CLK   = 1'b0;
+   assign DRAM_CS_N  = 1'b1;
+   assign DRAM_DQ    = 16'hzzzz;
+   assign DRAM_LDQM  = 1'b0;
+   assign DRAM_RAS_N = 1'b1;
+   assign DRAM_UDQM  = 1'b0;
+   assign DRAM_WE_N  = 1'b1;
 
-  // Disable flash.
-  assign FL_ADDR  = 23'h0;
-  assign FL_CE_N  = 1'b1;
-  assign FL_DQ    = 8'hzz;
-  assign FL_OE_N  = 1'b1;
-  assign FL_RST_N = 1'b1;
-  assign FL_WE_N  = 1'b1;
-  assign FL_WP_N  = 1'b0;
+   //Disable Ethernet.
+   assign ENET_CLK   = 1'b0;
+   assign ENET_CS_N  = 1'b1;
+   assign ENET_CMD   = 1'b0;
+   assign ENET_DATA  = 16'hzzzz;
+   assign ENET_RD_N  = 1'b1;
+   assign ENET_RST_N = 1'b1;
+   assign ENET_WR_N  = 1'b1;
 
-  // Disable LCD.
-  assign LCD_BLON = 1'b0;
-  assign LCD_DATA = 8'hzz;
-  assign LCD_EN   = 1'b0;
-  assign LCD_ON   = 1'b0;
-  assign LCD_RS   = 1'b0;
-  assign LCD_RW   = 1'b0;
+   //Disable flash.
+   assign FL_ADDR  = 22'h0;
+   assign FL_CE_N  = 1'b1;
+   assign FL_DQ    = 8'hzz;
+   assign FL_OE_N  = 1'b1;
+   assign FL_RST_N = 1'b1;
+   assign FL_WE_N  = 1'b1;
 
-  // Disable OTG.
-  assign OTG_ADDR    = 2'h0;
-  assign OTG_CS_N    = 1'b1;
-  assign OTG_DACK_N  = 2'b11;
-  assign OTG_FSPEED  = 1'b1;
-  assign OTG_DATA    = 16'hzzzz;
-  assign OTG_LSPEED  = 1'b1;
-  assign OTG_RD_N    = 1'b1;
-  assign OTG_RST_N   = 1'b1;
-  assign OTG_WR_N    = 1'b1;
+   //Disable LCD.
+   assign LCD_BLON = 1'b0;
+   assign LCD_DATA = 8'hzz;
+   assign LCD_EN   = 1'b0;
+   assign LCD_ON   = 1'b0;
+   assign LCD_RS   = 1'b0;
+   assign LCD_RW   = 1'b0;
 
-  // Disable SD
-  assign SD_DAT = 4'bzzzz;
-  assign SD_CLK = 1'b0;
-  assign SD_CMD = 1'b0;
-  
-  
-reg unsigned LOW_FREQ_CLK;
+   //Disable OTG.
+   assign OTG_ADDR    = 2'h0;
+   assign OTG_CS_N    = 1'b1;
+   assign OTG_DACK0_N = 1'b1;
+   assign OTG_DACK1_N = 1'b1;
+   assign OTG_FSPEED  = 1'b1;
+   assign OTG_DATA    = 16'hzzzz;
+   assign OTG_LSPEED  = 1'b1;
+   assign OTG_RD_N    = 1'b1;
+   assign OTG_RST_N   = 1'b1;
+   assign OTG_WR_N    = 1'b1;
+
+   //Disable SDRAM.
+   assign SD_DAT = 1'bz;
+   assign SD_CLK = 1'b0;
+
+   //Disable SRAM.
+   assign SRAM_ADDR = 18'h0;
+   assign SRAM_CE_N = 1'b1;
+   assign SRAM_DQ   = 16'hzzzz;
+   assign SRAM_LB_N = 1'b1;
+   assign SRAM_OE_N = 1'b1;
+   assign SRAM_UB_N = 1'b1;
+   assign SRAM_WE_N = 1'b1;
+
+   //Disable VGA.
+   //assign VGA_CLK   = 1'b0;
+   assign VGA_BLANK = 1'b0;
+   assign VGA_SYNC  = 1'b0;
+   assign VGA_HS    = 1'b0;
+   assign VGA_VS    = 1'b0;
+   assign VGA_R     = 10'h0;
+   assign VGA_G     = 10'h0;
+   assign VGA_B     = 10'h0;
+
+   //Disable all other peripherals.
+   //assign I2C_SCLK = 1'b0;
+   assign IRDA_TXD = 1'b0;
+   assign TD_RESET_N = 1'b1;
+   assign TDO = 1'b0;
+   assign UART_TXD = 1'b0;
+   
+
+wire	VGA_CTRL_CLK;
 wire	AUD_CTRL_CLK;
 wire	DLY_RST;
 
 assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
 assign	AUD_ADCLRCK	=	AUD_DACLRCK;
 assign	AUD_XCK		=	AUD_CTRL_CLK;
-reg unsigned [14:0] count;
-
-always @ (posedge AUD_CTRL_CLK) begin
-	if(count < 15'd9200) begin
-	count = count + 1;
-	end
-	else begin
-	count <= 0;
-	LOW_FREQ_CLK <= ~LOW_FREQ_CLK;
-	end
-end
-reg DEBUG_CLK;
-reg [11:0] debug_count;
-
-always @ (posedge LOW_FREQ_CLK) begin
-	if(debug_count < 12'd2000) begin
-	debug_count = debug_count + 1;
-	end
-	else begin
-	debug_count <= 0;
-	DEBUG_CLK <= ~DEBUG_CLK;
-	end
-end
-
-assign LEDG[0] = DEBUG_CLK;
-assign LEDG[1] = KEY[0];
-//assign LEDG[2] = DLY_RST;
-assign LEDG[2] = DLY_RST;
-assign LEDG[3] = KEY[0] && DLY_RST;
 
 Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
 
-//VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(CLOCK_27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
-Audio_PLL         p1 (  .areset(~DLY_RST), .inclk0(CLOCK_50),.c0(AUD_CTRL_CLK ));
+VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+
 I2C_AV_Config 		u3	(	//	Host Side
 							.iCLK(CLOCK_50),
-							.iRST_N(KEY[0] && DLY_RST),
+							.iRST_N(KEY[0]),
 							//	I2C Side
 							.I2C_SCLK(I2C_SCLK),
 							.I2C_SDAT(I2C_SDAT)	);
@@ -281,15 +300,44 @@ AUDIO_DAC_ADC 			u4	(	//	Audio Side
 							.oAUD_BCK(AUD_BCLK),
 							.oAUD_DATA(AUD_DACDAT),
 							.oAUD_LRCK(AUD_DACLRCK),
-							.oAUD_inL(), // audio data from ADC 
-							.oAUD_inR(), // audio data from ADC 
+							.oAUD_inL(audio_inL), // audio data from ADC 
+							.oAUD_inR(audio_inR), // audio data from ADC 
 							.iAUD_ADCDAT(AUD_ADCDAT),
-							.iAUD_extL((LOW_FREQ_CLK<<13)), // audio data to DAC
-							.iAUD_extR((LOW_FREQ_CLK<<15)), // audio data to DAC
+							.iAUD_extL(audio_outL), // audio data to DAC
+							.iAUD_extR(audio_outR), // audio data to DAC
 							//	Control Signals
-				           		 .iCLK_18_4(AUD_CTRL_CLK),
+				         .iCLK_18_4(AUD_CTRL_CLK),
 							.iRST_N(DLY_RST)
 							);
 
-endmodule //top module
+/// reset ///////////////////////////////////////////////////////						
+//state machine start up	
+wire reset; 
+// reset control
+assign reset = ~KEY[0];
 
+/// audio stuff /////////////////////////////////////////////////
+
+wire signed [15:0] audio_outL, audio_outR ;
+
+reg [5:0] count;
+reg [15:0] sq_out;
+
+assign audio_outR = sq_out;
+assign audio_outL = sq_out;
+
+always@(posedge AUD_DACLRCK) begin
+	if (reset) begin
+		count  <= 6'd0;
+		sq_out <= 16'd0;
+	end
+	else if (count > 50) begin
+		count  <= 6'd0;
+		sq_out <= sq_out ^ 16'h0FFF;
+	end
+	else begin
+		count <= count + 6'd1;
+	end
+end
+
+endmodule
