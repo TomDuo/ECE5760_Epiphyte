@@ -279,6 +279,7 @@ module DE2_115_Basic_Computer (
 
 wire	VGA_CTRL_CLK;
 wire	AUD_CTRL_CLK;
+wire  MESH_CTRL_CLK;
 wire	DLY_RST;
 
 assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
@@ -288,7 +289,7 @@ assign	AUD_XCK		=	AUD_CTRL_CLK;
 Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
 
 VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
-
+PLL_LOWFREQ       p2 (  .areset(~DLY_RST),.inclk0(TD_CLK27),.c0(MESH_CTRL_CLK));
 I2C_AV_Config 		u3	(	//	Host Side
 							.iCLK(CLOCK_50),
 							.iRST_N(KEY[0]),
@@ -320,40 +321,57 @@ assign reset = ~KEY[0];
 wire [17:0] etaTone1;
 wire [17:0] etaTone2;
 wire [17:0] etaTone3;
-wire [17:0] currentEta;
+wire        makeTone;
+reg [17:0] currentEta;
+wire [17:0] currentRho;
 
 assign etaTone1 = 18'h0_0003;
-assign etaTone1 = 18'h0_0400;
-assign etaTone1 = 18'h0_0010;
+assign etaTone2 = 18'h0_0400;
+assign etaTone3 = 18'h0_0010;
+assign makeTone = ~KEY[1] | ~KEY[2]|  ~KEY[3];
 
-always @(posedge ~KEY[1] ~KEY[2] ~KEY[3]) begin
+always @(posedge makeTone) begin
   if (~KEY[1]) currentEta = etaTone1;
   else if (~KEY[2]) currentEta = etaTone2;
-  else (~KEY[3]) currentEta = etaTone3; 
+  else currentEta = etaTone3; 
 end
 
+/// comp mesh ///////////////////////////////////////////////////
+wire [17:0] u_mid;
+wire        validOut;
+
+compMesh #(5,5) cm1 (
+  .clk(MESH_CTRL_CLK),
+  .reset(makeTone),
+
+  //Input Params
+  .rho(rho_eff),
+  .eta(currentEta),
+  .tensionSel(3'b0),
+
+  // Output Values
+   .out(u_mid),
+   .allValid(validOut)
+);
+  
+rho_effective re1 (
+  // clk reset
+  .clk(MESH_CTRL_CLK),
+  .reset(makeTone),
+
+  // inputs for rho, constants, and middle position
+  .tension_effect_enable(SW[0]),
+  .rho_0(18'h0_2000),
+  .u_mid(u_mid),
+
+  // output the effective rho value for drum
+  .rho_eff(currentRho)
+);
 /// audio stuff /////////////////////////////////////////////////
 
 wire signed [15:0] audio_outL, audio_outR ;
 
-reg [5:0] count;
-reg [15:0] sq_out;
-
-assign audio_outR = sq_out;
-assign audio_outL = sq_out;
-
-always@(posedge AUD_DACLRCK) begin
-	if (reset) begin
-		count  <= 6'd0;
-		sq_out <= 16'd0;
-	end
-	else if (count > 50) begin
-		count  <= 6'd0;
-		sq_out <= sq_out ^ 16'h0FFF;
-	end
-	else begin
-		count <= count + 6'd1;
-	end
-end
+assign audio_outR = u_mid[17:2];
+assign audio_outL = u_mid[17:2];
 
 endmodule

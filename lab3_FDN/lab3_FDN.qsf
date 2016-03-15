@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE EP4CE115F29C7
 set_global_assignment -name TOP_LEVEL_ENTITY DE2_115_Basic_Computer
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 13.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:50:20  MARCH 11, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name LAST_QUARTUS_VERSION 13.0
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_location_assignment PIN_D2 -to AUD_ADCDAT
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to AUD_ADCDAT
@@ -1104,6 +1104,11 @@ set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -entity D
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VERILOG_FILE rho_effective.v
 set_global_assignment -name VERILOG_FILE compMesh.v
 set_global_assignment -name VERILOG_FILE PLL_LOWFREQ.v
 set_global_assignment -name VERILOG_FILE Audio_PLL.v
@@ -1117,8 +1122,4 @@ set_global_assignment -name VERILOG_FILE DE2_115_Basic_Computer.v
 set_global_assignment -name VERILOG_FILE compNode.v
 set_global_assignment -name QIP_FILE Audio_PLL.qip
 set_global_assignment -name QIP_FILE PLL_LOWFREQ.qip
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

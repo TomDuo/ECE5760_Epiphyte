@@ -42,7 +42,7 @@ generate
             wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : mesh_u[y][x] ;    
             wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : 0 ;    
             wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : mesh_u[y][x] ;    
-            real drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
+            CONSTANT drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
             //Boundary conditions for full tiling           
             /*
             if( (x == 0) || (y == 0) ) begin
