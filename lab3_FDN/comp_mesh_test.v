@@ -12,6 +12,7 @@ module top;
   reg reset = 1'b1;
   reg clk = 1;
   always #5 clk = ~clk;
+  reg [17:0] myEta = ((18'h1_0000)>>12);
   wire [17:0] out;
   wire [63:0] out_float;
   wire allValid;
@@ -24,7 +25,7 @@ module top;
     .reset(reset),
 
     .rho(18'h0_2000),
-    .eta((18'h1_0000)>>12),
+    .eta(myEta),
     .tensionSel(3'd0),
 
     .out(out),
@@ -44,6 +45,15 @@ module top;
 
     // Reset
 
+    #11;
+    reset = 1'b0;
+    repeat(32000) begin 
+    #10;
+    cyc_count = cyc_count + 1;
+    out_real = $bitstoreal(out_float);
+    end
+    reset = 1'b1;
+    myEta <= ((18'h1_0000)>>11);
     #11;
     reset = 1'b0;
     repeat(32000) begin 
