@@ -42,7 +42,8 @@ generate
             wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : mesh_u[y][x] ;    
             wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : 0 ;    
             wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : mesh_u[y][x] ;    
-            CONSTANT drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
+            wire signed [17:0] drum_init_r = ((x == 0) | (y == 0)) ? 0 : (1<<(xSize-x-y));
+				//real drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
             //Boundary conditions for full tiling           
             /*
             if( (x == 0) || (y == 0) ) begin
@@ -52,7 +53,8 @@ generate
                 drum_init_r= 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; //Using euclidean distance for now
             end
             */
-            wire signed [17:0] uInit = $rtoi(drum_init_r);//dist >= 15 ? 0 : ~((18'h0_1800>>dist)+18'd1);
+				wire signed [17:0] uInit = drum_init_r;
+            //wire signed [17:0] uInit = $rtoi(drum_init_r);//dist >= 15 ? 0 : ~((18'h0_1800>>dist)+18'd1);
             compNode #(x,y) cn (
                 .clk(clk),
                 .reset(reset),

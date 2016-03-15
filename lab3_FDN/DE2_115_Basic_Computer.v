@@ -328,7 +328,7 @@ wire [17:0] currentRho;
 assign etaTone1 = 18'h0_0003;
 assign etaTone2 = 18'h0_0400;
 assign etaTone3 = 18'h0_0010;
-assign makeTone = ~KEY[1] | ~KEY[2]|  ~KEY[3];
+assign makeTone = ~KEY[1] || ~KEY[2]||  ~KEY[3];
 
 always @(posedge makeTone) begin
   if (~KEY[1]) currentEta = etaTone1;
@@ -370,7 +370,7 @@ rho_effective re1 (
 /// audio stuff /////////////////////////////////////////////////
 
 wire signed [15:0] audio_outL, audio_outR ;
-
+assign LEDG[0] = makeTone;
 assign audio_outR = u_mid[17:2];
 assign audio_outL = u_mid[17:2];
 
