@@ -16,7 +16,7 @@ clear all
 % 16  0.05  2e-4  0.1   0.0          bass drum
 
 %linear dimension of membrane -- bigger is lower pitch
-n = 16 ;
+n = 32 ;
 u = zeros(n,n); %time t
 u1 = zeros(n,n); %time t-1
 u2 = zeros(n,n); %time t-2
