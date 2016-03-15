@@ -316,6 +316,22 @@ wire reset;
 // reset control
 assign reset = ~KEY[0];
 
+/// tone generation /////////////////////////////////////////////
+wire [17:0] etaTone1;
+wire [17:0] etaTone2;
+wire [17:0] etaTone3;
+wire [17:0] currentEta;
+
+assign etaTone1 = 18'h0_0003;
+assign etaTone1 = 18'h0_0400;
+assign etaTone1 = 18'h0_0010;
+
+always @(posedge ~KEY[1] ~KEY[2] ~KEY[3]) begin
+  if (~KEY[1]) currentEta = etaTone1;
+  else if (~KEY[2]) currentEta = etaTone2;
+  else (~KEY[3]) currentEta = etaTone3; 
+end
+
 /// audio stuff /////////////////////////////////////////////////
 
 wire signed [15:0] audio_outL, audio_outR ;
