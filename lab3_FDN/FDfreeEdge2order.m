@@ -24,10 +24,10 @@ uHit = zeros(n,n); %input strike
 
 % 0 < rho < 0.5 -- lower rho => lower pitch
 % rho = (vel*dt/dx)^2
-rho = 0.05;
+rho = 0.125;
 % eta = damping*dt/2
 % higher damping => shorter sound
-eta = 0.0002 ;
+eta = 2^-12 ;
 % boundary condition -1.0<gain<1.0
 % 1.0 is completely free edge
 % 0.0 is clamped edge
@@ -35,7 +35,7 @@ boundaryGain = 0;
 
 %time
 Fs = 8000 ;
-time = 0.0:1/Fs:5.0;
+time = 0.0:1/Fs:2.0;
 %output sound
 aud = zeros(size(time)) ;
 
@@ -116,6 +116,26 @@ set(gca,'xlim',[0 2])
 
 %play the sound
 sound(aud,Fs)
+fs=8000;
+figure(5);
+PSD = pwelch(aud);
+freq = linspace(0,fs/2,length(PSD));
+
+[pks,locs] = findpeaks(PSD,'MinPeakProminence',max(PSD)/2);
+PSD_db = 10*log10(PSD);
+clf;
+hold on;
+plot(1:length(PSD),PSD_db);
+
+for m=1:4
+    for n=1:4
+        plot([ locs(1)*sqrt(m^2+n^2)/sqrt(2), locs(1)*sqrt(m^2+n^2)/sqrt(2)] , [-1000,1000], 'r' );
+    end
+end
+hold off;
+xlim([0,100]);
+ylim([min(PSD_db),max(PSD_db)]);
+
 
 %end
 %============================================================

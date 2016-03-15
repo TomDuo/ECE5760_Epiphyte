@@ -12,7 +12,9 @@ uS  = 0;
 
 
 uprev = 0;
+buprev = uprev;
 u = .125;
+bu = u;
 
 oneMinusEta = 1-eta;
 cycleNum = 0
@@ -29,28 +31,42 @@ while cycleNum <  limit
     cycleNum=cycleNum+1
     
     %pause;
-    mul2 = (1-eta)*mul1
+    mul2 = (1-eta)*uprev
     mul2s = [mul2s mul2];
 
     cycleNum=cycleNum+1
     
     %pause;
-    mul3 =  (1-eta)*uprev
+    mul3 =  (1-eta)*(mul1 + 2*u - mul2);
     mul3s = [mul3s mul3];
     cycleNum=cycleNum+1
     
     %pause;
     uprev = u
-    u = mul2 + 2*u - mul3;
+    u = mul3;
     cycleNum=cycleNum+1
     
     %pause;
 
 end
-y
+bruce_y = [];
+for n=1:length(y)
+    bruce_y = [bruce_y bu];
+    
+    bu_prime = 1/(1+eta) * (...
+              rho * (uN+uS+uW+uE - 4*bu) ...
+              + 2 * bu ...
+              - (1-eta) * buprev);
+     buprev = bu;
+     bu = bu_prime;
+          
+end
 
 single =csvread('single.csv');
 t = 1:length(y);
-plot(t,y,t,single,'r-.')
-legend('matlab','iverilog');
+
+plot(t,y,t,single,'r-.',t,bruce_y,'g')
+legend('matlab','iverilog','bruce');
 xlim([0,500]);
+
+sound(single,8000);

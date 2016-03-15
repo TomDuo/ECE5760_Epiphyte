@@ -23,8 +23,8 @@ module top;
     .clk(clk),
     .reset(reset),
 
-    .rho(18'h0_8000),
-    .eta(18'h0_0200),
+    .rho(18'h0_2000),
+    .eta((18'h1_0000)>>12),
     .tensionSel(3'd0),
 
     .out(out),
@@ -46,7 +46,7 @@ module top;
 
     #11;
     reset = 1'b0;
-    repeat(16000) begin 
+    repeat(32000) begin 
     #10;
     cyc_count = cyc_count + 1;
     out_real = $bitstoreal(out_float);
