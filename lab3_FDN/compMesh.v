@@ -23,7 +23,7 @@ module compMesh
 
 wire [17:0] mesh_u [0:ySize-1][0:xSize-1];
 wire [xSize*ySize-1:0] validOuts ;
-assign allValid = &validOuts;
+assign allValid = validOuts[0];
 genvar x;
 genvar y;
 generate 

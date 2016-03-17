@@ -176,11 +176,11 @@ module DE2_115_Basic_Computer (
 );
 
    //Turn off all displays.
-   assign HEX0 = 7'h7F;
-   assign HEX1 = 7'h7F;
-   assign HEX2 = 7'h7F;
-   assign HEX3 = 7'h7F;
-   assign HEX4 = 7'h7F;
+   //assign HEX0 = 7'h7F;
+   //assign HEX1 = 7'h7F;
+   //assign HEX2 = 7'h7F;
+   //assign HEX3 = 7'h7F;
+   //assign HEX4 = 7'h7F;
    assign HEX5 = 7'h7F;
    assign HEX6 = 7'h7F;
    assign HEX7 = 7'h7F;
@@ -291,6 +291,11 @@ reg        ledFlag;
 reg        ledFlag2;
 reg [15:0] count;
 reg [15:0] count2;
+hex_7seg(currentEta[3:0],HEX0);
+hex_7seg(currentEta[7:4],HEX1);
+hex_7seg(currentEta[11:8],HEX2);
+hex_7seg(currentEta[15:12],HEX3);
+hex_7seg(currentEta[17:16],HEX4);
 
 always @(posedge MESH_CTRL_CLK) begin
 	if (count < 44100) begin
@@ -317,8 +322,8 @@ assign LEDR[1] = ledFlag;
 
 Reset_Delay			r0	(	.iCLK(CLOCK_50),.iRST(reset),.oRST_0(DLY_RST_0),.oRST_1(DLY_RST_1),.oRST_2(DLY_RST_2)	);
 
-VGA_Audio_PLL 		p1	(	.areset(DLY_RST_1),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
-PLL_LOWFREQ       p2 (  .areset(DLY_RST_1),.inclk0(TD_CLK27),.c0(MESH_CTRL_CLK));
+VGA_Audio_PLL 		p1	(	.areset(DLY_RST_0),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+PLL_LOWFREQ       p2 (  .areset(DLY_RST_1),.inclk0(AUD_CTRL_CLK),.c0(MESH_CTRL_CLK));
 I2C_AV_Config 		u3	(	//	Host Side
 							.iCLK(CLOCK_50),
 							.iRST_N(~DLY_RST_0),
@@ -403,9 +408,18 @@ assign LEDR[0] = makeTone;
 assign audio_outR =  AudOut;
 assign audio_outL =  AudOut;
 
-reg [15:0] AudOut;
+reg signed [15:0] AudOut;
+reg [2:0] aud_count;
 always @(posedge validOut)begin
-	AudOut <= u_mid[17:2];
+	//AudOut <= {u_mid[17],u_mid[14:0]};
+	if(aud_count < 3'd4) begin
+	  AudOut <= 16'h8000; 
+	end
+	else begin
+		  AudOut <= 16'h7FFF; 
+
+	end
+	aud_count = aud_count + 1;
 end
 
 endmodule
