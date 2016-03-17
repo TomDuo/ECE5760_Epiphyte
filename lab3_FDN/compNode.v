@@ -107,6 +107,6 @@ module compNode
      end
   end
 
-  assign validOut = (state == mul2);
+  assign validOut = (state == sUpdate);
 endmodule
 

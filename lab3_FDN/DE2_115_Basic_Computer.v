@@ -280,19 +280,48 @@ module DE2_115_Basic_Computer (
 wire	VGA_CTRL_CLK;
 wire	AUD_CTRL_CLK;
 wire  MESH_CTRL_CLK;
-wire	DLY_RST;
+wire	DLY_RST_0;
+wire	DLY_RST_1;
+wire	DLY_RST_2;
 
-assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
 assign	AUD_ADCLRCK	=	AUD_DACLRCK;
 assign	AUD_XCK		=	AUD_CTRL_CLK;
 
-Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
+reg        ledFlag;
+reg        ledFlag2;
+reg [15:0] count;
+reg [15:0] count2;
 
-VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
-PLL_LOWFREQ       p2 (  .areset(~DLY_RST),.inclk0(TD_CLK27),.c0(MESH_CTRL_CLK));
+always @(posedge MESH_CTRL_CLK) begin
+	if (count < 44100) begin
+		count <= count + 1;
+	end
+	else begin
+		count <= 0;
+		ledFlag = ~ledFlag;
+	end
+end
+
+always @(posedge validOut) begin
+	if (count2 < 44100) begin
+		count2 <= count2 + 1;
+	end
+	else begin
+		count2 <= 0;
+		ledFlag2 = ~ledFlag2;
+	end
+end
+
+assign LEDR[2] = ledFlag2;
+assign LEDR[1] = ledFlag;
+
+Reset_Delay			r0	(	.iCLK(CLOCK_50),.iRST(reset),.oRST_0(DLY_RST_0),.oRST_1(DLY_RST_1),.oRST_2(DLY_RST_2)	);
+
+VGA_Audio_PLL 		p1	(	.areset(DLY_RST_1),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+PLL_LOWFREQ       p2 (  .areset(DLY_RST_1),.inclk0(TD_CLK27),.c0(MESH_CTRL_CLK));
 I2C_AV_Config 		u3	(	//	Host Side
 							.iCLK(CLOCK_50),
-							.iRST_N(KEY[0]),
+							.iRST_N(~DLY_RST_0),
 							//	I2C Side
 							.I2C_SCLK(I2C_SCLK),
 							.I2C_SDAT(I2C_SDAT)	);
@@ -308,7 +337,7 @@ AUDIO_DAC_ADC 			u4	(	//	Audio Side
 							.iAUD_extR(audio_outR), // audio data to DAC
 							//	Control Signals
 				         .iCLK_18_4(AUD_CTRL_CLK),
-							.iRST_N(DLY_RST)
+							.iRST_N(~DLY_RST_2)
 							);
 
 /// reset ///////////////////////////////////////////////////////						
@@ -322,18 +351,18 @@ wire [17:0] etaTone1;
 wire [17:0] etaTone2;
 wire [17:0] etaTone3;
 wire        makeTone;
-reg [17:0] currentEta;
+reg  [17:0] currentEta;
 wire [17:0] currentRho;
 
 assign etaTone1 = 18'h0_0003;
 assign etaTone2 = 18'h0_0400;
 assign etaTone3 = 18'h0_0010;
-assign makeTone = ~KEY[1] || ~KEY[2]||  ~KEY[3];
+assign makeTone = ~KEY[1] || ~KEY[2] ||  ~KEY[3];
 
 always @(posedge makeTone) begin
-  if (~KEY[1]) currentEta = etaTone1;
-  else if (~KEY[2]) currentEta = etaTone2;
-  else currentEta = etaTone3; 
+  if (~KEY[1]) currentEta <= etaTone1;
+  else if (~KEY[2]) currentEta <= etaTone2;
+  else currentEta <= etaTone3; 
 end
 
 /// comp mesh ///////////////////////////////////////////////////
@@ -345,7 +374,7 @@ compMesh #(5,5) cm1 (
   .reset(makeTone),
 
   //Input Params
-  .rho(rho_eff),
+  .rho(18'h0_2000),
   .eta(currentEta),
   .tensionSel(3'b0),
 
@@ -370,8 +399,13 @@ rho_effective re1 (
 /// audio stuff /////////////////////////////////////////////////
 
 wire signed [15:0] audio_outL, audio_outR ;
-assign LEDG[0] = makeTone;
-assign audio_outR = u_mid[17:2];
-assign audio_outL = u_mid[17:2];
+assign LEDR[0] = makeTone;
+assign audio_outR =  AudOut;
+assign audio_outL =  AudOut;
+
+reg [15:0] AudOut;
+always @(posedge validOut)begin
+	AudOut <= u_mid[17:2];
+end
 
 endmodule
