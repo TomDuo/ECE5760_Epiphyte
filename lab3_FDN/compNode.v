@@ -9,6 +9,7 @@ module compNode
     input reset,
 
   // Neighbors NOTE: inputs might be boundaries depending on xID and yID
+    input signed [17:0] uInit,
     input signed [17:0] uNorth,
     input signed [17:0] uSouth,
     input signed [17:0] uEast,
@@ -36,31 +37,20 @@ module compNode
   localparam sUpdate = 3'd4;
 
   // Registers to hold intermediate values
-  //wire signed [17:0] oneMinusEta;
-  //wire signed [17:0] sumNeighbors;
   reg  signed [17:0] uprev;
-  //reg  signed [17:0] rhoMultSum;
-  //reg  signed [17:0] rhoSumMultOneMinusEta;
-
-  //assign oneMinusEta  = (1-eta)>>1;
-  //assign sumNeighbors = uNorth + uSouth + uEast + uWest - (u << 2); 
-
 
   // Multiplier and Multiplexor Datapath
   wire signed [17:0] multOut;
   wire [31:0]  multOutfloat;
-  fixed_to_float ff_multOut(multOut,multOutfloat);
+  //fixed_to_float ff_multOut(multOut,multOutfloat);
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
-  reg signed [17:0] state2_out;
-  fixed_clocked_mult5760 multy_the_multiplier_who_only_loves(
-      .clk(clk),
+  reg signed [17:0] state1_out;
+  fixed_comb_mult5760 multy_the_multiplier_who_only_loves(
       .a(multInA),
       .b(multInB),
       .out(multOut)
   );
-
-
 
   // State Machine Actions
   always @(posedge clk) begin
@@ -73,9 +63,9 @@ module compNode
         sInit:
         begin
           // consider adding code here to only change the value based on the x and y ID
-          u     <= 18'h0_2000; // allow for the drum to be struck by setting u to -1
+          u     <= uInit; // allow for the drum to be struck by setting u to -1
           uprev <= 18'h0_0000;
-          state2_out <= 18'h0_0000;
+          state1_out <= 18'h0_0000;
           nextState <= mul1;
           multInA <= 18'h1_0000;
           multInB <= 18'h1_0000;
@@ -84,27 +74,28 @@ module compNode
         mul1:
         begin
          multInA <= rho;
-         multInB <= (uNorth + uSouth + uEast  + uWest - (u<<2));
+         multInB <= (uNorth -u + uSouth -u + uEast - u + uWest - u);
          nextState <= mul2;
         end
 
+        
         mul2:
         begin
-          multInA <= multOut; 
-          multInB <= (18'h1_0000-eta);
-          nextState <= mul3;
-        end
-
-        mul3:
-        begin
-          state2_out <= multOut;
+          state1_out <= multOut;
           multInA <= (18'h1_0000-eta);
           multInB <= uprev;
+          nextState <= mul3;
+        end
+        mul3:
+        begin
+          multInA <= (18'h1_0000-eta);
+          multInB <= (state1_out + (u<<1) - multOut);
           nextState <= sUpdate;
         end
+
         sUpdate:
         begin
-          u <= state2_out + (u<<1) -  multOut;
+          u <= multOut; 
           uprev <= u;
           nextState <= mul1;
         end
@@ -116,6 +107,6 @@ module compNode
      end
   end
 
-  assign validOut = (state == mul2);
+  assign validOut = (state == sUpdate);
 endmodule
 

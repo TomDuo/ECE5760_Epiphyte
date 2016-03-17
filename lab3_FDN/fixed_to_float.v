@@ -1,6 +1,6 @@
 module fixed_to_float(
     input signed [17:0] fixed,
-    output wire  [31:0] floatbits
+    output wire  [63:0] floatbits
 );
 integer int_fixed;
 real float_repr; 

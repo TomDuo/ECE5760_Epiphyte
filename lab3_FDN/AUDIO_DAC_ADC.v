@@ -20,8 +20,8 @@ module AUDIO_DAC_ADC (
 					iRST_N	
 					);				
 
-parameter	REF_CLK			=	18432000;	//	18.432	MHz
-parameter	SAMPLE_RATE		=	48000;		//	48		KHz
+parameter	REF_CLK			=	18400000;	//	18.432	MHz
+parameter	SAMPLE_RATE		=	8000;		//	48		KHz
 parameter	DATA_WIDTH		=	16;			//	16		Bits
 parameter	CHANNEL_NUM		=	2;			//	Dual Channel
 

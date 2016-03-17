@@ -176,11 +176,12 @@ module DE2_115_Basic_Computer (
 );
 
    //Turn off all displays.
-   assign HEX0 = 7'h7F;
-   assign HEX1 = 7'h7F;
-   assign HEX2 = 7'h7F;
-   assign HEX3 = 7'h7F;
-   assign HEX4 = 7'h7F;
+
+   //assign HEX0 = 7'h7F;
+   //assign HEX1 = 7'h7F;
+   //assign HEX2 = 7'h7F;
+   //assign HEX3 = 7'h7F;
+   //assign HEX4 = 7'h7F;
    assign HEX5 = 7'h7F;
    assign HEX6 = 7'h7F;
    assign HEX7 = 7'h7F;
@@ -279,19 +280,20 @@ module DE2_115_Basic_Computer (
 
 wire	VGA_CTRL_CLK;
 wire	AUD_CTRL_CLK;
-wire	DLY_RST;
+wire  MESH_CTRL_CLK;
+wire	DLY_RST_0;
+wire	DLY_RST_1;
+wire	DLY_RST_2;
 
-assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
 assign	AUD_ADCLRCK	=	AUD_DACLRCK;
 assign	AUD_XCK		=	AUD_CTRL_CLK;
-
-Reset_Delay			r0	(	.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
 
 VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
 
 I2C_AV_Config 		u3	(	//	Host Side
 							.iCLK(CLOCK_50),
 							.iRST_N(KEY[0]),
+
 							//	I2C Side
 							.I2C_SCLK(I2C_SCLK),
 							.I2C_SDAT(I2C_SDAT)	);
@@ -308,6 +310,7 @@ AUDIO_DAC_ADC 			u4	(	//	Audio Side
 							//	Control Signals
 				         .iCLK_18_4(AUD_CTRL_CLK),
 							.iRST_N(DLY_RST)
+
 							);
 
 /// reset ///////////////////////////////////////////////////////						
@@ -338,6 +341,7 @@ always@(posedge AUD_DACLRCK) begin
 	else begin
 		count <= count + 6'd1;
 	end
+
 end
 
 endmodule
