@@ -46,7 +46,7 @@ for x=0:xSize-1
                uPatch(x+1,y+1) = ampIn*exp(-alpha*(((xSize-x)-1)*((xSize-x)-1) + ((ySize-y)-1)*((ySize-y)-1)));
             end
                uPatchBinary(x+1,y+1) = int64(uPatch(x+1,y+1)*(65536.0));
-               fprintf('assign gaussian[%i][%i] = 0x%x;\n',x,y,uPatchBinary(x+1,y+1));
+               fprintf('assign gaussian[%i][%i] = 18''h%x;\n',x,y,uPatchBinary(x+1,y+1));
     end
 end
 
@@ -56,6 +56,7 @@ uTiled = [uPatch fliplr(uPatch);
 mh = mesh(uTiled);
 title('tiled displacement')
 set(gca, 'zlim', [-0.5,0.5])
-
+pause(1);
+close all;
 
 

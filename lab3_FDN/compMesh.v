@@ -42,19 +42,7 @@ generate
             wire signed [17:0] uSouth = y != ySize-1 ? mesh_u[y+1][x] : mesh_u[y][x] ;    
             wire signed [17:0] uWest = x != 0 ? mesh_u[y][x-1] : 0 ;    
             wire signed [17:0] uEast = x != xSize-1 ? mesh_u[y][x+1] : mesh_u[y][x] ;    
-            wire signed [17:0] drum_init_r = ((x == 0) | (y == 0)) ? 0 : (1<<(xSize-x-y));
-				//real drum_init_r = (x == 0) || (y == 0) ? boundary_value : 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; 
-            //Boundary conditions for full tiling           
-            /*
-            if( (x == 0) || (y == 0) ) begin
-                drum_init_r = boundary_gain;
-            end
-            else begin 
-                drum_init_r= 65536.0*amplitudeInit*$exp(alpha*(  (((xSize-x)-1)*((xSize-x)-1)) + ( ((ySize - y)-1)*((ySize-y)-1) ) )) ; //Using euclidean distance for now
-            end
-            */
-				wire signed [17:0] uInit = drum_init_r;
-            //wire signed [17:0] uInit = $rtoi(drum_init_r);//dist >= 15 ? 0 : ~((18'h0_1800>>dist)+18'd1);
+			wire signed [17:0] uInit = gaussian[x][y];
             compNode #(x,y) cn (
                 .clk(clk),
                 .reset(reset),
@@ -77,5 +65,31 @@ always @(posedge allValid) begin
     out <= mesh_u[ySize-1][xSize-1];
 end
 
+wire [17:0] gaussian [0:xSize-1][0:ySize-1];
+assign gaussian[0][0] = 18'h0;
+assign gaussian[0][1] = 18'h0;
+assign gaussian[0][2] = 18'h0;
+assign gaussian[0][3] = 18'h0;
+assign gaussian[0][4] = 18'h0;
+assign gaussian[1][0] = 18'h0;
+assign gaussian[1][1] = 18'h43b;
+assign gaussian[1][2] = 18'h6fa;
+assign gaussian[1][3] = 18'h96b;
+assign gaussian[1][4] = 18'ha68;
+assign gaussian[2][0] = 18'h0;
+assign gaussian[2][1] = 18'h6fa;
+assign gaussian[2][2] = 18'hb81;
+assign gaussian[2][3] = 18'hf87;
+assign gaussian[2][4] = 18'h1129;
+assign gaussian[3][0] = 18'h0;
+assign gaussian[3][1] = 18'h96b;
+assign gaussian[3][2] = 18'hf87;
+assign gaussian[3][3] = 18'h14f6;
+assign gaussian[3][4] = 18'h172a;
+assign gaussian[4][0] = 18'h0;
+assign gaussian[4][1] = 18'ha68;
+assign gaussian[4][2] = 18'h1129;
+assign gaussian[4][3] = 18'h172a;
+assign gaussian[4][4] = 18'h199a;
 endmodule
 
