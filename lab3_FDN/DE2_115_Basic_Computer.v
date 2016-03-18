@@ -308,17 +308,24 @@ reg        ledFlag;
 reg        ledFlag2;
 reg [15:0] count;
 reg [15:0] count2;
-hex_7seg(currentEta[3:0],HEX0);
-hex_7seg(currentEta[7:4],HEX1);
+
 
 //hex_7seg(currentEta[17:16],HEX4);
 
 
 //hex_7seg(aud_out[1:0],HEX3);
-hex_7seg(aud_out[5:2],HEX4);
-hex_7seg(aud_out[9:6],HEX5);
-hex_7seg(aud_out[13:10],HEX6);
-hex_7seg(aud_out[15:14],HEX7);
+hex_7seg(currentRho[3:0],HEX0);
+hex_7seg(currentRho[7:4],HEX1);
+hex_7seg(currentRho[11:8],HEX2);
+hex_7seg(currentRho[15:12],HEX3);
+
+hex_7seg(currentEta[3:0],HEX4);
+hex_7seg(currentEta[7:4],HEX5);
+hex_7seg(currentEta[11:8],HEX6);
+hex_7seg(currentEta[15:12],HEX7);
+
+
+
 
 always @(posedge MESH_CTRL_CLK) begin
 	if (count < 12000) begin
@@ -349,15 +356,12 @@ wire        makeTone;
 reg  [17:0] currentEta;
 wire [17:0] currentRho;
 
-assign etaTone1 = 18'h0_0400;
-assign etaTone2 = 18'h0_0200;
-assign etaTone3 = 18'h0_0080;
-assign makeTone = ~KEY[3] || ~KEY[2] || ~KEY[1];
+assign etaTone1 = {8'd0,SW[17:10],2'd0};
+
+assign makeTone = ~KEY[1];
 
 always @(posedge makeTone) begin
-  if (~KEY[1]) currentEta <= etaTone1;
-  else if (~KEY[2]) currentEta <= etaTone2;
-  else currentEta <= etaTone3; 
+  currentEta <= etaTone1;
 end
 
 /// comp mesh ///////////////////////////////////////////////////
@@ -383,19 +387,21 @@ compNode cn (
 );
 	
 */
-compMesh #(5,5) cm1 (
+compMesh #(10,10) cm1 (
   .clk(MESH_CTRL_CLK),
   .reset(makeTone),
 
   //Input Params
-  .rho(18'h0_8000),
+  .rho(currentRho),
   .eta(currentEta),
-  .tensionSel(3'b0),
-
+  .tensionSel(),
   // Output Values
    .out(u_mid),
    .allValid(validOut)
 );
+
+wire [17:0] rhoSwitches;
+assign rhoSwitches = {3'd0,SW[9:1],7'd0};
   
 rho_effective re1 (
   // clk reset
@@ -404,7 +410,7 @@ rho_effective re1 (
 
   // inputs for rho, constants, and middle position
   .tension_effect_enable(SW[0]),
-  .rho_0(18'h0_2000),
+  .rho_0(rhoSwitches),
   .u_mid(u_mid),
 
   // output the effective rho value for drum

@@ -1,5 +1,5 @@
-xSize=5;
-ySize=5;
+xSize=10;
+ySize=10;
 n = 2*xSize ;
 clc;
 uHit = zeros(n,n); %input strike

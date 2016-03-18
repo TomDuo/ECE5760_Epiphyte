@@ -17,7 +17,7 @@ fixed_comb_mult5760 multy_jr(u_mid,u_mid,u_sq);
 
 always @(posedge clk) begin
   if (tension_effect_enable) begin
-    rho_eff <= rho_0 + (u_sq>>>1); // note that the constant temr just divides by 2
+    rho_eff <= rho_0 + (u_sq>>>3); // note that the constant temr just divides by 2
   end
   else begin
     rho_eff <= rho_0;
