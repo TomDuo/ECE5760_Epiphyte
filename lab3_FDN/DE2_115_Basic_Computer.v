@@ -177,7 +177,7 @@ module DE2_115_Basic_Computer (
 
 
    //assign LEDR = 18'h0;
-   assign LEDG = 9'h0;
+   //assign LEDG = 9'h0;
    
    //Set all GPIO to tri-state.
    assign GPIO_0 = 36'hzzzzzzzzz;
@@ -263,10 +263,10 @@ module DE2_115_Basic_Computer (
 
    //Disable all other peripherals.
    //assign I2C_SCLK = 1'b0;
-   assign IRDA_TXD = 1'b0;
+   assign IRDA_TXD   = 1'b0;
    assign TD_RESET_N = 1'b1;
-   assign TDO = 1'b0;
-   assign UART_TXD = 1'b0;
+   assign TDO        = 1'b0;
+   assign UART_TXD   = 1'b0;
    
 
 wire	VGA_CTRL_CLK;
@@ -302,7 +302,7 @@ AUDIO_DAC_ADC 			u4	(	//	Audio Side
 							.iRST_N(DLY_RST)
 							);
 
-wire  MESH_CTRL_CLK = AUD_DACLRCK;
+wire  MESH_CTRL_CLK = slow_clock;
 
 reg        ledFlag;
 reg        ledFlag2;
@@ -310,12 +310,18 @@ reg [15:0] count;
 reg [15:0] count2;
 hex_7seg(currentEta[3:0],HEX0);
 hex_7seg(currentEta[7:4],HEX1);
-hex_7seg(currentEta[11:8],HEX2);
-hex_7seg(currentEta[15:12],HEX3);
-hex_7seg(currentEta[17:16],HEX4);
+
+//hex_7seg(currentEta[17:16],HEX4);
+
+
+//hex_7seg(aud_out[1:0],HEX3);
+hex_7seg(aud_out[5:2],HEX4);
+hex_7seg(aud_out[9:6],HEX5);
+hex_7seg(aud_out[13:10],HEX6);
+hex_7seg(aud_out[15:14],HEX7);
 
 always @(posedge MESH_CTRL_CLK) begin
-	if (count < 48000) begin
+	if (count < 12000) begin
 		count <= count + 1;
 	end
 	else begin
@@ -343,10 +349,10 @@ wire        makeTone;
 reg  [17:0] currentEta;
 wire [17:0] currentRho;
 
-assign etaTone1 = 18'h0_4000;
-assign etaTone2 = 18'h0_0400;
-assign etaTone3 = 18'h0_0010;
-assign makeTone = ~KEY[1];
+assign etaTone1 = 18'h0_0400;
+assign etaTone2 = 18'h0_0200;
+assign etaTone3 = 18'h0_0080;
+assign makeTone = ~KEY[3] || ~KEY[2] || ~KEY[1];
 
 always @(posedge makeTone) begin
   if (~KEY[1]) currentEta <= etaTone1;
@@ -357,7 +363,9 @@ end
 /// comp mesh ///////////////////////////////////////////////////
 wire [17:0] u_mid;
 wire        validOut;
-
+wire [2:0]  stateLED;
+assign LEDR[17] = ((stateLED[2]==0)&&(stateLED[1]==0)&&(stateLED[0]==0));
+/*
 compNode cn (
 	 .clk(MESH_CTRL_CLK),
 	 .reset(makeTone),
@@ -366,20 +374,21 @@ compNode cn (
 	 .uSouth(0),
 	 .uEast(0),
 	 .uWest(0),
-	 .rho(18'h0_2000),
-	 .eta(18'h0_0080),
+	 .rho(18'h0_8000),
+	 .eta(currentEta),
 	 .tensionSel(3'b0),
 	 .u(u_mid), 
-	 .validOut(validOut)
+	 .validOut(validOut),
+	 .state(stateLED)
 );
 	
-		/*
+*/
 compMesh #(5,5) cm1 (
   .clk(MESH_CTRL_CLK),
   .reset(makeTone),
 
   //Input Params
-  .rho(18'h0_2000),
+  .rho(18'h0_8000),
   .eta(currentEta),
   .tensionSel(3'b0),
 
@@ -387,7 +396,6 @@ compMesh #(5,5) cm1 (
    .out(u_mid),
    .allValid(validOut)
 );
-*/
   
 rho_effective re1 (
   // clk reset
@@ -417,28 +425,52 @@ assign reset = ~KEY[0];
 /// audio stuff /////////////////////////////////////////////////
 
 wire signed [15:0] audio_outL, audio_outR ;
+wire [15:0] aud_out;
+cross_clocker #(16) cc(
+.dest_clk(AUD_DACLRCK),
+.sig_in(u_mid[17:2]),
+.sig_out(aud_out));
+reg [15:0] acount;
 
-reg [5:0] acount;
-reg [15:0] sq_out;
+/*
+reg slow_clock;
+always@(posedge AUD_DACLRCK) begin
+	if (reset) begin
+	acount <= 16'd0;
+	end
+	else if(acount >= 16'd1) begin
+	acount <= 16'd0;
+	slow_clock <= ~slow_clock;
+	end
+	else begin
+	acount <= acount + 1;
+	end
 
-assign audio_outR = sq_out;
-assign audio_outL = sq_out;
+end
+*/
+wire slow_clock = AUD_DACLRCK;
 
+assign LEDG[7] = slow_clock;
+assign audio_outR = aud_out;
+assign audio_outL = aud_out; 
+
+/*
 always@(posedge AUD_DACLRCK) begin
 	if (reset) begin
 		acount  <= 6'd0;
-		sq_out <= 16'd0;
+		aud_out <= 16'd0;
 	end
 	if (acount > 50 && ~KEY[3]) begin
 		acount <= 6'd0;
-		sq_out <= sq_out ^ 16'h0FFF;
+		aud_out <= sq_out ^ 16'h0FFF;
 	end
 	else begin
 		if (KEY[3]) begin
-		sq_out <= u_mid[17:2];
+		aud_out <= u_mid[17:2];
 		end
 		acount <= acount + 6'd1;
 	end
 end
+	*/
 
 endmodule

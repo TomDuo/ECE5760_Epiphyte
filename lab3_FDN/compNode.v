@@ -22,11 +22,11 @@ module compNode
 
   // Output Values
     output reg signed [17:0] u,
-    output                   validOut
+    output                   validOut,
+	 output reg [2:0]         state
   );
 
   // Registers to track current state
-  reg [2:0] state;
   reg [2:0] nextState;
 
   // State machine parameters
@@ -41,7 +41,8 @@ module compNode
 
   // Multiplier and Multiplexor Datapath
   wire signed [17:0] multOut;
-  wire [31:0]  multOutfloat;
+  wire signed [17:0] one;
+  assign one = 18'h1_0000;
   //fixed_to_float ff_multOut(multOut,multOutfloat);
   reg signed [17:0] multInA;
   reg signed [17:0] multInB;
@@ -82,13 +83,13 @@ module compNode
         mul2:
         begin
           state1_out <= multOut;
-          multInA <= (18'h1_0000-(eta>>>1));
+          multInA <= (one-(eta>>>1));
           multInB <= uprev;
           nextState <= mul3;
         end
         mul3:
         begin
-          multInA <= (18'h1_0000-(eta>>>1));
+          multInA <= (one-(eta>>>1));
           multInB <= (state1_out + (u<<1) - multOut);
           nextState <= sUpdate;
         end
