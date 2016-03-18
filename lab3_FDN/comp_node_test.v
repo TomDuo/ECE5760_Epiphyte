@@ -23,7 +23,7 @@ module top;
       .clk(clk),
       .reset(reset),
        
-      .uInit(18'h0_2000),
+      .uInit(18'h3_8000),
       .uNorth(18'd0),
       .uSouth(18'd0),
       .uEast (18'd0),
