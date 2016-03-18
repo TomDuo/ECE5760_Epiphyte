@@ -387,7 +387,7 @@ compNode cn (
 );
 	
 */
-compMesh #(10,10) cm1 (
+compMesh #(18,18) cm1 (
   .clk(MESH_CTRL_CLK),
   .reset(makeTone),
 
