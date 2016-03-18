@@ -175,15 +175,7 @@ module DE2_115_Basic_Computer (
   output [7:0]  VGA_B       // VGA Blue[9:0]
 );
 
-   //Turn off all displays.
-   assign HEX0 = 7'h7F;
-   assign HEX1 = 7'h7F;
-   assign HEX2 = 7'h7F;
-   assign HEX3 = 7'h7F;
-   assign HEX4 = 7'h7F;
-   assign HEX5 = 7'h7F;
-   assign HEX6 = 7'h7F;
-   assign HEX7 = 7'h7F;
+
    //assign LEDR = 18'h0;
    assign LEDG = 9'h0;
    
@@ -310,6 +302,112 @@ AUDIO_DAC_ADC 			u4	(	//	Audio Side
 							.iRST_N(DLY_RST)
 							);
 
+wire  MESH_CTRL_CLK = AUD_DACLRCK;
+
+reg        ledFlag;
+reg        ledFlag2;
+reg [15:0] count;
+reg [15:0] count2;
+hex_7seg(currentEta[3:0],HEX0);
+hex_7seg(currentEta[7:4],HEX1);
+hex_7seg(currentEta[11:8],HEX2);
+hex_7seg(currentEta[15:12],HEX3);
+hex_7seg(currentEta[17:16],HEX4);
+
+always @(posedge MESH_CTRL_CLK) begin
+	if (count < 48000) begin
+		count <= count + 1;
+	end
+	else begin
+		count <= 0;
+		ledFlag = ~ledFlag;
+	end
+end
+
+always @(posedge validOut) begin
+	if (count2 < 12000) begin
+		count2 <= count2 + 1;
+	end
+	else begin
+		count2 <= 0;
+		ledFlag2 = ~ledFlag2;
+	end
+end
+
+
+/// tone generation /////////////////////////////////////////////
+wire [17:0] etaTone1;
+wire [17:0] etaTone2;
+wire [17:0] etaTone3;
+wire        makeTone;
+reg  [17:0] currentEta;
+wire [17:0] currentRho;
+
+assign etaTone1 = 18'h0_4000;
+assign etaTone2 = 18'h0_0400;
+assign etaTone3 = 18'h0_0010;
+assign makeTone = ~KEY[1];
+
+always @(posedge makeTone) begin
+  if (~KEY[1]) currentEta <= etaTone1;
+  else if (~KEY[2]) currentEta <= etaTone2;
+  else currentEta <= etaTone3; 
+end
+
+/// comp mesh ///////////////////////////////////////////////////
+wire [17:0] u_mid;
+wire        validOut;
+
+compNode cn (
+	 .clk(MESH_CTRL_CLK),
+	 .reset(makeTone),
+	 .uInit(18'h3_8000),
+	 .uNorth(0),
+	 .uSouth(0),
+	 .uEast(0),
+	 .uWest(0),
+	 .rho(18'h0_2000),
+	 .eta(18'h0_0080),
+	 .tensionSel(3'b0),
+	 .u(u_mid), 
+	 .validOut(validOut)
+);
+	
+		/*
+compMesh #(5,5) cm1 (
+  .clk(MESH_CTRL_CLK),
+  .reset(makeTone),
+
+  //Input Params
+  .rho(18'h0_2000),
+  .eta(currentEta),
+  .tensionSel(3'b0),
+
+  // Output Values
+   .out(u_mid),
+   .allValid(validOut)
+);
+*/
+  
+rho_effective re1 (
+  // clk reset
+  .clk(MESH_CTRL_CLK),
+  .reset(makeTone),
+
+  // inputs for rho, constants, and middle position
+  .tension_effect_enable(SW[0]),
+  .rho_0(18'h0_2000),
+  .u_mid(u_mid),
+
+  // output the effective rho value for drum
+  .rho_eff(currentRho)
+);
+
+
+assign LEDR[2] = ledFlag2;
+assign LEDR[1] = ledFlag;
+assign LEDR[3] = makeTone;
+
 /// reset ///////////////////////////////////////////////////////						
 //state machine start up	
 wire reset; 
@@ -320,7 +418,7 @@ assign reset = ~KEY[0];
 
 wire signed [15:0] audio_outL, audio_outR ;
 
-reg [5:0] count;
+reg [5:0] acount;
 reg [15:0] sq_out;
 
 assign audio_outR = sq_out;
@@ -328,15 +426,18 @@ assign audio_outL = sq_out;
 
 always@(posedge AUD_DACLRCK) begin
 	if (reset) begin
-		count  <= 6'd0;
+		acount  <= 6'd0;
 		sq_out <= 16'd0;
 	end
-	else if (count > 50) begin
-		count  <= 6'd0;
+	if (acount > 50 && ~KEY[3]) begin
+		acount <= 6'd0;
 		sq_out <= sq_out ^ 16'h0FFF;
 	end
 	else begin
-		count <= count + 6'd1;
+		if (KEY[3]) begin
+		sq_out <= u_mid[17:2];
+		end
+		acount <= acount + 6'd1;
 	end
 end
 

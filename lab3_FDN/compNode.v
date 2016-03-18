@@ -82,13 +82,13 @@ module compNode
         mul2:
         begin
           state1_out <= multOut;
-          multInA <= (18'h1_0000-eta);
+          multInA <= (18'h1_0000-(eta>>>1));
           multInB <= uprev;
           nextState <= mul3;
         end
         mul3:
         begin
-          multInA <= (18'h1_0000-eta);
+          multInA <= (18'h1_0000-(eta>>>1));
           multInB <= (state1_out + (u<<1) - multOut);
           nextState <= sUpdate;
         end
@@ -101,7 +101,9 @@ module compNode
         end
         default:
         begin
-            nextState <= sInit;
+				u <= 18'h0;
+				uprev <= 18'h0;
+            nextState <= mul1;
         end
         endcase
      end
