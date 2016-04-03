@@ -12,14 +12,14 @@ double fix2double(int64_t);
 
 int main()
 {
-double thing1 = -3.25;
-double thing2 = .00001;
+double thing1 = 3.5;
+double thing2 = 3.25;
 
 int64_t fix1 = double2fix(thing1);
 int64_t fix2 = double2fix(thing2);
 int64_t mult_out = mult_fix(fix1,fix2);
-printf("0x%09X\n",fix1);
-printf("0x%09X\n",fix2);
+printf("0x%016X\n",fix1);
+printf("0x%016X\n",fix2);
 
 printf("%f\n",thing1); 
 printf("%f\n",thing2);
@@ -28,7 +28,7 @@ printf("%f\n", fix2double(fix1));
 printf("%f\n", fix2double(fix2));
 
 printf("\n---MULTIPLICATION RESULTS---\n\n");
-printf("0x%09X\n",mult_out);
+printf("0x%016X\n",mult_out);
 printf("%f\n", fix2double(mult_out));
 return 0;
 }
