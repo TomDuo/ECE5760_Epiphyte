@@ -1,21 +1,24 @@
 module mandlebrotProcessor #(
-  parameter maxIterations = 1000
+  parameter maxIterations = 512
   )(
   // clocks and resets
   input clk,
   input reset,
 
   // inputs from queue
-  input iDataVal,
-  input [18:0] iCoord,
+  input        iDataVal,
+  input [35:0] iCoordX,
+  input [35:0] iCoordY,
+  input [9:0]  iVGAX,
+  input [8:0]  iVGAY,
 
   // signals sent to queue
   output reg        oProcReady,
 
   // signals sent to VGA buffer
   output reg [3:0]  oColor,
-  output reg [18:0] oCoordSig,
-  output reg        oCoordVal 
+  output reg [18:0] oVGACoord,
+  output reg        oVGAVal 
 );
 
 localparam s_init        = 4'd0;
@@ -29,30 +32,30 @@ reg signed [9:0] xCoord;
 reg signed [8:0] yCoord;
 
 reg [11:0] calcCount;
-reg signed [18:0] z_real;
-reg signed [18:0] z_imag;
+reg signed [35:0] z_real;
+reg signed [35:0] z_imag;
 
-reg  signed [17:0] mul1ina;
-reg  signed [17:0] mul1inb;
-wire signed [17:0] mul1out;
-reg  signed [17:0] mul2ina;
-reg  signed [17:0] mul2inb;
-wire signed [17:0] mul2out;
-reg  signed [17:0] mul3ina;
-reg  signed [17:0] mul3inb;
-wire signed [17:0] mul3out;
-reg  signed [17:0] mul4ina;
-reg  signed [17:0] mul4inb;
-wire signed [17:0] mul4out;
-reg  signed [17:0] mul5ina;
-reg  signed [17:0] mul5inb;
-wire signed [17:0] mul5out;
+reg  signed [35:0] mul1ina;
+reg  signed [35:0] mul1inb;
+wire signed [35:0] mul1out;
+reg  signed [35:0] mul2ina;
+reg  signed [35:0] mul2inb;
+wire signed [35:0] mul2out;
+reg  signed [35:0] mul3ina;
+reg  signed [35:0] mul3inb;
+wire signed [35:0] mul3out;
+reg  signed [35:0] mul4ina;
+reg  signed [35:0] mul4inb;
+wire signed [35:0] mul4out;
+reg  signed [35:0] mul5ina;
+reg  signed [35:0] mul5inb;
+wire signed [35:0] mul5out;
 
-fixed_comb_mult5760 mul1 (mul1ina,mul1inb,mul1out);
-fixed_comb_mult5760 mul2 (mul2ina,mul2inb,mul2out);
-fixed_comb_mult5760 mul3 (mul3ina,mul3inb,mul3out);
-fixed_comb_mult5760 mul4 (mul4ina,mul4inb,mul4out);
-fixed_comb_mult5760 mul5 (mul5ina,mul5inb,mul5out);
+long_mult5760 mul1 (mul1ina,mul1inb,mul1out);
+long_mult5760 mul2 (mul2ina,mul2inb,mul2out);
+long_mult5760 mul3 (mul3ina,mul3inb,mul3out);
+long_mult5760 mul4 (mul4ina,mul4inb,mul4out);
+long_mult5760 mul5 (mul5ina,mul5inb,mul5out);
 
 wire [3:0] log2Iter;
 quickLog2 ql1 (calcCount,log2Iter);
@@ -64,14 +67,17 @@ always @(posedge clk) begin
   case(state)
   s_init: begin
     nextState <= s_waiting;
+    oVGAVal     <= 0;
   end
 
   s_waiting: begin
     oProcReady  <= 1;
+    oVGAVal     <= 0;
     if (iDataVal) begin
       nextState <= s_processing;
-      xCoord    <= iCoord[18:9];
-      yCoord    <= iCoord[8:0];
+      xCoord    <= iCoordX;
+      yCoord    <= iCoordY;
+      oVGACoord <= {iVGAX,iVGAY};
       calcCount <= 0;
       z_real    <= 0;
       z_imag    <= 0;
@@ -107,20 +113,19 @@ always @(posedge clk) begin
     // if there have been too many calculations, return with dark color
     if (calcCount > maxIterations) begin
       oColor    <= 4'd0;
-      oCoordSig <= {xCoord,yCoord};
-      oCoordVal <= 1;
+      oVGAVal   <= 1;
       nextState <= s_waiting;
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
     else if ((mul4out + mul5out)>4) begin
       oColor    <= log2Iter;
-      oCoordSig <= {xCoord,yCoord};
-      oCoordVal <= 1;
+      oVGAVal   <= 1;
       nextState <= s_waiting;
     end
     // otherwise continue calculations
     else begin
       nextState <= s_processing;
+      oVGAVal <= 0;
     end
   end
 

@@ -17,45 +17,59 @@ module loadBalancer#(
   // input ready signals from processors 
   input  [numProcs-1:0] iProcReady,
   
-  // output val, ready, signal groups
+  // input from coordinate generation
+  input        iCoordVal,
+  input [35:0] iCoordX,
+  input [35:0] iCoordY,
+  input [9:0]  iVGAX,
+  input [8:0]  iVGAY,
+
+  // output val, ready, signal groups to procs
   output reg [numProcs-1:0] oDataVal,
-  output reg [18:0]         oDataSignal
+  output reg [35:0]         oDataXSignal,
+  output reg [35:0]         oDataYSignal,
+  output reg [9:0]          oVGAX,
+  output reg [8:0]          oVGAY,
+
+  // output ready, val signal groups to coordinate generator
+  output reg oCoordRdy
 );
 
-reg  [18:0]      queue [31:0];
-reg  [4:0]       rdPtr;
-reg  [4:0]       wtPtr;
-reg  [4:0]       queueFull;
-reg  [18:0]      nextCoord;
-wire [18:0]      nextProc;
+reg                 full;
+wire [numProcs-1:0] nextProc;
 
 msbOneHot procSel(.in(iProcReady),.out(nextProc));
 
 always @(posedge clk) begin
   // Handle resets by assering no valid data
   if (reset) begin
-    rdPtr     <= 0;
-    wtPtr     <= 0;
+    oCoordRdy <= 1;
     oDataVal  <= 0;
-    nextCoord <= 0;
-    queueFull <= 0;
+    full      <= 0;
   end
-  // If queue isn't full, bring in another coordinate
-  else if (!(queueFull== 5'd31))begin
-    queue[wtPtr] <= nextCoord; 
-    wtPtr        <= wtPtr + 1;
-    nextCoord    <= nextCoord + 1;
-    queueFull    <= queueFull + 1; 
+  // If queue isn't full and coordinate is ready, bring it in
+  else if (!(full) && iCoordVal)begin
+    oCoordRdy    <= 0;
+    oDataXSignal <= iCoordX;
+    oDataYSignal <= iCoordY;
+    oVGAX        <= iVGAX;
+    oVGAY        <= iVGAY;
+    full         <= 1;
   end
-  // queue is full and a processor wants data
+  // If queue isn't full and coordinate is not ready, wait
+  else if (!(full) && !(iCoordVal)) begin
+    oDataVal  <= 0;
+    oCoordRdy <= 1;
+  end
+  // If queue is full and a processor wants data, set output valid and reset q
   else if (iProcReady > 0) begin
-    oDataSignal  <= queue[rdPtr];
     oDataVal     <= nextProc;
-    queueFull    <= queueFull -1;
-    rdPtr        <= rdPtr + 1;
+    full         <= 0;
   end
-  else begin
   // wait for something to happen
+  else begin
+    oDataVal  <= 0;
+    oCoordRdy <= 1;
   end
 end
 
