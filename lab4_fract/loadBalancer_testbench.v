@@ -11,13 +11,18 @@ module top;
   reg reset = 1'b1;
   reg clk = 1;
   always #5 clk = ~clk;
-  wire [3:0] iProcReady;
-  reg [3:0] proc1count = 0;
-  reg [3:0] proc2count = 0;
-  reg [3:0] proc3count = 0;
-  reg [3:0] proc0count = 0;
-  wire [3:0] oDataVal;
-  wire [18:0] oDataSignal;
+  wire [3:0]  iProcReady;
+  wire [3:0]  oDataVal;
+  wire [35:0] oDataXSignal;
+  wire [35:0] oDataYSignal;
+  wire [9:0]  oVGAX;
+  wire [8:0]  oVGAY;
+  wire        oCoordRdy;
+  reg  [35:0] iCoordX = 0;
+  reg  [35:0] iCoordY = 0;
+  reg         iCoordVal = 0;
+  reg  [9:0]  iVGAX = 0;
+  reg  [8:0]  iVGAY = 0;
 
   wire m0ProcReady;
   wire m1ProcReady;
@@ -29,56 +34,105 @@ module top;
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
 
-  loadBalancer lb1 (
+  loadBalancer #(4) lb1 (
     .clk(clk),
     .reset(reset),
+
+  // input ready signals from processors 
     .iProcReady(iProcReady),
+  
+  // input from coordinate generation
+    .iCoordVal(iCoordVal),
+    .iCoordX(iCoordX),
+    .iCoordY(iCoordY),
+    .iVGAX(iVGAX),
+    .iVGAY(iVGAY),
+
+  // output val, ready, signal groups to procs
     .oDataVal(oDataVal),
-    .oDataSignal(oDataSignal)
+    .oDataXSignal(oDataXSignal),
+    .oDataYSignal(oDataYSignal),
+    .oVGAX(oVGAX),
+    .oVGAY(oVGAY),
+
+  // output ready, val signal groups to coordinate generator
+    .oCoordRdy(oCoordRdy)
   );
 
   mandlebrotProcessor #(16) m0 (
       .clk(clk),
       .reset(reset),
-      .iDataVal(oDataVal[0]),
-      .iCoord(oDataSignal),
-      .oProcReady(m0ProcReady),
-      .oColor(),
-      .oCoordSig(),
-      .oCoordVal() 
+  // inputs from queue
+    .iDataVal(oDataVal[0]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignala),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m0ProcReady),
+
+  // signals sent to VGA buffer
+    .oColor(),
+    .oVGACoord(),
+    .oVGAVal()
     );
 
   mandlebrotProcessor #(16) m1 (
       .clk(clk),
       .reset(reset),
-      .iDataVal(oDataVal[1]),
-      .iCoord(oDataSignal),
-      .oProcReady(m1ProcReady),
-      .oColor(),
-      .oCoordSig(),
-      .oCoordVal() 
+  // inputs from queue
+    .iDataVal(oDataVal[1]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignala),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m1ProcReady),
+
+  // signals sent to VGA buffer
+    .oColor(),
+    .oVGACoord(),
+    .oVGAVal()
     );
 
   mandlebrotProcessor #(16) m2 (
       .clk(clk),
       .reset(reset),
-      .iDataVal(oDataVal[2]),
-      .iCoord(oDataSignal),
-      .oProcReady(m2ProcReady),
-      .oColor(),
-      .oCoordSig(),
-      .oCoordVal() 
+  // inputs from queue
+    .iDataVal(oDataVal[2]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignala),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m2ProcReady),
+
+  // signals sent to VGA buffer
+    .oColor(),
+    .oVGACoord(),
+    .oVGAVal()
     );
 
   mandlebrotProcessor #(16) m3 (
       .clk(clk),
       .reset(reset),
-      .iDataVal(oDataVal[3]),
-      .iCoord(oDataSignal),
-      .oProcReady(m3ProcReady),
-      .oColor(),
-      .oCoordSig(),
-      .oCoordVal() 
+  // inputs from queue
+    .iDataVal(oDataVal[3]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignala),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m3ProcReady),
+
+  // signals sent to VGA buffer
+    .oColor(),
+    .oVGACoord(),
+    .oVGAVal()
     );
 
     initial begin
@@ -88,7 +142,19 @@ module top;
     $dumpvars;
     #11;
     reset = 1'b0;
+    #10;
+    #10;
+    #10;
+    #10;
+
     repeat(16000) begin
+    if(oCoordRdy) begin
+      iCoordVal = 1;
+      iCoordX   = iCoordX + 1;
+      iCoordY   = iCoordY + 1;
+      iVGAX     = iVGAX   + 1;
+      iVGAY     = iVGAY   + 1;
+    end
 
     #10;
     end
