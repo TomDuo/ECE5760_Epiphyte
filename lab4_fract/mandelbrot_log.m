@@ -9,7 +9,7 @@ y_index = 1:length(y) ;
 img = zeros(length(y),length(x));
 
 
-for k=x_index
+for k=x_index2
     for j=y_index
         z = 0;
         n = 0;
