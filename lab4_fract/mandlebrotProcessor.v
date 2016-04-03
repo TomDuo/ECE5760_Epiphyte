@@ -51,11 +51,11 @@ reg  signed [35:0] mul5ina;
 reg  signed [35:0] mul5inb;
 wire signed [35:0] mul5out;
 
-fixed_comb_mult5760 mul1 (mul1ina,mul1inb,mul1out);
-fixed_comb_mult5760 mul2 (mul2ina,mul2inb,mul2out);
-fixed_comb_mult5760 mul3 (mul3ina,mul3inb,mul3out);
-fixed_comb_mult5760 mul4 (mul4ina,mul4inb,mul4out);
-fixed_comb_mult5760 mul5 (mul5ina,mul5inb,mul5out);
+long_mult5760 mul1 (mul1ina,mul1inb,mul1out);
+long_mult5760 mul2 (mul2ina,mul2inb,mul2out);
+long_mult5760 mul3 (mul3ina,mul3inb,mul3out);
+long_mult5760 mul4 (mul4ina,mul4inb,mul4out);
+long_mult5760 mul5 (mul5ina,mul5inb,mul5out);
 
 wire [3:0] log2Iter;
 quickLog2 ql1 (calcCount,log2Iter);
