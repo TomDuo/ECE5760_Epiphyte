@@ -48,7 +48,7 @@ always @(posedge clk) begin
     full      <= 0;
   end
   // If queue isn't full and coordinate is ready, bring it in
-  else if (!(full) && iCoordVal)begin
+  else if (!(full) && iCoordVal && oCoordRdy)begin
     oCoordRdy    <= 0;
     oDataXSignal <= iCoordX;
     oDataYSignal <= iCoordY;
@@ -62,14 +62,14 @@ always @(posedge clk) begin
     oCoordRdy <= 1;
   end
   // If queue is full and a processor wants data, set output valid and reset q
-  else if (iProcReady > 0) begin
+  else if (full && (iProcReady > 0)) begin
     oDataVal     <= nextProc;
     full         <= 0;
+    oCoordRdy    <= 1;
   end
   // wait for something to happen
   else begin
     oDataVal  <= 0;
-    oCoordRdy <= 1;
   end
 end
 

@@ -71,18 +71,21 @@ always @(posedge clk) begin
   end
 
   s_waiting: begin
-    oProcReady  <= 1;
     oVGAVal     <= 0;
     if (iDataVal) begin
-      nextState <= s_processing;
-      xCoord    <= iCoordX;
-      yCoord    <= iCoordY;
-      oVGACoord <= {iVGAX,iVGAY};
-      calcCount <= 0;
-      z_real    <= 0;
-      z_imag    <= 0;
+      nextState  <= s_processing;
+      xCoord     <= iCoordX;
+      yCoord     <= iCoordY;
+      oVGACoord  <= {iVGAX,iVGAY};
+      calcCount  <= 0;
+      z_real     <= 0;
+      z_imag     <= 0;
+      oProcReady <= 0;
     end
-    else nextState <= s_waiting;
+    else begin
+      nextState <= s_waiting;
+      oProcReady  <= 1;
+    end
   end
 
   s_processing: begin

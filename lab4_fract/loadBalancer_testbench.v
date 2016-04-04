@@ -18,11 +18,11 @@ module top;
   wire [9:0]  oVGAX;
   wire [8:0]  oVGAY;
   wire        oCoordRdy;
-  reg  [35:0] iCoordX = 0;
-  reg  [35:0] iCoordY = 0;
+  reg  [35:0] iCoordX = 36'd0;
+  reg  [35:0] iCoordY = 36'd0;
   reg         iCoordVal = 0;
-  reg  [9:0]  iVGAX = 0;
-  reg  [8:0]  iVGAY = 0;
+  reg  [9:0]  iVGAX = 10'd0;
+  reg  [8:0]  iVGAY = 9'd0;
 
   wire m0ProcReady;
   wire m1ProcReady;
@@ -59,7 +59,7 @@ module top;
     .oCoordRdy(oCoordRdy)
   );
 
-  mandlebrotProcessor #(16) m0 (
+  mandlebrotProcessor #(3) m0 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -147,7 +147,7 @@ module top;
     #10;
     #10;
 
-    repeat(16000) begin
+    repeat(400) begin
     if(oCoordRdy) begin
       iCoordVal = 1;
       iCoordX   = iCoordX + 1;
