@@ -13,8 +13,8 @@ module proc2memArb #(
   input reset,
 
   // VGA data inputs from processors
-  input [18:0] iProcVGA   [31:0],
-  input [7:0]  iProcColor [31:0], 
+  input [18:0] iProcVGA   [0:31],
+  input [7:0]  iProcColor [0:31], 
 
   // ready signals from processors
   input [31:0] iProcRdy,
