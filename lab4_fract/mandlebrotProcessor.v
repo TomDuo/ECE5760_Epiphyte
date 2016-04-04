@@ -5,15 +5,18 @@ module mandlebrotProcessor #(
   input clk,
   input reset,
 
-  // inputs from queue
+  // inputs from load dist
   input        iDataVal,
   input [35:0] iCoordX,
   input [35:0] iCoordY,
   input [9:0]  iVGAX,
   input [8:0]  iVGAY,
 
-  // signals sent to queue
+  // signals sent to load distr
   output reg        oProcReady,
+
+  // input from arbitor
+  input valueStored, 
 
   // signals sent to VGA buffer
   output reg [3:0]  oColor,
@@ -24,6 +27,7 @@ module mandlebrotProcessor #(
 localparam s_init        = 4'd0;
 localparam s_waiting     = 4'd1;
 localparam s_processing  = 4'd2;
+localparam s_store       = 4'd3;
 
 reg [3:0] state;
 reg [3:0] nextState;
@@ -117,13 +121,13 @@ always @(posedge clk) begin
     if (calcCount > maxIterations) begin
       oColor    <= 4'd0;
       oVGAVal   <= 1;
-      nextState <= s_waiting;
+      nextState <= s_store;
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
     else if ((mul4out + mul5out)>4) begin
       oColor    <= log2Iter;
       oVGAVal   <= 1;
-      nextState <= s_waiting;
+      nextState <= s_store;
     end
     // otherwise continue calculations
     else begin
@@ -132,8 +136,20 @@ always @(posedge clk) begin
     end
   end
 
+  s_store:
+    if(valueStored) begin
+      oProcReady <= 1;
+      oVGAVal    <= 1;
+      nextState  <= s_waiting;
+    end
+    else begin
+      oProcReady <= 0;
+      oVGAVal    <= 0;
+      nextState  <= s_store;
+    end
+
   default: begin
-      nextState = s_waiting;
+      nextState <= s_waiting;
   end
   endcase
 end

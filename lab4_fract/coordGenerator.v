@@ -2,7 +2,7 @@
 // ECE 5760 Lab 4
 // Coord Generation module
 //
-// Connor Archard March 2016
+// Connor Archard, Noah Levy March 2016
 //
 //=============================================================================
 module coordGenerator (
