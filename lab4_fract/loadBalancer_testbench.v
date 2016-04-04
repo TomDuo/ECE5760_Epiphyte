@@ -18,11 +18,11 @@ module top;
   wire [9:0]  oVGAX;
   wire [8:0]  oVGAY;
   wire        oCoordRdy;
-  reg  [35:0] iCoordX = 36'd0;
-  reg  [35:0] iCoordY = 36'd0;
-  reg         iCoordVal = 0;
-  reg  [9:0]  iVGAX = 10'd0;
-  reg  [8:0]  iVGAY = 9'd0;
+  wire [35:0] iCoordX;
+  wire [35:0] iCoordY;
+  wire        iCoordVal;
+  wire [9:0]  iVGAX;
+  wire [8:0]  iVGAY;
 
   wire m0ProcReady;
   wire m1ProcReady;
@@ -33,6 +33,26 @@ module top;
   assign iProcReady[1] = m1ProcReady;
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
+  coordGenerator c1 (
+    .clk(clk),
+    .reset(reset),
+
+  // inputs from NIOS
+  .zoomLevel(4'd0),
+  .upperLeftX(36'hF_00000000),
+  .upperLeftY(36'hF_00000000),
+  .draw(0),
+
+  // inputs from Load Dist
+  .iLoadDistRdy(oCoordRdy),
+
+  // outputs to Load Dist
+  .oLoadDistVal(iCoordVal),
+  .oVGAX(iVGAX),
+  .oVGAY(iVGAY),
+  .oCoordX(iCoordX),
+  .oCoordY(iCoordY)
+  );
 
   loadBalancer #(4) lb1 (
     .clk(clk),
@@ -142,20 +162,8 @@ module top;
     $dumpvars;
     #11;
     reset = 1'b0;
-    #10;
-    #10;
-    #10;
-    #10;
 
-    repeat(400) begin
-    if(oCoordRdy) begin
-      iCoordVal = 1;
-      iCoordX   = iCoordX + 1;
-      iCoordY   = iCoordY + 1;
-      iVGAX     = iVGAX   + 1;
-      iVGAY     = iVGAY   + 1;
-    end
-
+    repeat(6000) begin
     #10;
     end
     $finish;

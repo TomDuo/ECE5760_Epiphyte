@@ -28,22 +28,19 @@ module coordGenerator (
 
   localparam x_step = 36'h000666666;
   localparam y_step = 36'h000888889;
-  long_mult5760 xMuler (x_step,xDist,xSize);
-  long_mult5760 yMuler (y_step,yDist,ySize);
 
-  //long_mult5760 xMuler2 (xSize,oVGAX,oCoordX);
-  //long_mult5760 yMuler2 (ySize,oVGAY,oCoordY);
   
   wire [35:0] xSize;
   wire [35:0] ySize;
+
   wire [35:0] xDist;
-  reg [35:0] xLower;
   wire [35:0] yDist;
-  reg [35:0] yLower;
-  reg [9:0] xCounter;
-  reg [8:0] yCounter;
+
   reg [1:0] state;
   reg [1:0] nextState;
+
+  long_mult5760 xMuler (x_step,xDist,xSize);
+  long_mult5760 yMuler (y_step,yDist,ySize);
 
   assign xDist = (36'h3_00000000 >> (zoomLevel));
   assign yDist = (36'h2_00000000 >> (zoomLevel));
@@ -62,15 +59,13 @@ module coordGenerator (
     oLoadDistVal <= 0;
     oVGAY        <= 9'd0;
     oVGAX        <= 10'd0;
-    oCoordX      <= xLower;
-    oCoordY      <= yLower;
-    xLower       <= upperLeftX;
-    yLower       <= upperLeftY;
+    oCoordX      <= upperLeftX;
+    oCoordY      <= upperLeftY;
     nextState    <= s_getNextValue;
   end
 
   s_waiting: begin
-    if (!oLoadDistRdy) begin
+    if (!oLoadDistVal) begin
       nextState    <= s_getNextValue;
     end
     else if (iLoadDistRdy) begin
@@ -95,13 +90,13 @@ module coordGenerator (
     else if ((oVGAX == 10'd640) && (oVGAY < 9'd480)) begin
       oVGAX <= 0;
       oVGAY <= oVGAY + 1;
-      oCoordX <= xLower;
+      oCoordX <= upperLeftX;
       oCoordY <= oCoordY + ySize;
     nextState    <= s_waiting;
     oLoadDistVal <= 1;
     end
     else begin
-      nextState <= s_complete
+      nextState <= s_complete;
       oLoadDistVal <= 0;
     end
   end
