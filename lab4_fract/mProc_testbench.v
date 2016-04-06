@@ -12,8 +12,8 @@ module top;
   always #5 clk = ~clk;
 
   reg oDataVal = 1;
-  reg [35:0] oDataXSignal = 36'b000011010111000010100011110101110000;
-  reg [35:0] oDataYSignal = 36'b000000000111101011100001010001111010;
+  reg [35:0] oDataXSignal = 36'b000011010111000010100011110101110000; // 0.84
+  reg [35:0] oDataYSignal = 36'b000000000111101011100001010001111010; // 0.03
 
   mandlebrotProcessor #(500) m0 (
     .clk(clk),
