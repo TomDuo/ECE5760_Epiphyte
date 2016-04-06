@@ -24,7 +24,7 @@ module proc2memArb #(
 
   // output signals to VGA buffer
   output reg [18:0] addr,
-  output reg [7:0]  data,
+  output reg [3:0]  color,
   output reg        w_en
   );
 

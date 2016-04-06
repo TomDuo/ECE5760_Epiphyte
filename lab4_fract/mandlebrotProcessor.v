@@ -35,7 +35,7 @@ reg [3:0] nextState;
 reg signed [9:0] xCoord;
 reg signed [8:0] yCoord;
 
-reg [11:0] calcCount;
+reg        [11:0] calcCount;
 reg signed [35:0] z_real;
 reg signed [35:0] z_imag;
 
@@ -115,10 +115,10 @@ always @(posedge clk) begin
 
     // take results from muls of previous calc
     z_real    <= mul1out - mul3out + xCoord;
-    z_imag    <= mul2out + yCoord;
+    z_imag    <= (mul2out<<1) + yCoord;
 
     // if there have been too many calculations, return with dark color
-    if (calcCount > maxIterations) begin
+    if (calcCount >= maxIterations) begin
       oColor    <= 4'd0;
       oVGAVal   <= 1;
       nextState <= s_store;

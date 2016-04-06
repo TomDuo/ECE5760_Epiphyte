@@ -85,7 +85,7 @@ module top;
   // inputs from queue
     .iDataVal(oDataVal[0]),
     .iCoordX(oDataXSignal),
-    .iCoordY(oDataYSignala),
+    .iCoordY(oDataYSignal),
     .iVGAX(oVGAX),
     .iVGAY(oVGAY),
 
@@ -104,7 +104,7 @@ module top;
   // inputs from queue
     .iDataVal(oDataVal[1]),
     .iCoordX(oDataXSignal),
-    .iCoordY(oDataYSignala),
+    .iCoordY(oDataYSignal),
     .iVGAX(oVGAX),
     .iVGAY(oVGAY),
 
@@ -123,7 +123,7 @@ module top;
   // inputs from queue
     .iDataVal(oDataVal[2]),
     .iCoordX(oDataXSignal),
-    .iCoordY(oDataYSignala),
+    .iCoordY(oDataYSignal),
     .iVGAX(oVGAX),
     .iVGAY(oVGAY),
 
@@ -142,7 +142,7 @@ module top;
   // inputs from queue
     .iDataVal(oDataVal[3]),
     .iCoordX(oDataXSignal),
-    .iCoordY(oDataYSignala),
+    .iCoordY(oDataYSignal),
     .iVGAX(oVGAX),
     .iVGAY(oVGAY),
 
