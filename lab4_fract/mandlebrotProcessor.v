@@ -134,12 +134,12 @@ always @(posedge clk) begin
   s_store:
     if(valueStored) begin
       oProcReady <= 1;
-      oVGAVal    <= 1;
+      oVGAVal    <= 0;
       nextState  <= s_waiting;
     end
     else begin
       oProcReady <= 0;
-      oVGAVal    <= 0;
+      oVGAVal    <= 1;
       nextState  <= s_store;
     end
 
