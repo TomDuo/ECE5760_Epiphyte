@@ -29,6 +29,19 @@ module top;
   wire m2ProcReady;
   wire m3ProcReady;
 
+  wire [18:0] iProc0VGA;
+  wire [18:0] iProc1VGA;
+  wire [18:0] iProc2VGA;
+  wire [18:0] iProc3VGA;
+
+  wire [7:0]  iProc0Color;
+  wire [7:0]  iProc1Color;
+  wire [7:0]  iProc2Color;
+  wire [7:0]  iProc3Color;
+
+  wire [3:0]  iProcVal;
+  wire [3:0]  oProcRdy;
+
   assign iProcReady[0] = m0ProcReady;
   assign iProcReady[1] = m1ProcReady;
   assign iProcReady[2] = m2ProcReady;
@@ -96,8 +109,8 @@ module top;
     .valueStored(oProcRdy[0]), 
 
   // signals sent to VGA buffer
-    .oColor(iProcColor[0]),
-    .oVGACoord(iProcVGA[0]),
+    .oColor(iProc0Color),
+    .oVGACoord(iProc0VGA),
     .oVGAVal(iProcVal[0])    );
 
   mandlebrotProcessor #(100) m1 (
@@ -117,8 +130,8 @@ module top;
     .valueStored(oProcRdy[1]),
 
   // signals sent to VGA buffer
-    .oColor(iProcColor[1]),
-    .oVGACoord(iProcVGA[1]),
+    .oColor(iProc1Color),
+    .oVGACoord(iProc1VGA),
     .oVGAVal(iProcVal[1])
     );
 
@@ -139,8 +152,8 @@ module top;
     .valueStored(oProcRdy[2]),
 
   // signals sent to VGA buffer
-    .oColor(iProcColor[2]),
-    .oVGACoord(iProcVGA[2]),
+    .oColor(iProc2Color),
+    .oVGACoord(iProc2VGA),
     .oVGAVal(iProcVal[2])
     );
 
@@ -161,23 +174,25 @@ module top;
     .valueStored(oProcRdy[3]),
 
   // signals sent to VGA buffer
-    .oColor(iProcColor[3]),
-    .oVGACoord(iProcVGA[3]),
+    .oColor(iProc3Color),
+    .oVGACoord(iProc3VGA),
     .oVGAVal(iProcVal[3])
     );
-
-wire [18:0] iProcVGA   [0:3];
-wire [7:0]  iProcColor [0:3];
-wire [3:0]  iProcVal;
-wire [3:0]  oProcRdy;
 
 proc2memArb p2m1 (
   .clk(clk),
   .reset(reset),
 
   // VGA data inputs from processors
-  .iProcVGA(iProcVGA),
-  .iProcColor(iProcColor), 
+  .iProc0VGA(iProc0VGA),
+  .iProc1VGA(iProc1VGA),
+  .iProc2VGA(iProc2VGA),
+  .iProc3VGA(iProc3VGA),
+
+  .iProc0Color(iProc0Color),
+  .iProc1Color(iProc1Color),
+  .iProc2Color(iProc2Color),
+  .iProc3Color(iProc3Color), 
 
   // ready signals from processors
   .iProcRdy(iProcVal),
@@ -187,7 +202,7 @@ proc2memArb p2m1 (
 
   // output signals to VGA buffer
   .addr(),
-  .color(),
+  .data(),
   .w_en()
   );
     initial begin
