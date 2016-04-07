@@ -32,8 +32,8 @@ localparam s_store       = 4'd3;
 reg [3:0] state;
 reg [3:0] nextState;
 
-reg signed [9:0] xCoord;
-reg signed [8:0] yCoord;
+reg signed [35:0] xCoord;
+reg signed [35:0] yCoord;
 
 reg        [11:0] calcCount;
 reg signed [35:0] z_real;
@@ -119,7 +119,7 @@ always @(posedge clk) begin
       nextState <= s_store;
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
-    else if ((mul2out + mul3out)>4) begin
+    else if ((mul1out + mul3out)>4) begin
       oColor    <= log2Iter;
       oVGAVal   <= 1;
       nextState <= s_store;
