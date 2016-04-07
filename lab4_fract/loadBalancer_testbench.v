@@ -79,7 +79,7 @@ module top;
     .oCoordRdy(oCoordRdy)
   );
 
-  mandlebrotProcessor #(3) m0 (
+  mandlebrotProcessor #(100) m0 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -92,13 +92,15 @@ module top;
   // signals sent to queue
     .oProcReady(m0ProcReady),
 
-  // signals sent to VGA buffer
-    .oColor(),
-    .oVGACoord(),
-    .oVGAVal()
-    );
+  // input from arbitor
+    .valueStored(oProcRdy[0]), 
 
-  mandlebrotProcessor #(16) m1 (
+  // signals sent to VGA buffer
+    .oColor(iProcColor[0]),
+    .oVGACoord(iProcVGA[0]),
+    .oVGAVal(iProcVal[0])    );
+
+  mandlebrotProcessor #(100) m1 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -111,13 +113,16 @@ module top;
   // signals sent to queue
     .oProcReady(m1ProcReady),
 
+  // input from arbitor
+    .valueStored(oProcRdy[1]),
+
   // signals sent to VGA buffer
-    .oColor(),
-    .oVGACoord(),
-    .oVGAVal()
+    .oColor(iProcColor[1]),
+    .oVGACoord(iProcVGA[1]),
+    .oVGAVal(iProcVal[1])
     );
 
-  mandlebrotProcessor #(16) m2 (
+  mandlebrotProcessor #(100) m2 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -130,13 +135,16 @@ module top;
   // signals sent to queue
     .oProcReady(m2ProcReady),
 
+  // input from arbitor
+    .valueStored(oProcRdy[2]),
+
   // signals sent to VGA buffer
-    .oColor(),
-    .oVGACoord(),
-    .oVGAVal()
+    .oColor(iProcColor[2]),
+    .oVGACoord(iProcVGA[2]),
+    .oVGAVal(iProcVal[2])
     );
 
-  mandlebrotProcessor #(16) m3 (
+  mandlebrotProcessor #(100) m3 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -149,12 +157,39 @@ module top;
   // signals sent to queue
     .oProcReady(m3ProcReady),
 
+  // input from arbitor
+    .valueStored(oProcRdy[3]),
+
   // signals sent to VGA buffer
-    .oColor(),
-    .oVGACoord(),
-    .oVGAVal()
+    .oColor(iProcColor[3]),
+    .oVGACoord(iProcVGA[3]),
+    .oVGAVal(iProcVal[3])
     );
 
+wire [18:0] iProcVGA   [0:3];
+wire [7:0]  iProcColor [0:3];
+wire [3:0]  iProcVal;
+wire [3:0]  oProcRdy;
+
+proc2memArb p2m1 (
+  .clk(clk),
+  .reset(reset),
+
+  // VGA data inputs from processors
+  .iProcVGA(iProcVGA),
+  .iProcColor(iProcColor), 
+
+  // ready signals from processors
+  .iProcRdy(iProcVal),
+
+  // output signals to processors
+  .oProcRdy(oProcRdy),
+
+  // output signals to VGA buffer
+  .addr(),
+  .color(),
+  .w_en()
+  );
     initial begin
 
     // Dump waveforms

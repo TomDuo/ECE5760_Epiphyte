@@ -7,17 +7,17 @@
 //=============================================================================
 
 module proc2memArb #(
-  parameter numProcs = 8
+  parameter numProcs = 4
   )(
   input clk,
   input reset,
 
   // VGA data inputs from processors
-  input [18:0] iProcVGA   [0:31],
-  input [7:0]  iProcColor [0:31], 
+  input [18:0] iProcVGA   [0:3],
+  input [7:0]  iProcColor [0:3], 
 
   // ready signals from processors
-  input [31:0] iProcRdy,
+  input [3:0] iProcRdy,
 
   // output signals to processors
   output reg [31:0] oProcRdy,
@@ -31,7 +31,7 @@ module proc2memArb #(
 wire [31:0] oneHotProcRdy;
 wire [4:0]  log2ProcRdy;
 
-msbOneHot msb1 (iProcRdy,oneHotProcRdy);
+msbOneHot msb1 ({28'd0,iProcRdy},oneHotProcRdy);
 quickLog2 ql1  (oneHotProcRdy,log2ProcRdy);
 
 always @ (posedge clk) begin
