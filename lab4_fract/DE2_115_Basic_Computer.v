@@ -428,6 +428,30 @@ end
   assign upperLeftX = {2'd0,niosUpperLeftX,16'd0};
   assign upperLeftY = {2'd0,niosUpperLeftY,16'd0};
   
+  wire done;
+  reg [16:0] timerCounter;
+  reg [15:0] mSecCounter;
+
+  always @(posedge CLOCK_50) begin
+    if (~KEY[3]) begin
+      // reset
+      timerCounter <= 0;
+      mSecCounter  <= 0;
+    end
+    else if (~done && (mSecCounter == 16'd50000)) begin
+      timerCounter <= timerCounter + 1;
+      mSecCounter  <= 16'd0;
+    end
+    else begin
+      mSecCounter <= mSecCounter + 1;
+    end
+  end
+
+  hex_7seg hex7 (timerCounter[15:12],6'd7);
+  hex_7seg hex7 (timerCounter[11:8],6'd6);
+  hex_7seg hex7 (timerCounter[7:4],6'd5);
+  hex_7seg hex7 (timerCounter[3:0],6'd4);
+
   nios_param_driver npd1 (
    .clk(CLOCK_50),
    .reset(reset),
