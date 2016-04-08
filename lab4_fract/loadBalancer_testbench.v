@@ -179,6 +179,9 @@ module top;
     .oVGAVal(iProcVal[3])
     );
 
+  wire [18:0] arb_addr;
+  wire [2:0] arb_data;
+  wire arb_wren;
 proc2memArb p2m1 (
   .clk(clk),
   .reset(reset),
@@ -201,19 +204,23 @@ proc2memArb p2m1 (
   .oProcRdy(oProcRdy),
 
   // output signals to VGA buffer
-  .addr(),
-  .data(),
-  .w_en()
+  .addr(arb_addr),
+  .data(arb_data),
+  .w_en(arb_wren)
   );
-    initial begin
+        always @(posedge arb_addr) begin
+        $display("arb_addr=%d, arb_data=%d",arb_addr,arb_data); 
+        end
 
-    // Dump waveforms
+    initial begin
+            // Dump waveforms
     $dumpfile("loadBalancer-sim.vcd");
     $dumpvars;
     #11;
     reset = 1'b0;
 
     repeat(6000) begin
+    
     #10;
     end
     $finish;

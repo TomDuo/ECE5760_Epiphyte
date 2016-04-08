@@ -1,6 +1,7 @@
 clear;
 buffer = csvread('buffer.csv');
 
-buffer_box = reshape(buffer,[480 640]);
+buffer_box = reshape(buffer,[640 480]);
 
-imshow(buffer_box);
+imagesc(buffer_box');
+colorbar;

@@ -72,7 +72,7 @@ always @(posedge clk) begin
       nextState  <= s_processing;
       xCoord     <= iCoordX;
       yCoord     <= iCoordY;
-      oVGACoord  <= {iVGAX,iVGAY};
+      oVGACoord  <= iVGAX + 640*iVGAY;
       calcCount  <= 0;
       z_real     <= 0;
       z_imag     <= 0;
