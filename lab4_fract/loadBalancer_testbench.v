@@ -219,7 +219,7 @@ proc2memArb p2m1 (
     #11;
     reset = 1'b0;
 
-    repeat(6000) begin
+    repeat(600000) begin
     
     #10;
     end

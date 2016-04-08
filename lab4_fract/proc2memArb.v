@@ -88,6 +88,7 @@ always @ (posedge clk) begin
       data <= iProc7Color;
     end
     default: begin
+      $display("IN DEFAULT. WTF");
       addr <= 0;
       data <= 0;
     end
