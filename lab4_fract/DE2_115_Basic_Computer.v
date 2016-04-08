@@ -432,10 +432,10 @@ end
    .clk(CLOCK_50),
    .reset(reset),
    .niosDDA_cmd(nios_opts),  
-   .xCoord,(niosUpperLeftX)
+   .xCoord(niosUpperLeftX),
    .yCoord(niosUpperLeftY),
    .zoom(zoomLevel)
-    );
+   );
 //////////////////////////// NOTE: CURRENTLY IGNORING NIOS INPUTS HERE ////////////////////////////
   coordGenerator c1 (
     .clk(clk),
