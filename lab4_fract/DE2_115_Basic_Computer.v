@@ -447,10 +447,10 @@ end
     end
   end
 
-  hex_7seg hex7 (timerCounter[15:12],6'd7);
-  hex_7seg hex7 (timerCounter[11:8],6'd6);
-  hex_7seg hex7 (timerCounter[7:4],6'd5);
-  hex_7seg hex7 (timerCounter[3:0],6'd4);
+  hex_7seg hex7 (timerCounter[15:12],HEX7);
+  hex_7seg hex6 (timerCounter[11:8],HEX6);
+  hex_7seg hex5 (timerCounter[7:4],HEX5);
+  hex_7seg hex4 (timerCounter[3:0],HEX4);
 
   nios_param_driver npd1 (
    .clk(CLOCK_50),
@@ -479,7 +479,8 @@ end
   .oVGAX(iVGAX),
   .oVGAY(iVGAY),
   .oCoordX(iCoordX),
-  .oCoordY(iCoordY)
+  .oCoordY(iCoordY),
+  .done(done)
   );
 
   loadBalancer #(4) lb1 (
