@@ -297,11 +297,12 @@ wire	VGA_CTRL_CLK;
 vga_pll 		p1	(	.areset(),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1());
 
 wire		[9:0]	VGA_X;
-wire		[8:0]	VGA_Y; 				
+wire		[8:0]	VGA_Y;
+ 				
 JULIE	julies_vga_ctrl	(	
 	//	Host Side
 	.iRed 		(mVGA_R),
-	.iGreen 	(mVGA_G),
+	.iGreen 	   (mVGA_G),
 	.iBlue 		(mVGA_B),
 	.oCurrent_X (VGA_X),
 	.oCurrent_Y (VGA_Y),
@@ -318,14 +319,18 @@ JULIE	julies_vga_ctrl	(
 	.oVGA_CLOCK (VGA_CLK),
 	//	Control Signal
 	.iCLK 		(VGA_CTRL_CLK),
-	.iRST_N 	(DLY2)	
+	.iRST_N 		(DLY2)	
 );
 
-reg [7:0]	mVGA_R;				//memory output to VGA
-reg [7:0]	mVGA_G;
-reg [7:0]	mVGA_B;
+wire [7:0]	mVGA_R;				//memory output to VGA
+wire [7:0]	mVGA_G;
+wire [7:0]	mVGA_B;
 
-
+assign mVGA_R = (8'd179>>(negColorData));
+assign mVGA_G = (8'd27>>(negColorData));
+assign mVGA_B = (8'd27>>(negColorData));
+wire [2:0] colorData;
+reg  [2:0] negColorData;
 ////////////////////////////////////
 //CA state machine variables
 wire reset;
@@ -354,40 +359,229 @@ reg [SCREEN_WIDTH-1:0] nextGen;
 // -- use m4k a for state machine
 // -- use m4k b for VGA refresh
 
-wire [9:0] arbiter_Xcoord;
-wire [8:0] arbiter_Ycoord;
-wire [3:0] arbiter_Color;
 hotter_buffer buffbuffbuff(
-	.address_a({eulers_Xcoord,eulers_Ycoord}),
-	.address_b({VGA_X,VGA_Y}),
-	.clock(VGA_CTRL_CLK),
-	.data_a(disp_bits),
-	//.data_b,
-	.wren_a(wren_a),
-	.wren_b(1'b0),
-	//.q_a,
-	.q_b(buff_out)
-);
-wire wren_a;
-wire [1:0] buff_out;
-wire [1:0] mem_bits ; //current data from m4k to VGA
-reg  [1:0] disp_bits ; // registered data from m4k to VGA
-
-reg we ; // write enable for a
-reg [18:0] addr_reg ; // for a
-reg data_reg ; // for a
-
-
+	.data(arb_data),
+	.rdaddress(VGAX+(VGAY*640)),
+	.rdclock(VGA_CTRL_CLK),
+	.wraddress(arb_addr),
+	.wrclock(CLOCK_50),
+	.wren(arb_wren),
+	.q(colorData)
+	);
+	
 // DLA state machine
 assign reset = ~KEY[0];
-
+assign clk   = CLOCK_50;
 always @ (negedge VGA_CTRL_CLK)
 begin
 	// register the m9k output for better timing on VGA
 	// negedge seems to work better than posedge
-	disp_bits <= mem_bits;
+	negColorData <= colorData;
 end
 
+//////////////////////////////////////////////////////////////////////
+//                           LAB 4 STUFF                            //
+//////////////////////////////////////////////////////////////////////
+  wire [3:0]  iProcReady;
+  wire [3:0]  oDataVal;
+  wire [35:0] oDataXSignal;
+  wire [35:0] oDataYSignal;
+  wire [9:0]  oVGAX;
+  wire [8:0]  oVGAY;
+  wire        oCoordRdy;
+  wire [35:0] iCoordX;
+  wire [35:0] iCoordY;
+  wire        iCoordVal;
+  wire [9:0]  iVGAX;
+  wire [8:0]  iVGAY;
 
+  wire m0ProcReady;
+  wire m1ProcReady;
+  wire m2ProcReady;
+  wire m3ProcReady;
+
+  wire [18:0] iProc0VGA;
+  wire [18:0] iProc1VGA;
+  wire [18:0] iProc2VGA;
+  wire [18:0] iProc3VGA;
+
+  wire [7:0]  iProc0Color;
+  wire [7:0]  iProc1Color;
+  wire [7:0]  iProc2Color;
+  wire [7:0]  iProc3Color;
+
+  wire [3:0]  iProcVal;
+  wire [3:0]  oProcRdy;
+
+  assign iProcReady[0] = m0ProcReady;
+  assign iProcReady[1] = m1ProcReady;
+  assign iProcReady[2] = m2ProcReady;
+  assign iProcReady[3] = m3ProcReady;
+  
+  coordGenerator c1 (
+    .clk(clk),
+    .reset(reset),
+
+  // inputs from NIOS
+  .zoomLevel(4'd0),
+  .upperLeftX(36'hF_00000000),
+  .upperLeftY(36'hF_00000000),
+  .draw(~KEY[3]),
+
+  // inputs from Load Dist
+  .iLoadDistRdy(oCoordRdy),
+
+  // outputs to Load Dist
+  .oLoadDistVal(iCoordVal),
+  .oVGAX(iVGAX),
+  .oVGAY(iVGAY),
+  .oCoordX(iCoordX),
+  .oCoordY(iCoordY)
+  );
+
+  loadBalancer #(4) lb1 (
+    .clk(clk),
+    .reset(reset),
+
+  // input ready signals from processors 
+    .iProcReady(iProcReady),
+  
+  // input from coordinate generation
+    .iCoordVal(iCoordVal),
+    .iCoordX(iCoordX),
+    .iCoordY(iCoordY),
+    .iVGAX(iVGAX),
+    .iVGAY(iVGAY),
+
+  // output val, ready, signal groups to procs
+    .oDataVal(oDataVal),
+    .oDataXSignal(oDataXSignal),
+    .oDataYSignal(oDataYSignal),
+    .oVGAX(oVGAX),
+    .oVGAY(oVGAY),
+
+  // output ready, val signal groups to coordinate generator
+    .oCoordRdy(oCoordRdy)
+);
+
+  mandlebrotProcessor #(100) m0 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[0]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m0ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[0]), 
+
+  // signals sent to VGA buffer
+    .oColor(iProc0Color),
+    .oVGACoord(iProc0VGA),
+    .oVGAVal(iProcVal[0])    
+);
+
+  mandlebrotProcessor #(100) m1 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[1]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m1ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[1]),
+
+  // signals sent to VGA buffer
+    .oColor(iProc1Color),
+    .oVGACoord(iProc1VGA),
+    .oVGAVal(iProcVal[1])
+ );
+
+  mandlebrotProcessor #(100) m2 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[2]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m2ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[2]),
+
+  // signals sent to VGA buffer
+    .oColor(iProc2Color),
+    .oVGACoord(iProc2VGA),
+    .oVGAVal(iProcVal[2])
+ );
+
+  mandlebrotProcessor #(100) m3 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[3]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m3ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[3]),
+
+  // signals sent to VGA buffer
+    .oColor(iProc3Color),
+    .oVGACoord(iProc3VGA),
+    .oVGAVal(iProcVal[3])
+);
+
+  wire [18:0] arb_addr;
+  wire [2:0] arb_data;
+  wire arb_wren;
+  
+proc2memArb p2m1 (
+  .clk(clk),
+  .reset(reset),
+
+  // VGA data inputs from processors
+  .iProc0VGA(iProc0VGA),
+  .iProc1VGA(iProc1VGA),
+  .iProc2VGA(iProc2VGA),
+  .iProc3VGA(iProc3VGA),
+
+  .iProc0Color(iProc0Color),
+  .iProc1Color(iProc1Color),
+  .iProc2Color(iProc2Color),
+  .iProc3Color(iProc3Color), 
+
+  // ready signals from processors
+  .iProcRdy(iProcVal),
+
+  // output signals to processors
+  .oProcRdy(oProcRdy),
+
+  // output signals to VGA buffer
+  .addr(arb_addr),
+  .data(arb_data),
+  .w_en(arb_wren)
+ );
+  
 endmodule //top module
 

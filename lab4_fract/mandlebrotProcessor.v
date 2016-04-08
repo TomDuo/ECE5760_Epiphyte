@@ -19,7 +19,7 @@ module mandlebrotProcessor #(
   input valueStored, 
 
   // signals sent to VGA buffer
-  output reg [3:0]  oColor,
+  output reg [2:0]  oColor,
   output reg [18:0] oVGACoord,
   output reg        oVGAVal 
 );
@@ -120,7 +120,7 @@ always @(posedge clk) begin
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
     else if ((mul1out + mul3out)>4) begin
-      oColor    <= log2Iter;
+      oColor    <= log2Iter>>1;
       oVGAVal   <= 1;
       nextState <= s_store;
     end
