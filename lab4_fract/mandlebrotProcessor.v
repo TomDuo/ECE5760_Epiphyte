@@ -119,8 +119,8 @@ always @(posedge clk) begin
       nextState <= s_store;
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
-    else if ((mul1out + mul3out)>4) begin
-      oColor    <= log2Iter>>1;
+    else if ((mul1out + mul3out)>36'h4_00000000) begin
+      oColor    <= log2Iter;
       oVGAVal   <= 1;
       nextState <= s_store;
     end

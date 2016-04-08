@@ -26,5 +26,5 @@ for k=x_index
 end
 
 imagesc(img)
-%colormap(summer)
-
+colormap(summer)
+colorbar();
