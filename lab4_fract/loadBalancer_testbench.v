@@ -52,8 +52,8 @@ module top;
 
   // inputs from NIOS
   .zoomLevel(4'd0),
-  .upperLeftX(36'hF_00000000),
-  .upperLeftY(36'hF_00000000),
+  .upperLeftX(~(36'h2_00000000)),
+  .upperLeftY(~(36'h1_00000000)),
   .draw(0),
 
   // inputs from Load Dist
@@ -92,7 +92,7 @@ module top;
     .oCoordRdy(oCoordRdy)
   );
 
-  mandlebrotProcessor #(100) m0 (
+  mandlebrotProcessor #(1000) m0 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -113,7 +113,7 @@ module top;
     .oVGACoord(iProc0VGA),
     .oVGAVal(iProcVal[0])    );
 
-  mandlebrotProcessor #(100) m1 (
+  mandlebrotProcessor #(1000) m1 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -135,7 +135,7 @@ module top;
     .oVGAVal(iProcVal[1])
     );
 
-  mandlebrotProcessor #(100) m2 (
+  mandlebrotProcessor #(1000) m2 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -157,7 +157,7 @@ module top;
     .oVGAVal(iProcVal[2])
     );
 
-  mandlebrotProcessor #(100) m3 (
+  mandlebrotProcessor #(1000) m3 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -181,6 +181,8 @@ module top;
 
   wire [18:0] arb_addr;
   wire [2:0] arb_data;
+  integer rd_addr = 0;
+  wire [2:0] buff_out;
   wire arb_wren;
 proc2memArb p2m1 (
   .clk(clk),
@@ -208,21 +210,39 @@ proc2memArb p2m1 (
   .data(arb_data),
   .w_en(arb_wren)
   );
+  dizzy_buffer thedz(
+      .data(arb_data),
+      .rdaddress(rd_addr),
+      .rdclock(clk),
+      .wraddress(arb_addr),
+      .wrclock(clk),
+      .wren(arb_wren),
+      .q(buff_out)
+  );
         always @(posedge arb_addr) begin
         $display("arb_addr=%d, arb_data=%d",arb_addr,arb_data); 
         end
-
+    integer f;
     initial begin
             // Dump waveforms
+    f=$fopen("buffer.csv","w");
     $dumpfile("loadBalancer-sim.vcd");
     $dumpvars;
     #11;
     reset = 1'b0;
-
-    repeat(600000) begin
-    
+    repeat(1000) begin
     #10;
     end
+    while(arb_addr < 36'd307200) begin
+    //repeat(307200) begin
+    #10;
+    end
+    repeat(307200) begin
+        #10
+        $fwrite(f,"%d\n",buff_out);
+        rd_addr = rd_addr + 1;
+    end
+    $fclose(f);
     $finish;
 end
 
