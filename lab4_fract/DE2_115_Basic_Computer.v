@@ -256,13 +256,13 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
 // Internal Wires
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
 wire				system_clock;
-
+wire        nios_opts;
 nios_system NiosII (
 	// 1) global signals:
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
-	.dda_options_external_interface_export(dda_opts),
+	.dda_options_external_interface_export(nios_opts),
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -418,6 +418,25 @@ end
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
   
+  wire [35:0] upperLeftX;
+  wire [35:0] upperLeftY;
+  wire [4:0]  zoomLevel;
+
+  wire [17:0] niosUpperLeftX;
+  wire [17:0] niosUpperLeftY;
+
+  assign upperLeftX = {2'd0,niosUpperLeftX,16'd0};
+  assign upperLeftY = {2'd0,niosUpperLeftY,16'd0};
+  
+  nios_param_driver npd1 (
+   .clk(CLOCK_50),
+   .reset(reset),
+   .niosDDA_cmd(nios_opts),  
+   .xCoord,(niosUpperLeftX)
+   .yCoord(niosUpperLeftY),
+   .zoom(zoomLevel)
+    );
+//////////////////////////// NOTE: CURRENTLY IGNORING NIOS INPUTS HERE ////////////////////////////
   coordGenerator c1 (
     .clk(clk),
     .reset(reset),

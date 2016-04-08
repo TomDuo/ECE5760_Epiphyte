@@ -34,21 +34,15 @@ int main(void)
 	int data, i, n;
 	int k1, k2, k13, kmid, x1, v1, x2, v2;
 	char command_index = 0;
-	char text_string[] = "\nInput Spring-Mass System Parameters\n> \0";
+	char text_string[] = "\nInput Coordinate and Zoom Parameters\n> \0";
 	char * command_string;//[20];
-	char go_string[] = "go:";
-	char stop_string[] = "st:";
-	char k1_string[] = "k1:";
-	char k2_string[] = "k2:";
-	char kmid_string[] = "km:";
-	char k13_string[] = "k3:";
-	char x1_string[] = "x1:";
-	char v1_string[] = "v1:";
-	char x2_string[] = "x2:";
-	char v2_string[] = "v2:";
-  	char* pEnd;
+	char xCoord_string[] = "xC:";
+	char yCoord_string[] = "yC:";
+	char zoom_string[] = "zm:";
+	char* pEnd;
 
 	command_string = malloc( sizeof(char)*20);
+
 	/* print a text string */
 	for (i = 0; text_string[i] != 0; ++i)
 		put_jtag (JTAG_UART_ptr, text_string[i]);
@@ -72,7 +66,7 @@ int main(void)
 			{
 				command_string[command_index] = '\0';
 				// check for a match on any of the special strings in the command string
-				if (strstr(command_string,k1_string) == command_string)
+				if (strstr(command_string,xCoord_string) == command_string)
 				{
 
 					//printf("\nfound k1 match\n");
@@ -80,58 +74,25 @@ int main(void)
 					//printf("completed strtod call\n");
 					//sscanf(command_string,"%f", &tempFloat);
 					select_line = 0x1;
-
 				}
 				
-				else if (strstr(command_string,k2_string) == command_string)
+				else if (strstr(command_string,yCoord_string) == command_string)
 				{
 					tempFloat = strtod(command_string + 3,NULL);
 					select_line = 0x2;
 				}
-				else if (strstr(command_string,k13_string) == command_string)
+
+				else if (strstr(command_string,zoom_string) == command_string)
 				{
 					tempFloat = strtod(command_string + 3,NULL);
 					select_line = 0x3;
 				}
 
-				else if (strstr(command_string,kmid_string) == command_string)
-				{
-					tempFloat = strtod(command_string + 3,NULL);
-					select_line = 0x4;
-
-				}
-				else if (strstr(command_string,x1_string) == command_string)
-				{
-					tempFloat = strtod(command_string + 3,NULL);
-					select_line = 0x5;
-				}
-				else if (strstr(command_string,v1_string) == command_string)
-				{
-					tempFloat = strtod(command_string + 3,NULL);
-				select_line = 0x6;
-				}
-				else if (strstr(command_string,x2_string) == command_string)
-				{
-					tempFloat = strtod(command_string + 3,NULL);
-					select_line = 0x7;
-				}
-				else if (strstr(command_string,v2_string) == command_string)
-				{
-					tempFloat = strtod(command_string + 3,NULL);
-					select_line = 0x8;
-				}
-				else if (strstr(command_string,go_string) == command_string)
-				{
-					select_line = 0x9;
-				}
-				else if (strstr(command_string,stop_string) == command_string)
-				{
-					select_line = 0xA;
-				}
 				else
 				{
 					//select_line = 0x0;
 				}
+				
 				//printf("about to convert to fixed\n");
 				dataLine = FLOAT2_DDA_FIXED(tempFloat);
 				// after reading a value, zero the index and clear the command string
