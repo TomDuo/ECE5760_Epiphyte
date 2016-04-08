@@ -54,61 +54,62 @@ module coordGenerator (
   always @(posedge clk) begin
     state = nextState;
     if (reset || draw) nextState <= s_init;
+	else begin
+	  case(state)
+	  s_init: begin
+		 oLoadDistVal <= 0;
+		 oVGAY        <= 9'd0;
+		 oVGAX        <= 10'd0;
+		 done         <= 0;
+		 oCoordX      <= upperLeftX;
+		 oCoordY      <= upperLeftY;
+		 nextState    <= s_getNextValue;
+	  end
 
-  case(state)
-  s_init: begin
-    oLoadDistVal <= 0;
-    oVGAY        <= 9'd0;
-    oVGAX        <= 10'd0;
-    done         <= 0;
-    oCoordX      <= upperLeftX;
-    oCoordY      <= upperLeftY;
-    nextState    <= s_getNextValue;
-  end
+	  s_waiting: begin
+		 if (!oLoadDistVal) begin
+			nextState    <= s_getNextValue;
+		 end
+		 else if (iLoadDistRdy) begin
+			oLoadDistVal <= 0;
+			nextState    <= s_getNextValue;
+		 end
+		 else begin
+			oLoadDistVal <= 1;
+			nextState    <= s_waiting;
+		 end
+	  end
 
-  s_waiting: begin
-    if (!oLoadDistVal) begin
-      nextState    <= s_getNextValue;
-    end
-    else if (iLoadDistRdy) begin
-      oLoadDistVal <= 0;
-      nextState    <= s_getNextValue;
-    end
-    else begin
-      oLoadDistVal <= 1;
-      nextState    <= s_waiting;
-    end
-  end
+	  s_getNextValue: begin
+		 if ((oVGAX < 10'd640) && (oVGAY < 9'd480)) begin
+		 oVGAX    <= oVGAX + 1;
+		 oVGAY    <= oVGAY;
+		 oCoordX  <= oCoordX + xSize;
+		 oCoordY  <= oCoordY;
+		 nextState    <= s_waiting;
+		 oLoadDistVal <= 1;
+		 end
+		 else if ((oVGAX == 10'd640) && (oVGAY < 9'd480)) begin
+			oVGAX <= 0;
+			oVGAY <= oVGAY + 1;
+			oCoordX <= upperLeftX;
+			oCoordY <= oCoordY + ySize;
+		 nextState    <= s_waiting;
+		 oLoadDistVal <= 1;
+		 end
+		 else begin
+			nextState <= s_complete;
+			oLoadDistVal <= 0;
+		 end
+	  end
 
-  s_getNextValue: begin
-    if ((oVGAX < 10'd640) && (oVGAY < 9'd480)) begin
-    oVGAX    <= oVGAX + 1;
-    oVGAY    <= oVGAY;
-    oCoordX  <= oCoordX + xSize;
-    oCoordY  <= oCoordY;
-    nextState    <= s_waiting;
-    oLoadDistVal <= 1;
-    end
-    else if ((oVGAX == 10'd640) && (oVGAY < 9'd480)) begin
-      oVGAX <= 0;
-      oVGAY <= oVGAY + 1;
-      oCoordX <= upperLeftX;
-      oCoordY <= oCoordY + ySize;
-    nextState    <= s_waiting;
-    oLoadDistVal <= 1;
-    end
-    else begin
-      nextState <= s_complete;
-      oLoadDistVal <= 0;
-    end
+	  s_complete: begin
+		 oLoadDistVal <= 0;
+		 done         <= 1;
+		 nextState <= s_complete;
+	  end
+	  endcase
   end
-
-  s_complete: begin
-    oLoadDistVal <= 0;
-    done         <= 1;
-    nextState <= s_complete;
-  end
-  endcase
   end    
 
 endmodule
