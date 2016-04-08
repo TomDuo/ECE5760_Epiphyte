@@ -2,9 +2,9 @@
  * alt_sys_init.c - HAL initialization source
  *
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Tue Mar 01 13:37:23 EST 2016
+ * Generated: Fri Apr 08 17:50:35 EDT 2016
  */
 
 /*
@@ -60,8 +60,10 @@
 
 #include "altera_nios2_qsys_irq.h"
 #include "altera_avalon_jtag_uart.h"
+#include "altera_avalon_lcd_16207.h"
 #include "altera_avalon_sysid_qsys.h"
 #include "altera_up_avalon_parallel_port.h"
+#include "altera_up_avalon_ps2.h"
 
 /*
  * Allocate the device storage
@@ -69,10 +71,12 @@
 
 ALTERA_NIOS2_QSYS_IRQ_INSTANCE ( CPU, CPU);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART, JTAG_UART);
+ALTERA_AVALON_LCD_16207_INSTANCE ( LCD_16207_0, lcd_16207_0);
 ALTERA_AVALON_SYSID_QSYS_INSTANCE ( SYSID, sysid);
 ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( DDA_OPTIONS, DDA_Options);
 ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( GREEN_LEDS, Green_LEDs);
 ALTERA_UP_AVALON_PARALLEL_PORT_INSTANCE ( HEX3_HEX0, HEX3_HEX0);
+ALTERA_UP_AVALON_PS2_INSTANCE ( PS2_0, ps2_0);
 
 /*
  * Initialize the interrupt controller devices
@@ -96,8 +100,10 @@ void alt_irq_init ( const void* base )
 void alt_sys_init( void )
 {
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART, JTAG_UART);
+    ALTERA_AVALON_LCD_16207_INIT ( LCD_16207_0, lcd_16207_0);
     ALTERA_AVALON_SYSID_QSYS_INIT ( SYSID, sysid);
     ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( DDA_OPTIONS, DDA_Options);
     ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( GREEN_LEDS, Green_LEDs);
     ALTERA_UP_AVALON_PARALLEL_PORT_INIT ( HEX3_HEX0, HEX3_HEX0);
+    ALTERA_UP_AVALON_PS2_INIT ( PS2_0, ps2_0);
 }

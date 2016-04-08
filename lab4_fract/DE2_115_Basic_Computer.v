@@ -204,13 +204,6 @@ module DE2_115_Basic_Computer (
   assign FL_WE_N  = 1'b1;
   assign FL_WP_N  = 1'b0;
 
-  // Disable LCD.
-  assign LCD_BLON = 1'b0;
-  assign LCD_DATA = 8'hzz;
-  assign LCD_EN   = 1'b0;
-  assign LCD_ON   = 1'b0;
-  assign LCD_RS   = 1'b0;
-  assign LCD_RW   = 1'b0;
 
   // Disable OTG.
   assign OTG_ADDR    = 2'h0;
@@ -257,12 +250,21 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
 wire				system_clock;
 wire        nios_opts;
+assign LCD_ON = 1'b1;
+assign LCD_BLON = 1'b1;
 nios_system NiosII (
 	// 1) global signals:
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
 	.dda_options_external_interface_export(nios_opts),
+	
+	// .ps2_0_external_interface_CLK          (<connected-to-ps2_0_external_interface_CLK>),          //       ps2_0_external_interface.CLK
+    //    .ps2_0_external_interface_DAT          (<connected-to-ps2_0_external_interface_DAT>),          //                               .DAT
+        .lcd_16207_0_external_RS               (LCD_RS),               //           lcd_16207_0_external.RS
+        .lcd_16207_0_external_RW               (LCD_RW),               //                               .RW
+        .lcd_16207_0_external_data             (LCD_DATA),             //                               .data
+        .lcd_16207_0_external_E                (LCD_EN),                 //                               .E
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -286,9 +288,10 @@ nios_system NiosII (
 	.zs_ras_n_from_the_SDRAM				(DRAM_RAS_N),
 	.zs_we_n_from_the_SDRAM					(DRAM_WE_N)
 	
-
+       
 	);
-
+	
+	   
 sdram_pll neg_3ns (CLOCK_50, DRAM_CLK, system_clock);
 
 wire	VGA_CTRL_CLK;
@@ -329,8 +332,8 @@ wire [7:0]	mVGA_B;
 assign mVGA_R = (8'd179>>(negColorData));
 assign mVGA_G = (8'd27>>(negColorData));
 assign mVGA_B = (8'd27>>(negColorData));
-wire [2:0] colorData;
-reg  [2:0] negColorData;
+wire [4:0] colorData;
+reg  [4:0] negColorData;
 ////////////////////////////////////
 //CA state machine variables
 wire reset;
@@ -361,7 +364,7 @@ reg [SCREEN_WIDTH-1:0] nextGen;
 
 hotter_buffer buffbuffbuff(
 	.data(arb_data),
-	.rdaddress(VGAX+(VGAY*640)),
+	.rdaddress(VGA_X+(VGA_Y*640)),
 	.rdclock(VGA_CTRL_CLK),
 	.wraddress(arb_addr),
 	.wrclock(CLOCK_50),
@@ -467,8 +470,8 @@ end
 
   // inputs from NIOS
   .zoomLevel(4'd0),
-  .upperLeftX(36'hF_00000000),
-  .upperLeftY(36'hF_00000000),
+  .upperLeftX(~(36'h2_00000001)),
+  .upperLeftY(~(36'h1_00000001)),
   .draw(~KEY[3]),
 
   // inputs from Load Dist
@@ -508,7 +511,7 @@ end
     .oCoordRdy(oCoordRdy)
 );
 
-  mandlebrotProcessor #(100) m0 (
+  mandlebrotProcessor #(1000) m0 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -530,7 +533,7 @@ end
     .oVGAVal(iProcVal[0])    
 );
 
-  mandlebrotProcessor #(100) m1 (
+  mandlebrotProcessor #(1000) m1 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -552,7 +555,7 @@ end
     .oVGAVal(iProcVal[1])
  );
 
-  mandlebrotProcessor #(100) m2 (
+  mandlebrotProcessor #(1000) m2 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -574,7 +577,7 @@ end
     .oVGAVal(iProcVal[2])
  );
 
-  mandlebrotProcessor #(100) m3 (
+  mandlebrotProcessor #(1000) m3 (
       .clk(clk),
       .reset(reset),
   // inputs from queue

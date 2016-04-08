@@ -19,7 +19,7 @@ module mandlebrotProcessor #(
   input valueStored, 
 
   // signals sent to VGA buffer
-  output reg [2:0]  oColor,
+  output reg [4:0]  oColor,
   output reg [18:0] oVGACoord,
   output reg        oVGAVal 
 );
@@ -53,7 +53,7 @@ long_mult5760 mul1 (mul1ina,mul1inb,mul1out);
 long_mult5760 mul2 (mul2ina,mul2inb,mul2out);
 long_mult5760 mul3 (mul3ina,mul3inb,mul3out);
 
-wire [3:0] log2Iter;
+wire [4:0] log2Iter;
 quickLog2 ql1 (calcCount,log2Iter);
 
 always @(posedge clk) begin
@@ -114,13 +114,13 @@ always @(posedge clk) begin
 
     // if there have been too many calculations, return with dark color
     if (calcCount >= maxIterations) begin
-      oColor    <= 4'd0;
+      oColor    <= 5'd31;// {3{iVGAX[0]}};
       oVGAVal   <= 1;
       nextState <= s_store;
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
     else if ((mul1out + mul3out)>36'h4_00000000) begin
-      oColor    <= log2Iter;
+      oColor    <= (calcCount>>5);//{3{iVGAX[0]}};//
       oVGAVal   <= 1;
       nextState <= s_store;
     end

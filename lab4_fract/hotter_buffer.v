@@ -45,13 +45,13 @@ module hotter_buffer (
 	wren,
 	q);
 
-	input	[2:0]  data;
+	input	[4:0]  data;
 	input	[18:0]  rdaddress;
 	input	  rdclock;
 	input	[18:0]  wraddress;
 	input	  wrclock;
 	input	  wren;
-	output	[2:0]  q;
+	output	[4:0]  q;
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_off
 `endif
@@ -61,8 +61,8 @@ module hotter_buffer (
 // synopsys translate_on
 `endif
 
-	wire [2:0] sub_wire0;
-	wire [2:0] q = sub_wire0[2:0];
+	wire [4:0] sub_wire0;
+	wire [4:0] q = sub_wire0[4:0];
 
 	altsyncram	altsyncram_component (
 				.address_a (wraddress),
@@ -82,7 +82,7 @@ module hotter_buffer (
 				.clocken1 (1'b1),
 				.clocken2 (1'b1),
 				.clocken3 (1'b1),
-				.data_b ({3{1'b1}}),
+				.data_b ({5{1'b1}}),
 				.eccstatus (),
 				.q_a (),
 				.rden_a (1'b1),
@@ -104,8 +104,8 @@ module hotter_buffer (
 		altsyncram_component.power_up_uninitialized = "FALSE",
 		altsyncram_component.widthad_a = 19,
 		altsyncram_component.widthad_b = 19,
-		altsyncram_component.width_a = 3,
-		altsyncram_component.width_b = 3,
+		altsyncram_component.width_a = 5,
+		altsyncram_component.width_b = 5,
 		altsyncram_component.width_byteena_a = 1;
 
 
@@ -144,8 +144,8 @@ endmodule
 // Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
-// Retrieval info: PRIVATE: MEMSIZE NUMERIC "921600"
-// Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "1"
+// Retrieval info: PRIVATE: MEMSIZE NUMERIC "1536000"
+// Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
 // Retrieval info: PRIVATE: MIFfilename STRING ""
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "2"
 // Retrieval info: PRIVATE: OUTDATA_ACLR_B NUMERIC "0"
@@ -164,10 +164,10 @@ endmodule
 // Retrieval info: PRIVATE: USE_DIFF_CLKEN NUMERIC "0"
 // Retrieval info: PRIVATE: UseDPRAM NUMERIC "1"
 // Retrieval info: PRIVATE: VarWidth NUMERIC "0"
-// Retrieval info: PRIVATE: WIDTH_READ_A NUMERIC "3"
-// Retrieval info: PRIVATE: WIDTH_READ_B NUMERIC "3"
-// Retrieval info: PRIVATE: WIDTH_WRITE_A NUMERIC "3"
-// Retrieval info: PRIVATE: WIDTH_WRITE_B NUMERIC "3"
+// Retrieval info: PRIVATE: WIDTH_READ_A NUMERIC "5"
+// Retrieval info: PRIVATE: WIDTH_READ_B NUMERIC "5"
+// Retrieval info: PRIVATE: WIDTH_WRITE_A NUMERIC "5"
+// Retrieval info: PRIVATE: WIDTH_WRITE_B NUMERIC "5"
 // Retrieval info: PRIVATE: WRADDR_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: WRADDR_REG_B NUMERIC "0"
 // Retrieval info: PRIVATE: WRCTRL_ACLR_B NUMERIC "0"
@@ -189,11 +189,11 @@ endmodule
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "19"
 // Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "19"
-// Retrieval info: CONSTANT: WIDTH_A NUMERIC "3"
-// Retrieval info: CONSTANT: WIDTH_B NUMERIC "3"
+// Retrieval info: CONSTANT: WIDTH_A NUMERIC "5"
+// Retrieval info: CONSTANT: WIDTH_B NUMERIC "5"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
-// Retrieval info: USED_PORT: data 0 0 3 0 INPUT NODEFVAL "data[2..0]"
-// Retrieval info: USED_PORT: q 0 0 3 0 OUTPUT NODEFVAL "q[2..0]"
+// Retrieval info: USED_PORT: data 0 0 5 0 INPUT NODEFVAL "data[4..0]"
+// Retrieval info: USED_PORT: q 0 0 5 0 OUTPUT NODEFVAL "q[4..0]"
 // Retrieval info: USED_PORT: rdaddress 0 0 19 0 INPUT NODEFVAL "rdaddress[18..0]"
 // Retrieval info: USED_PORT: rdclock 0 0 0 0 INPUT NODEFVAL "rdclock"
 // Retrieval info: USED_PORT: wraddress 0 0 19 0 INPUT NODEFVAL "wraddress[18..0]"
@@ -203,9 +203,9 @@ endmodule
 // Retrieval info: CONNECT: @address_b 0 0 19 0 rdaddress 0 0 19 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 wrclock 0 0 0 0
 // Retrieval info: CONNECT: @clock1 0 0 0 0 rdclock 0 0 0 0
-// Retrieval info: CONNECT: @data_a 0 0 3 0 data 0 0 3 0
+// Retrieval info: CONNECT: @data_a 0 0 5 0 data 0 0 5 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
-// Retrieval info: CONNECT: q 0 0 3 0 @q_b 0 0 3 0
+// Retrieval info: CONNECT: q 0 0 5 0 @q_b 0 0 5 0
 // Retrieval info: GEN_FILE: TYPE_NORMAL hotter_buffer.v TRUE
 // Retrieval info: GEN_FILE: TYPE_NORMAL hotter_buffer.inc FALSE
 // Retrieval info: GEN_FILE: TYPE_NORMAL hotter_buffer.cmp FALSE

@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 1, 2016 1:37:22 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1456857442685</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\ECE5760_Epiphyte\lab2_DDA\DE2-115_Basic_Computer\BSP</BspGeneratedLocation>
-        <BspSettingsFile>C:\ECE5760_Epiphyte\lab2_DDA\DE2-115_Basic_Computer\BSP\settings.bsp</BspSettingsFile>
-        <SopcDesignFile>C:\ECE5760_Epiphyte\lab2_DDA\DE2-115_Basic_Computer\verilog\nios_system.sopcinfo</SopcDesignFile>
+        <BspGeneratedTimeStamp>Apr 8, 2016 6:29:03 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1460154543303</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\ECE5760_Epiphyte\lab4_fract\BSP</BspGeneratedLocation>
+        <BspSettingsFile>C:\ECE5760_Epiphyte\lab4_fract\BSP\settings.bsp</BspSettingsFile>
+        <SopcDesignFile>C:\ECE5760_Epiphyte\lab4_fract\nios_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>CPU</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
@@ -891,6 +891,18 @@
                 <addressRange>0x10000030 - 0x1000003F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>ps2_0</slaveDescriptor>
+                <addressRange>0x10000040 - 0x10000047</addressRange>
+                <addressSpan>8</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>lcd_16207_0</slaveDescriptor>
+                <addressRange>0x10000050 - 0x1000005F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes>printable</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>JTAG_UART</slaveDescriptor>

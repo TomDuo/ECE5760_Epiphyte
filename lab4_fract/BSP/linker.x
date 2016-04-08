@@ -2,9 +2,9 @@
  * linker.x - Linker script
  *
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Tue Mar 01 13:37:23 EST 2016
+ * Generated: Fri Apr 08 17:50:35 EDT 2016
  */
 
 /*

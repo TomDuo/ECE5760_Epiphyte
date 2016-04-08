@@ -2,9 +2,9 @@
  * system.h - SOPC Builder system and BSP software package information
  *
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
- * SOPC Builder design path: C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+ * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Tue Mar 01 13:37:23 EST 2016
+ * Generated: Fri Apr 08 18:29:03 EDT 2016
  */
 
 /*
@@ -119,6 +119,16 @@
 
 
 /*
+ * Custom instruction macros
+ *
+ */
+
+#define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0(n,A,B) __builtin_custom_inii(ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N+(n&ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N_MASK),(A),(B))
+#define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N 0xfc
+#define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N_MASK ((1<<2)-1)
+
+
+/*
  * DDA_Options configuration
  *
  */
@@ -138,11 +148,14 @@
  */
 
 #define __ALTERA_AVALON_JTAG_UART
+#define __ALTERA_AVALON_LCD_16207
 #define __ALTERA_AVALON_NEW_SDRAM_CONTROLLER
 #define __ALTERA_AVALON_ONCHIP_MEMORY2
 #define __ALTERA_AVALON_SYSID_QSYS
 #define __ALTERA_NIOS2_QSYS
+#define __ALTERA_NIOS_CUSTOM_INSTR_FLOATING_POINT
 #define __ALTERA_UP_AVALON_PARALLEL_PORT
+#define __ALTERA_UP_AVALON_PS2
 
 
 /*
@@ -306,6 +319,34 @@
 
 
 /*
+ * lcd_16207_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_lcd_16207_0 altera_avalon_lcd_16207
+#define LCD_16207_0_BASE 0x10000050
+#define LCD_16207_0_IRQ -1
+#define LCD_16207_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define LCD_16207_0_NAME "/dev/lcd_16207_0"
+#define LCD_16207_0_SPAN 16
+#define LCD_16207_0_TYPE "altera_avalon_lcd_16207"
+
+
+/*
+ * ps2_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_ps2_0 altera_up_avalon_ps2
+#define PS2_0_BASE 0x10000040
+#define PS2_0_IRQ -1
+#define PS2_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define PS2_0_NAME "/dev/ps2_0"
+#define PS2_0_SPAN 8
+#define PS2_0_TYPE "altera_up_avalon_ps2"
+
+
+/*
  * sysid configuration
  *
  */
@@ -317,7 +358,7 @@
 #define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_NAME "/dev/sysid"
 #define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1456856467
+#define SYSID_TIMESTAMP 1460154213
 #define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 #endif /* __SYSTEM_H_ */

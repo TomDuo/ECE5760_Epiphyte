@@ -103,7 +103,7 @@ ACDS_VERSION := 13.0
 # BUILD_NUMBER: 156
 
 SETTINGS_FILE := settings.bsp
-SOPC_FILE := C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+SOPC_FILE := C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
 
 #-------------------------------------------------------------------------------
 #                             TOOL & COMMAND DEFINITIONS
@@ -221,6 +221,14 @@ altera_avalon_jtag_uart_driver_C_LIB_SRCS := \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_ioctl.c \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_fd.c
 
+# altera_avalon_lcd_16207_driver sources root 
+altera_avalon_lcd_16207_driver_SRCS_ROOT := drivers
+
+# altera_avalon_lcd_16207_driver sources 
+altera_avalon_lcd_16207_driver_C_LIB_SRCS := \
+	$(altera_avalon_lcd_16207_driver_SRCS_ROOT)/src/altera_avalon_lcd_16207.c \
+	$(altera_avalon_lcd_16207_driver_SRCS_ROOT)/src/altera_avalon_lcd_16207_fd.c
+
 # altera_avalon_sysid_qsys_driver sources root 
 altera_avalon_sysid_qsys_driver_SRCS_ROOT := drivers
 
@@ -328,14 +336,25 @@ hal_C_LIB_SRCS := \
 	$(hal_SRCS_ROOT)/src/alt_wait.c \
 	$(hal_SRCS_ROOT)/src/alt_write.c
 
+# up_avalon_ps2_driver sources root 
+up_avalon_ps2_driver_SRCS_ROOT := drivers
+
+# up_avalon_ps2_driver sources 
+up_avalon_ps2_driver_C_LIB_SRCS := \
+	$(up_avalon_ps2_driver_SRCS_ROOT)/src/altera_up_avalon_ps2.c \
+	$(up_avalon_ps2_driver_SRCS_ROOT)/src/altera_up_ps2_keyboard.c \
+	$(up_avalon_ps2_driver_SRCS_ROOT)/src/altera_up_ps2_mouse.c
+
 
 # Assemble all component C source files 
 COMPONENT_C_LIB_SRCS += \
 	$(altera_avalon_jtag_uart_driver_C_LIB_SRCS) \
+	$(altera_avalon_lcd_16207_driver_C_LIB_SRCS) \
 	$(altera_avalon_sysid_qsys_driver_C_LIB_SRCS) \
 	$(altera_nios2_qsys_hal_driver_C_LIB_SRCS) \
 	$(avalon_parallel_port_driver_C_LIB_SRCS) \
-	$(hal_C_LIB_SRCS)
+	$(hal_C_LIB_SRCS) \
+	$(up_avalon_ps2_driver_C_LIB_SRCS)
 
 # Assemble all component assembly source files 
 COMPONENT_ASM_LIB_SRCS += \

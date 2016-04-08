@@ -9,15 +9,15 @@ module dizzy_buffer (
 );
 
 
-	input	[2:0]  data;
+	input	[4:0]  data;
 	input	[18:0]  rdaddress;
 	input	  rdclock;
 	input	[18:0]  wraddress;
 	input	  wrclock;
 	input	  wren;
 	output	[2:0]  q;
-    reg [2:0] mem_array [0:307200];
-    reg [2:0] qreg;
+    reg [4:0] mem_array [0:307200];
+    reg [4:0] qreg;
 
     assign q = qreg;
 

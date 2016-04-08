@@ -87,11 +87,11 @@ ACDS_VERSION := 13.0
 
 # Quartus Generated JDI File. Required for resolving node instance ID's with 
 # design component names. 
-JDI_FILE := C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/DE2_115_Basic_Computer.jdi
+JDI_FILE := C:/ECE5760_Epiphyte/lab4_fract/DE2_115_Basic_Computer.jdi
 
 # Qsys--generated SOPCINFO file. Required for resolving node instance ID's with 
 # design component names. 
-SOPCINFO_FILE := C:/ECE5760_Epiphyte/lab2_DDA/DE2-115_Basic_Computer/verilog/nios_system.sopcinfo
+SOPCINFO_FILE := C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
 
 # Big-Endian operation. 
 # setting BIG_ENDIAN is false
@@ -119,6 +119,10 @@ ELF_PATCH_FLAG  += --cpu_name $(CPU_NAME)
 # Hardware Divider present. 
 # setting HARDWARE_DIVIDE is false
 ALT_CFLAGS += -mno-hw-div
+
+# Hardware Floating Point Custom Instruction with Divider present. 
+ALT_CFLAGS += -mcustom-fpu-cfg=60-2
+ALT_LDFLAGS += -mcustom-fpu-cfg=60-2
 
 # Hardware Multiplier present. 
 # setting HARDWARE_MULTIPLY is false
@@ -156,9 +160,9 @@ SOPC_SYSID_FLAG += --sidp=0x10002020
 ELF_PATCH_FLAG  += --sidp 0x10002020
 
 # The SOPC Timestamp 
-# setting SOPC_TIMESTAMP is 1456856467
-SOPC_SYSID_FLAG += --timestamp=1456856467
-ELF_PATCH_FLAG  += --timestamp 1456856467
+# setting SOPC_TIMESTAMP is 1460154213
+SOPC_SYSID_FLAG += --timestamp=1460154213
+ELF_PATCH_FLAG  += --timestamp 1460154213
 
 # Enable JTAG UART driver to recover when host is inactive causing buffer to 
 # full without returning error. Printf will not fail with this recovery. none 
