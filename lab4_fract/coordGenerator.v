@@ -23,7 +23,8 @@ module coordGenerator (
   output reg [9:0]  oVGAX,
   output reg [8:0]  oVGAY,
   output reg [35:0] oCoordX,
-  output reg [35:0] oCoordY
+  output reg [35:0] oCoordY,
+  output reg        done
 );
 
   localparam x_step = 36'h000666666;
@@ -59,6 +60,7 @@ module coordGenerator (
     oLoadDistVal <= 0;
     oVGAY        <= 9'd0;
     oVGAX        <= 10'd0;
+    done         <= 0;
     oCoordX      <= upperLeftX;
     oCoordY      <= upperLeftY;
     nextState    <= s_getNextValue;
@@ -103,6 +105,7 @@ module coordGenerator (
 
   s_complete: begin
     oLoadDistVal <= 0;
+    done         <= 1;
     nextState <= s_complete;
   end
   endcase

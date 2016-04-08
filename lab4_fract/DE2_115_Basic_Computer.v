@@ -256,13 +256,13 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
 // Internal Wires
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
 wire				system_clock;
-
+wire        nios_opts;
 nios_system NiosII (
 	// 1) global signals:
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
 
-	.dda_options_external_interface_export(dda_opts),
+	.dda_options_external_interface_export(nios_opts),
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -418,6 +418,49 @@ end
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
   
+  wire [35:0] upperLeftX;
+  wire [35:0] upperLeftY;
+  wire [4:0]  zoomLevel;
+
+  wire [17:0] niosUpperLeftX;
+  wire [17:0] niosUpperLeftY;
+
+  assign upperLeftX = {2'd0,niosUpperLeftX,16'd0};
+  assign upperLeftY = {2'd0,niosUpperLeftY,16'd0};
+  
+  wire done;
+  reg [16:0] timerCounter;
+  reg [15:0] mSecCounter;
+
+  always @(posedge CLOCK_50) begin
+    if (~KEY[3]) begin
+      // reset
+      timerCounter <= 0;
+      mSecCounter  <= 0;
+    end
+    else if (~done && (mSecCounter == 16'd50000)) begin
+      timerCounter <= timerCounter + 1;
+      mSecCounter  <= 16'd0;
+    end
+    else begin
+      mSecCounter <= mSecCounter + 1;
+    end
+  end
+
+  hex_7seg hex7 (timerCounter[15:12],6'd7);
+  hex_7seg hex7 (timerCounter[11:8],6'd6);
+  hex_7seg hex7 (timerCounter[7:4],6'd5);
+  hex_7seg hex7 (timerCounter[3:0],6'd4);
+
+  nios_param_driver npd1 (
+   .clk(CLOCK_50),
+   .reset(reset),
+   .niosDDA_cmd(nios_opts),  
+   .xCoord(niosUpperLeftX),
+   .yCoord(niosUpperLeftY),
+   .zoom(zoomLevel)
+   );
+//////////////////////////// NOTE: CURRENTLY IGNORING NIOS INPUTS HERE ////////////////////////////
   coordGenerator c1 (
     .clk(clk),
     .reset(reset),
