@@ -249,7 +249,9 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
 // Internal Wires
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
 wire				system_clock;
-wire        nios_opts;
+wire [9:0]       nios_cursorx;
+wire [8:0]       nios_cursory;
+wire             cursor_update_clk;
 assign LCD_ON = 1'b1;
 assign LCD_BLON = 1'b1;
 nios_system NiosII (
@@ -261,10 +263,10 @@ nios_system NiosII (
 	
 	.ps2_0_external_interface_CLK          (PS2_CLK),          //       ps2_0_external_interface.CLK
    .ps2_0_external_interface_DAT          (PS2_DAT),          //                               .DAT
-        .lcd_16207_0_external_RS               (LCD_RS),               //           lcd_16207_0_external.RS
-        .lcd_16207_0_external_RW               (LCD_RW),               //                               .RW
-        .lcd_16207_0_external_data             (LCD_DATA),             //                               .data
-        .lcd_16207_0_external_E                (LCD_EN),                 //                               .E
+	.lcd_16207_0_external_RS               (LCD_RS),               //           lcd_16207_0_external.RS
+	.lcd_16207_0_external_RW               (LCD_RW),               //                               .RW
+	.lcd_16207_0_external_data             (LCD_DATA),             //                               .data
+	.lcd_16207_0_external_E                (LCD_EN),                 //                               .E
 	// the_Green_LEDs
 	.LEDG_from_the_Green_LEDs				(LEDG),
 
@@ -274,7 +276,9 @@ nios_system NiosII (
 	.HEX2_from_the_HEX3_HEX0				(HEX2),
 	.HEX3_from_the_HEX3_HEX0				(HEX3),
 	
-
+	.nios_cursorx                        (nios_cursorx),
+	.nios_cursory                        (nios_cursory),
+	.cursor_update_clk                   (cursor_update_clk),
 
 
 	// the_SDRAM
@@ -332,6 +336,9 @@ reg [7:0]	mVGA_B;
 wire cursorNearX = (VGA_X-9'd1 == cursorX) || (VGA_X == cursorX) || (VGA_X+9'd1 == cursorX);
 wire cursorNearY = (VGA_Y-8'd1 == cursorY) || (VGA_Y == cursorY) || (VGA_Y+8'd1 == cursorY);
 
+always @(posedge cursor_update_clk) begin
+
+end
 always @(*) begin
 	if(cursorNearX && cursorNearY) begin
 		mVGA_R = 8'd255;
@@ -475,7 +482,7 @@ end
   nios_param_driver npd1 (
    .clk(CLOCK_50),
    .reset(reset),
-   .niosDDA_cmd(nios_opts),  
+   //.niosDDA_cmd(nios_opts),  
    .xCoord(niosUpperLeftX),
    .yCoord(niosUpperLeftY),
    .zoom(zoomLevel)
