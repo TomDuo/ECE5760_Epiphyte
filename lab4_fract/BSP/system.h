@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Fri Apr 08 18:29:03 EDT 2016
+ * Generated: Fri Apr 08 20:56:35 EDT 2016
  */
 
 /*
@@ -278,8 +278,8 @@
  */
 
 #define ALT_DEVICE_FAMILY "Cyclone IV E"
-#define ALT_ENHANCED_INTERRUPT_API_PRESENT
 #define ALT_IRQ_BASE NULL
+#define ALT_LEGACY_INTERRUPT_API_PRESENT
 #define ALT_LOG_PORT "/dev/null"
 #define ALT_LOG_PORT_BASE 0x0
 #define ALT_LOG_PORT_DEV null
@@ -339,8 +339,8 @@
 
 #define ALT_MODULE_CLASS_ps2_0 altera_up_avalon_ps2
 #define PS2_0_BASE 0x10000040
-#define PS2_0_IRQ -1
-#define PS2_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define PS2_0_IRQ 2
+#define PS2_0_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define PS2_0_NAME "/dev/ps2_0"
 #define PS2_0_SPAN 8
 #define PS2_0_TYPE "altera_up_avalon_ps2"
@@ -358,7 +358,7 @@
 #define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_NAME "/dev/sysid"
 #define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1460154213
+#define SYSID_TIMESTAMP 1460163146
 #define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 #endif /* __SYSTEM_H_ */

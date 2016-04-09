@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Apr 8, 2016 6:29:03 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1460154543303</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Apr 8, 2016 8:56:35 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1460163395456</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\ECE5760_Epiphyte\lab4_fract\BSP</BspGeneratedLocation>
         <BspSettingsFile>C:\ECE5760_Epiphyte\lab4_fract\BSP\settings.bsp</BspSettingsFile>
         <SopcDesignFile>C:\ECE5760_Epiphyte\lab4_fract\nios_system.sopcinfo</SopcDesignFile>

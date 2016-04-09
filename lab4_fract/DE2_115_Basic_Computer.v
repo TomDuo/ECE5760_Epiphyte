@@ -259,8 +259,8 @@ nios_system NiosII (
 
 	.dda_options_external_interface_export(nios_opts),
 	
-	// .ps2_0_external_interface_CLK          (<connected-to-ps2_0_external_interface_CLK>),          //       ps2_0_external_interface.CLK
-    //    .ps2_0_external_interface_DAT          (<connected-to-ps2_0_external_interface_DAT>),          //                               .DAT
+	.ps2_0_external_interface_CLK          (PS2_CLK),          //       ps2_0_external_interface.CLK
+   .ps2_0_external_interface_DAT          (PS2_DAT),          //                               .DAT
         .lcd_16207_0_external_RS               (LCD_RS),               //           lcd_16207_0_external.RS
         .lcd_16207_0_external_RW               (LCD_RW),               //                               .RW
         .lcd_16207_0_external_data             (LCD_DATA),             //                               .data
@@ -325,13 +325,25 @@ JULIE	julies_vga_ctrl	(
 	.iRST_N 		(DLY2)	
 );
 
-wire [7:0]	mVGA_R;				//memory output to VGA
-wire [7:0]	mVGA_G;
-wire [7:0]	mVGA_B;
+reg [7:0]	mVGA_R;				//memory output to VGA
+reg [7:0]	mVGA_G;
+reg [7:0]	mVGA_B;
 
-assign mVGA_R = (8'd179>>(negColorData));
-assign mVGA_G = (8'd27>>(negColorData));
-assign mVGA_B = (8'd27>>(negColorData));
+wire cursorNearX = (VGA_X-9'd1 == cursorX) || (VGA_X == cursorX) || (VGA_X+9'd1 == cursorX);
+wire cursorNearY = (VGA_Y-8'd1 == cursorY) || (VGA_Y == cursorY) || (VGA_Y+8'd1 == cursorY);
+
+always @(*) begin
+	if(cursorNearX && cursorNearY) begin
+		mVGA_R = 8'd255;
+		mVGA_G = 8'd255;
+		mVGA_B = 8'd255;
+	end
+	else begin
+		mVGA_R = (8'd179>>(negColorData));
+		mVGA_G = (8'd27>>(negColorData));
+		mVGA_B = (8'd27>>(negColorData));
+	end
+end
 wire [4:0] colorData;
 reg  [4:0] negColorData;
 ////////////////////////////////////
@@ -434,7 +446,12 @@ end
   wire done;
   reg [16:0] timerCounter;
   reg [15:0] mSecCounter;
-
+  
+  
+  reg [9:0] cursorX = 9'd50;
+  reg [8:0] cursorY = 9'd200;
+  
+  
   always @(posedge CLOCK_50) begin
     if (~KEY[3]) begin
       // reset
