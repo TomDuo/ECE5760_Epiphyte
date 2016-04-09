@@ -212,7 +212,7 @@
          type = "long";
       }
    }
-   element HEX7_HEX4.avalon_parallel_port_slave
+   element Green_LEDs.avalon_parallel_port_slave
    {
       datum _lockedAddress
       {
@@ -221,20 +221,7 @@
       }
       datum baseAddress
       {
-         value = "268435504";
-         type = "long";
-      }
-   }
-   element HEX3_HEX0.avalon_parallel_port_slave
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "268435488";
+         value = "268435472";
          type = "long";
       }
    }
@@ -251,27 +238,6 @@
          type = "long";
       }
    }
-   element nios_cursorY.avalon_parallel_port_slave
-   {
-      datum baseAddress
-      {
-         value = "0";
-         type = "String";
-      }
-   }
-   element Green_LEDs.avalon_parallel_port_slave
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "268435472";
-         type = "long";
-      }
-   }
    element Expansion_JP5.avalon_parallel_port_slave
    {
       datum _lockedAddress
@@ -283,6 +249,27 @@
       {
          value = "268435552";
          type = "long";
+      }
+   }
+   element Slider_Switches.avalon_parallel_port_slave
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "268435520";
+         type = "long";
+      }
+   }
+   element nios_cursorY.avalon_parallel_port_slave
+   {
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
       }
    }
    element Red_LEDs.avalon_parallel_port_slave
@@ -298,7 +285,15 @@
          type = "long";
       }
    }
-   element Slider_Switches.avalon_parallel_port_slave
+   element nios_upper_leftY.avalon_parallel_port_slave
+   {
+      datum baseAddress
+      {
+         value = "268435712";
+         type = "String";
+      }
+   }
+   element HEX7_HEX4.avalon_parallel_port_slave
    {
       datum _lockedAddress
       {
@@ -307,7 +302,28 @@
       }
       datum baseAddress
       {
-         value = "268435520";
+         value = "268435504";
+         type = "long";
+      }
+   }
+   element nios_upper_leftX.avalon_parallel_port_slave
+   {
+      datum baseAddress
+      {
+         value = "268435600";
+         type = "String";
+      }
+   }
+   element HEX3_HEX0.avalon_parallel_port_slave
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "268435488";
          type = "long";
       }
    }
@@ -332,20 +348,20 @@
          type = "boolean";
       }
    }
-   element clk
-   {
-      datum _sortIndex
-      {
-         value = "15";
-         type = "int";
-      }
-   }
    element clk.clk
    {
       datum clock_domain
       {
          value = "clk";
          type = "String";
+      }
+   }
+   element clk
+   {
+      datum _sortIndex
+      {
+         value = "15";
+         type = "int";
       }
    }
    element sysid.control_slave
@@ -414,25 +430,36 @@
          type = "int";
       }
    }
+   element nios_upper_leftX
+   {
+      datum _sortIndex
+      {
+         value = "23";
+         type = "int";
+      }
+   }
+   element nios_upper_leftY
+   {
+      datum _sortIndex
+      {
+         value = "24";
+         type = "int";
+      }
+   }
+   element nios_zoom
+   {
+      datum _sortIndex
+      {
+         value = "22";
+         type = "int";
+      }
+   }
    element ps2_0
    {
       datum _sortIndex
       {
          value = "18";
          type = "int";
-      }
-   }
-   element Onchip_memory.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "150994944";
-         type = "long";
       }
    }
    element Interval_Timer.s1
@@ -458,6 +485,19 @@
       datum baseAddress
       {
          value = "0";
+         type = "long";
+      }
+   }
+   element Onchip_memory.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "150994944";
          type = "long";
       }
    }
@@ -497,7 +537,7 @@
  <parameter name="projectName" value="lab4_fract.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1460174826286" />
+ <parameter name="timeStamp" value="1460238867001" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="SDRAM_wire" internal="SDRAM.wire" type="conduit" dir="end">
@@ -580,6 +620,21 @@
  <interface
    name="cursor_update_clk"
    internal="cursor_update_clk.external_interface"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="nios_zoom"
+   internal="nios_zoom.external_interface"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="nios_upper_leftx"
+   internal="nios_upper_leftX.external_interface"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="nios_upper_lefty"
+   internal="nios_upper_leftY.external_interface"
    type="conduit"
    dir="end" />
  <module kind="clock_source" version="13.0" enabled="1" name="clk">
@@ -938,7 +993,7 @@
   <parameter name="tightlyCoupledInstructionMaster2AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster3AddrWidth" value="1" />
   <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s1' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /></address-map>]]></parameter>
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='nios_cursorX.avalon_parallel_port_slave' start='0x10000030' end='0x10000040' /><slave name='ps2_0.avalon_ps2_slave' start='0x10000040' end='0x10000048' /><slave name='lcd_16207_0.control_slave' start='0x10000050' end='0x10000060' /><slave name='nios_cursorY.avalon_parallel_port_slave' start='0x10000060' end='0x10000070' /><slave name='cursor_update_clk.avalon_parallel_port_slave' start='0x10000070' end='0x10000080' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='SDRAM.s1' start='0x0' end='0x8000000' /><slave name='Onchip_memory.s2' start='0x9000000' end='0x9002000' /><slave name='CPU.jtag_debug_module' start='0xA000000' end='0xA000800' /><slave name='Green_LEDs.avalon_parallel_port_slave' start='0x10000010' end='0x10000020' /><slave name='HEX3_HEX0.avalon_parallel_port_slave' start='0x10000020' end='0x10000030' /><slave name='nios_cursorX.avalon_parallel_port_slave' start='0x10000030' end='0x10000040' /><slave name='ps2_0.avalon_ps2_slave' start='0x10000040' end='0x10000048' /><slave name='lcd_16207_0.control_slave' start='0x10000050' end='0x10000060' /><slave name='nios_cursorY.avalon_parallel_port_slave' start='0x10000060' end='0x10000070' /><slave name='cursor_update_clk.avalon_parallel_port_slave' start='0x10000070' end='0x10000080' /><slave name='nios_zoom.avalon_parallel_port_slave' start='0x10000080' end='0x10000090' /><slave name='nios_upper_leftX.avalon_parallel_port_slave' start='0x10000090' end='0x100000A0' /><slave name='nios_upper_leftY.avalon_parallel_port_slave' start='0x10000100' end='0x10000110' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x10001000' end='0x10001008' /><slave name='sysid.control_slave' start='0x10002020' end='0x10002028' /></address-map>]]></parameter>
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="deviceFamilyName" value="Cyclone IV E" />
   <parameter name="internalIrqMaskSystemInfo" value="260" />
@@ -974,7 +1029,7 @@
   <parameter name="leds" value="Green" />
   <parameter name="sevensegs" value="3 to 0" />
   <parameter name="gpio" value="GPIO 0 (JP1)" />
-  <parameter name="custom_DW" value="9" />
+  <parameter name="custom_DW" value="10" />
   <parameter name="custom_direction" value="Output only" />
   <parameter name="capture" value="false" />
   <parameter name="edge" value="Rising" />
@@ -1013,7 +1068,7 @@
   <parameter name="leds" value="Green" />
   <parameter name="sevensegs" value="3 to 0" />
   <parameter name="gpio" value="GPIO 0 (JP1)" />
-  <parameter name="custom_DW" value="8" />
+  <parameter name="custom_DW" value="9" />
   <parameter name="custom_direction" value="Output only" />
   <parameter name="capture" value="false" />
   <parameter name="edge" value="Rising" />
@@ -1034,6 +1089,66 @@
   <parameter name="sevensegs" value="3 to 0" />
   <parameter name="gpio" value="GPIO 0 (JP1)" />
   <parameter name="custom_DW" value="1" />
+  <parameter name="custom_direction" value="Output only" />
+  <parameter name="capture" value="false" />
+  <parameter name="edge" value="Rising" />
+  <parameter name="irq" value="false" />
+  <parameter name="irq_type" value="Edge" />
+  <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
+ </module>
+ <module
+   kind="altera_up_avalon_parallel_port"
+   version="13.0"
+   enabled="1"
+   name="nios_zoom">
+  <parameter name="board" value="DE2-115" />
+  <parameter name="custom_port" value="true" />
+  <parameter name="preset" value="LEDs" />
+  <parameter name="leds" value="Green" />
+  <parameter name="sevensegs" value="3 to 0" />
+  <parameter name="gpio" value="GPIO 0 (JP1)" />
+  <parameter name="custom_DW" value="5" />
+  <parameter name="custom_direction" value="Output only" />
+  <parameter name="capture" value="false" />
+  <parameter name="edge" value="Rising" />
+  <parameter name="irq" value="false" />
+  <parameter name="irq_type" value="Edge" />
+  <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
+ </module>
+ <module
+   kind="altera_up_avalon_parallel_port"
+   version="13.0"
+   enabled="1"
+   name="nios_upper_leftX">
+  <parameter name="board" value="DE2-115" />
+  <parameter name="custom_port" value="true" />
+  <parameter name="preset" value="LEDs" />
+  <parameter name="leds" value="Green" />
+  <parameter name="sevensegs" value="3 to 0" />
+  <parameter name="gpio" value="GPIO 0 (JP1)" />
+  <parameter name="custom_DW" value="32" />
+  <parameter name="custom_direction" value="Output only" />
+  <parameter name="capture" value="false" />
+  <parameter name="edge" value="Rising" />
+  <parameter name="irq" value="false" />
+  <parameter name="irq_type" value="Edge" />
+  <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
+ </module>
+ <module
+   kind="altera_up_avalon_parallel_port"
+   version="13.0"
+   enabled="1"
+   name="nios_upper_leftY">
+  <parameter name="board" value="DE2-115" />
+  <parameter name="custom_port" value="true" />
+  <parameter name="preset" value="LEDs" />
+  <parameter name="leds" value="Green" />
+  <parameter name="sevensegs" value="3 to 0" />
+  <parameter name="gpio" value="GPIO 0 (JP1)" />
+  <parameter name="custom_DW" value="32" />
   <parameter name="custom_direction" value="Output only" />
   <parameter name="capture" value="false" />
   <parameter name="edge" value="Rising" />
@@ -1528,6 +1643,63 @@
    end="cursor_update_clk.avalon_parallel_port_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x10000070" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="CPU.data_master"
+   end="nios_zoom.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x10000080" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clk.clk"
+   end="nios_zoom.clock_reset" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="CPU.jtag_debug_module_reset"
+   end="nios_zoom.clock_reset_reset" />
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clk.clk"
+   end="nios_upper_leftX.clock_reset" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="CPU.jtag_debug_module_reset"
+   end="nios_upper_leftX.clock_reset_reset" />
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="CPU.data_master"
+   end="nios_upper_leftX.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x10000090" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clk.clk"
+   end="nios_upper_leftY.clock_reset" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="CPU.jtag_debug_module_reset"
+   end="nios_upper_leftY.clock_reset_reset" />
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="CPU.data_master"
+   end="nios_upper_leftY.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x10000100" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />

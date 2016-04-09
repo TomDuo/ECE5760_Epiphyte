@@ -4,6 +4,7 @@
 #include "altera_up_ps2_mouse.h"
 #include "head.h"
 #include <alt_types.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <system.h>
 #define lcd_write_command(base, data)                     IOWR(base, 0, data)
@@ -11,7 +12,13 @@
 #define lcd_write_data(base, data)                    IOWR(base, 2, data)
 #define lcd_read_data(base)                           IORD(base, 3) 
 #define INTELLIMOUSE 1
-	alt_up_ps2_dev * ps2_dev;
+alt_up_ps2_dev * ps2_dev;
+volatile int * cursor_update_clk_ptr = (int *) CURSOR_UPDATE_CLK_BASE;
+volatile int * nios_cursorX_ptr = (int *) NIOS_CURSORX_BASE;
+volatile int * nios_cursorY_ptr = (int *) NIOS_CURSORY_BASE;
+volatile int * nios_zoom_ptr = (int *) NIOS_ZOOM_BASE;
+volatile int * nios_upper_left_x_ptr = (int *) NIOS_UPPER_LEFTX_BASE;
+volatile int * nios_upper_left_y_ptr = (int *) NIOS_UPPER_LEFTY_BASE;
 
 unsigned char initMouse()
 	{
@@ -43,7 +50,9 @@ unsigned char initMouse()
 	alt_up_ps2_write_data_byte(ps2_dev,0xF2); //Reset
 	alt_up_ps2_read_data_byte_timeout(ps2_dev, &dumb);
 	alt_up_ps2_read_data_byte_timeout(ps2_dev, &mouseID); //Get Device ID
-	
+	alt_up_ps2_write_data_byte_with_ack(ps2_dev,0xF3); //Set sample rate
+	alt_up_ps2_write_data_byte_with_ack(ps2_dev,20); //Set sample rate
+
 	/*
 	alt_up_ps2_write_data_byte(ps2_dev,0xF3); //Set Resolution
 		alt_up_ps2_read_data_byte_timeout(ps2_dev, &dumb);
@@ -51,82 +60,153 @@ unsigned char initMouse()
 	alt_up_ps2_write_data_byte(ps2_dev,0x03); //8 counts/mm
 		alt_up_ps2_read_data_byte_timeout(ps2_dev, &dumb);
 	*/
-		alt_up_ps2_write_data_byte(ps2_dev,0xF4); //Enable!
-		alt_up_ps2_read_data_byte_timeout(ps2_dev, &dumb);
+
 
 	return mouseID;
 	}
 int main()
 {
+	*(cursor_update_clk_ptr) = 0;
 
 
-	 LCD_Init();   
-     LCD_Show_Text("MANDLEBROT");
-     	unsigned char mouseID = initMouse();
-
-	int count = 0;
-	volatile unsigned char byte1=1, byte2=2, byte3=3,byte4=4, byteX=0x0A,byteY=0x0B,byteZ=0x0C;
-	volatile unsigned char oldbyte1=0, oldbyte2=0, oldbyte3=0, oldbyte4=0;
+	LCD_Init();   
+    LCD_Show_Text("MANDLEBROT");
+    uint16_t count = 0;
+	volatile signed char byte1=0, byte2=0, byte3=0,byte4=0;
+	volatile signed char byteX=0x0A,byteY=0x0B,byteZ=0x0C;
+	//volatile signed char oldbyte1=0, oldbyte2=0, oldbyte3=0, oldbyte4=0;
 	volatile char buff[50];
+	int32_t xCursor=200;
+	int32_t yCursor=200;
+	int32_t prev_upperLeftX = ~(0x20000001); 
+	int32_t prev_upperLeftY = ~(0x10000001); ;
+	float upperLeftX[16]; 
+	float upperLeftY[16];
+
+	upperLeftX[0] = -2.0f;
+	upperLeftY[0] = -1.0f;
+    unsigned char mouseID = initMouse();
+
+
 	
-	alt_up_ps2_clear_fifo(ps2_dev);
+	//alt_up_ps2_clear_fifo(ps2_dev);
 
+	alt_up_ps2_write_data_byte(ps2_dev,0xF4); //Enable!
+	alt_up_ps2_read_data_byte(ps2_dev, NULL);
+	uint8_t status;
 
+	uint8_t left_pressed = 0;
+	uint8_t right_pressed = 0;
+	uint16_t zoom = 0;
+	uint16_t oldZoom = 0;
 	while(1)
 	{
-
-		if (read_num_bytes_available(PS2_0_BASE) >= 4)
+		uint16_t ravail=read_num_bytes_available(PS2_0_BASE);	
+		if (ravail !=0)
 		{
-			alt_up_ps2_read_data_byte(ps2_dev, &byte1);//read 1 byte
-			alt_up_ps2_read_data_byte(ps2_dev, &byte2);
-			alt_up_ps2_read_data_byte(ps2_dev, &byte3);
-			if(INTELLIMOUSE)
-				alt_up_ps2_read_data_byte(ps2_dev, &byte4);
-
-			if(byte4 != oldbyte4 || byte1 != oldbyte1 || byte2 != oldbyte2 || byte3 != oldbyte3)
-			{
-			sprintf(buff,"1=%02x|2=%02x|3=%02x",byte1,byte2,byte3);
-			/*
-			lcd_write_command(LCD_16207_0_BASE,0x00);
-			LCD_Show_Text(buff);
-			sprintf(buff,"4=%02x|m=%02x",byte4,mouseID);
-			lcd_write_command(LCD_16207_0_BASE,0xC0);
-			LCD_Show_Text(buff);
-			*/
+			status=0;
+			status |= alt_up_ps2_read_data_byte(ps2_dev, &byte1);//read 1 byte
+			status |=alt_up_ps2_read_data_byte(ps2_dev, &byte2);
+			status |=alt_up_ps2_read_data_byte(ps2_dev, &byte3);
+			if(INTELLIMOUSE) {
+				status |=alt_up_ps2_read_data_byte(ps2_dev, &byte4);
 			}
-			oldbyte1=byte1;
-			oldbyte2=byte2;
-			oldbyte3=byte3;
-			oldbyte4=byte4;
+			
+			if(INTELLIMOUSE)
+			{
+				byteX = byte2;
+				byteY = byte3;
+				byteZ = byte4;
+			}
+			else
+			{
+				byteX=byte2;
+				byteY=byte3;
+			}
 
-			/* DOCUMENTATION CLAIMS THIS
-			byteX = byte2;
-			byteY = byte3;
-			byteZ = byteZ;
-			*/
+			/*
 			byteX=byte1;
 			byteY=byte2;
 			byteZ=byte3;
+			*/
+			unsigned char y_overflow = ((byte1 & (1<<7))>>7);
+			unsigned char x_overflow = ((byte1 & (1<<6))>>6);
+			int16_t y_delta = ((byte1 & (1<<5) << 3) )| byteY;
+			y_delta = -1*y_delta;
+			int16_t x_delta = ((byte1 & (1<<4) << 4) )| byteX;
+
+			x_delta = x_delta/8;
+			y_delta = y_delta/8;
+			if(status == 0)
+			{
+				if( (abs(x_delta) < 127) && xCursor + x_delta >= 0 && xCursor + x_delta < 640)
+				{
+					xCursor += x_delta;
+				}
+				if( (abs(y_delta) < 127) && yCursor + y_delta >= 0 && yCursor + y_delta < 480)
+				{
+					yCursor += y_delta;
+				}
+				
+				if( zoom <= 31 && left_pressed == 0 && (byte1 & 1)) //Left button posedge
+				{
+					zoom++;
+				}
+				if( (zoom != 0  && right_pressed == 0 && (byte1 & (1<<1))>>1))
+				{
+					zoom--;
+
+				}
+				left_pressed =  byte1 & 1;
+				right_pressed =  (byte1 & (1<<1) )>>1;
+				
+			}
+
+
+
 		}
-/*
+		if(count >= 400)
+		{
+		*(cursor_update_clk_ptr) = 0;
 
-	if(count == 1000000)
-	{
-	lcd_write_command(LCD_16207_0_BASE,0x00);
-	LCD_Show_Text("xmouse=10");
+		float cursorFloatX = upperLeftX[oldZoom]+ 3.0f*xCursor/((1<<zoom)*640.0f);
+		float cursorFloatY = upperLeftY[oldZoom] + 2.0f*yCursor/((1<<zoom)*480.0f);
+		if(oldZoom > zoom)
+		{
+			upperLeftX[zoom] = cursorFloatX;
+			upperLeftY[zoom] = cursorFloatY;
+		}
+		if(oldZoom < zoom)
+		{
+			//do nothing!!
+		}
+
+		int32_t fixed_pt_upperLeftX = (int32_t)(upperLeftX[zoom]*268435456.0f);
+		int32_t fixed_pt_upperLeftY = (int32_t)(upperLeftY[zoom]*268435456.0f);
+
+		
+		oldZoom = zoom;
+		sprintf(buff," X=%i|Y=%i|Z=%i",xCursor,yCursor,zoom);
+
+		lcd_write_command(LCD_16207_0_BASE,0x00);
+		LCD_Show_Text(buff);
+		
 		lcd_write_command(LCD_16207_0_BASE,0xC0);
-	LCD_Show_Text("ymouse=42");
-	}
-	if(count == 2000000)
-	{
-	lcd_write_command(LCD_16207_0_BASE,0x00);
-	LCD_Show_Text("xmouse=2");
-	lcd_write_command(LCD_16207_0_BASE,0xC0);
-	LCD_Show_Text("ymouse=4");
-	}
-		*/
-	count ++;
+		//sprintf(buff,"zoom=%i",zoom);
+		sprintf(buff,"%1.4f|%1.4f",cursorFloatX,cursorFloatY);
 
+		LCD_Show_Text(buff);
+			*(nios_cursorX_ptr) = xCursor;
+			*(nios_cursorY_ptr) = yCursor;
+			*(nios_upper_left_x_ptr) = fixed_pt_upperLeftX;
+			*(nios_upper_left_y_ptr) = fixed_pt_upperLeftY;
+
+			*(nios_zoom_ptr)    = zoom;
+			*(cursor_update_clk_ptr) = 1;
+
+		count=0;
+		}
+	count ++;
 	}
 
 	return 0;

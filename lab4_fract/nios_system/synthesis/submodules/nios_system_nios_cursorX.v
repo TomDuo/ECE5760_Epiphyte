@@ -73,7 +73,7 @@ module nios_system_nios_cursorX (
  *****************************************************************************/
 
 // DW represents the Data Width minus 1
-parameter DW = 8;
+parameter DW = 9;
 
 /*****************************************************************************
  *                             Port Declarations                             *

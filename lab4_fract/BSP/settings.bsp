@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Apr 8, 2016 8:56:35 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1460163395456</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Apr 9, 2016 6:27:28 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1460240848356</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\ECE5760_Epiphyte\lab4_fract\BSP</BspGeneratedLocation>
         <BspSettingsFile>C:\ECE5760_Epiphyte\lab4_fract\BSP\settings.bsp</BspSettingsFile>
         <SopcDesignFile>C:\ECE5760_Epiphyte\lab4_fract\nios_system.sopcinfo</SopcDesignFile>
@@ -887,7 +887,7 @@
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>DDA_Options</slaveDescriptor>
+                <slaveDescriptor>nios_cursorX</slaveDescriptor>
                 <addressRange>0x10000030 - 0x1000003F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
@@ -903,6 +903,36 @@
                 <addressRange>0x10000050 - 0x1000005F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes>printable</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>nios_cursorY</slaveDescriptor>
+                <addressRange>0x10000060 - 0x1000006F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>cursor_update_clk</slaveDescriptor>
+                <addressRange>0x10000070 - 0x1000007F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>nios_zoom</slaveDescriptor>
+                <addressRange>0x10000080 - 0x1000008F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>nios_upper_leftX</slaveDescriptor>
+                <addressRange>0x10000090 - 0x1000009F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>nios_upper_leftY</slaveDescriptor>
+                <addressRange>0x10000100 - 0x1000010F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>JTAG_UART</slaveDescriptor>

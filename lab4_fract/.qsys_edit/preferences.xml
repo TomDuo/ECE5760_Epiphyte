@@ -14,8 +14,7 @@
    <frequency preferredWidth="319" />
   </columns>
  </clocktable>
- <library
-   expandedCategories="Library,Library/Peripherals/Microcontroller Peripherals,Library/Verification/Simulation,Library/Verification,Library/Peripherals,Project" />
- <window width="1296" height="1000" x="-8" y="-8" />
+ <library expandedCategories="Project,Library" />
+ <window width="1280" height="984" x="0" y="0" />
  <hdlexample language="VERILOG" />
 </preferences>

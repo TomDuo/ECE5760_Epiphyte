@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Fri Apr 08 17:50:35 EDT 2016
+ * Generated: Sat Apr 09 14:16:04 EDT 2016
  */
 
 /*

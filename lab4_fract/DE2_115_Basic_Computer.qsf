@@ -1100,6 +1100,11 @@ set_location_assignment PIN_V24 -to HSMC_CLKOUT_N2
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N2
 set_location_assignment PIN_G24 -to HSMC_CLKOUT_N1
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
+set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_nios_zoom.v
+set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_nios_upper_leftX.v
+set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_nios_cursorY.v
+set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_nios_cursorX.v
+set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_cursor_update_clk.v
 set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_ps2_0.v
 set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/nios_system_lcd_16207_0.v
 set_global_assignment -name VERILOG_FILE nios_system/synthesis/submodules/altera_up_ps2_data_in.v

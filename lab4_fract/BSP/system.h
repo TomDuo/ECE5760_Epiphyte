@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'nios_system'
  * SOPC Builder design path: C:/ECE5760_Epiphyte/lab4_fract/nios_system.sopcinfo
  *
- * Generated: Fri Apr 08 20:56:35 EDT 2016
+ * Generated: Sat Apr 09 18:27:28 EDT 2016
  */
 
 /*
@@ -126,20 +126,6 @@
 #define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0(n,A,B) __builtin_custom_inii(ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N+(n&ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N_MASK),(A),(B))
 #define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N 0xfc
 #define ALT_CI_NIOS_CUSTOM_INSTR_FLOATING_POINT_0_N_MASK ((1<<2)-1)
-
-
-/*
- * DDA_Options configuration
- *
- */
-
-#define ALT_MODULE_CLASS_DDA_Options altera_up_avalon_parallel_port
-#define DDA_OPTIONS_BASE 0x10000030
-#define DDA_OPTIONS_IRQ -1
-#define DDA_OPTIONS_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define DDA_OPTIONS_NAME "/dev/DDA_Options"
-#define DDA_OPTIONS_SPAN 16
-#define DDA_OPTIONS_TYPE "altera_up_avalon_parallel_port"
 
 
 /*
@@ -309,6 +295,20 @@
 
 
 /*
+ * cursor_update_clk configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_cursor_update_clk altera_up_avalon_parallel_port
+#define CURSOR_UPDATE_CLK_BASE 0x10000070
+#define CURSOR_UPDATE_CLK_IRQ -1
+#define CURSOR_UPDATE_CLK_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define CURSOR_UPDATE_CLK_NAME "/dev/cursor_update_clk"
+#define CURSOR_UPDATE_CLK_SPAN 16
+#define CURSOR_UPDATE_CLK_TYPE "altera_up_avalon_parallel_port"
+
+
+/*
  * hal configuration
  *
  */
@@ -330,6 +330,76 @@
 #define LCD_16207_0_NAME "/dev/lcd_16207_0"
 #define LCD_16207_0_SPAN 16
 #define LCD_16207_0_TYPE "altera_avalon_lcd_16207"
+
+
+/*
+ * nios_cursorX configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_nios_cursorX altera_up_avalon_parallel_port
+#define NIOS_CURSORX_BASE 0x10000030
+#define NIOS_CURSORX_IRQ -1
+#define NIOS_CURSORX_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define NIOS_CURSORX_NAME "/dev/nios_cursorX"
+#define NIOS_CURSORX_SPAN 16
+#define NIOS_CURSORX_TYPE "altera_up_avalon_parallel_port"
+
+
+/*
+ * nios_cursorY configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_nios_cursorY altera_up_avalon_parallel_port
+#define NIOS_CURSORY_BASE 0x10000060
+#define NIOS_CURSORY_IRQ -1
+#define NIOS_CURSORY_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define NIOS_CURSORY_NAME "/dev/nios_cursorY"
+#define NIOS_CURSORY_SPAN 16
+#define NIOS_CURSORY_TYPE "altera_up_avalon_parallel_port"
+
+
+/*
+ * nios_upper_leftX configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_nios_upper_leftX altera_up_avalon_parallel_port
+#define NIOS_UPPER_LEFTX_BASE 0x10000090
+#define NIOS_UPPER_LEFTX_IRQ -1
+#define NIOS_UPPER_LEFTX_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define NIOS_UPPER_LEFTX_NAME "/dev/nios_upper_leftX"
+#define NIOS_UPPER_LEFTX_SPAN 16
+#define NIOS_UPPER_LEFTX_TYPE "altera_up_avalon_parallel_port"
+
+
+/*
+ * nios_upper_leftY configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_nios_upper_leftY altera_up_avalon_parallel_port
+#define NIOS_UPPER_LEFTY_BASE 0x10000100
+#define NIOS_UPPER_LEFTY_IRQ -1
+#define NIOS_UPPER_LEFTY_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define NIOS_UPPER_LEFTY_NAME "/dev/nios_upper_leftY"
+#define NIOS_UPPER_LEFTY_SPAN 16
+#define NIOS_UPPER_LEFTY_TYPE "altera_up_avalon_parallel_port"
+
+
+/*
+ * nios_zoom configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_nios_zoom altera_up_avalon_parallel_port
+#define NIOS_ZOOM_BASE 0x10000080
+#define NIOS_ZOOM_IRQ -1
+#define NIOS_ZOOM_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define NIOS_ZOOM_NAME "/dev/nios_zoom"
+#define NIOS_ZOOM_SPAN 16
+#define NIOS_ZOOM_TYPE "altera_up_avalon_parallel_port"
 
 
 /*
@@ -358,7 +428,7 @@
 #define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_NAME "/dev/sysid"
 #define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1460163146
+#define SYSID_TIMESTAMP 1460240569
 #define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 #endif /* __SYSTEM_H_ */

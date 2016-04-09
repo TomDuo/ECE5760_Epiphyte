@@ -46,7 +46,7 @@
  *                                                                            *
  ******************************************************************************/
 
-module nios_system_nios_cursorY (
+module nios_system_nios_upper_leftX (
    // Inputs
 	clk,
 	reset,
@@ -73,7 +73,7 @@ module nios_system_nios_cursorY (
  *****************************************************************************/
 
 // DW represents the Data Width minus 1
-parameter DW = 8;
+parameter DW = 31;
 
 /*****************************************************************************
  *                             Port Declarations                             *

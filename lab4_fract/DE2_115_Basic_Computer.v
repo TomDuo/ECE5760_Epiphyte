@@ -249,17 +249,23 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
 // Internal Wires
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
 wire				system_clock;
-wire [9:0]       nios_cursorx;
-wire [8:0]       nios_cursory;
+wire unsigned [9:0]       nios_cursorx;
+wire unsigned [8:0]       nios_cursory;
+wire unsigned [4:0]      nios_zoom;
 wire             cursor_update_clk;
 assign LCD_ON = 1'b1;
 assign LCD_BLON = 1'b1;
+
+wire signed [35:0] nios_upper_leftx;
+wire signed [35:0] nios_upper_lefty;
+
+assign nios_upper_leftx[3:0] = 4'd0;
+assign nios_upper_lefty[3:0] = 4'd0;
+
 nios_system NiosII (
 	// 1) global signals:
 	.clk									(system_clock),
 	.reset_n								(KEY[0]),
-
-	.dda_options_external_interface_export(nios_opts),
 	
 	.ps2_0_external_interface_CLK          (PS2_CLK),          //       ps2_0_external_interface.CLK
    .ps2_0_external_interface_DAT          (PS2_DAT),          //                               .DAT
@@ -276,11 +282,12 @@ nios_system NiosII (
 	.HEX2_from_the_HEX3_HEX0				(HEX2),
 	.HEX3_from_the_HEX3_HEX0				(HEX3),
 	
-	.nios_cursorx                        (nios_cursorx),
-	.nios_cursory                        (nios_cursory),
-	.cursor_update_clk                   (cursor_update_clk),
-
-
+	.nios_cursorx_export                (nios_cursorx),
+	.nios_cursory_export                (nios_cursory),
+	.nios_zoom_export                   (nios_zoom),
+	.cursor_update_clk_export           (cursor_update_clk),
+	.nios_upper_leftx_export				(nios_upper_leftx[35:4]),
+	.nios_upper_lefty_export            (nios_upper_lefty[35:4]),
 	// the_SDRAM
 	.zs_addr_from_the_SDRAM					(DRAM_ADDR),
 	.zs_ba_from_the_SDRAM					(DRAM_BA),
@@ -336,8 +343,18 @@ reg [7:0]	mVGA_B;
 wire cursorNearX = (VGA_X-9'd1 == cursorX) || (VGA_X == cursorX) || (VGA_X+9'd1 == cursorX);
 wire cursorNearY = (VGA_Y-8'd1 == cursorY) || (VGA_Y == cursorY) || (VGA_Y+8'd1 == cursorY);
 
+  
+reg unsigned [9:0] cursorX = 9'd50;
+reg unsigned [8:0] cursorY = 9'd200;
+reg signed [35:0] upperLeftX = ~(36'h2_0000_0001);
+reg signed [35:0] upperLeftY = ~(36'h1_0000_0001);
+reg unsigned [4:0] zoom = 5'd0;
 always @(posedge cursor_update_clk) begin
-
+	cursorX <= nios_cursorx;
+	cursorY <= nios_cursory;
+	upperLeftX <= nios_upper_leftx;
+	upperLeftY <= nios_upper_lefty;
+	zoom <= nios_zoom;
 end
 always @(*) begin
 	if(cursorNearX && cursorNearY) begin
@@ -440,23 +457,15 @@ end
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
   
-  wire [35:0] upperLeftX;
-  wire [35:0] upperLeftY;
-  wire [4:0]  zoomLevel;
 
-  wire [17:0] niosUpperLeftX;
-  wire [17:0] niosUpperLeftY;
 
-  assign upperLeftX = {2'd0,niosUpperLeftX,16'd0};
-  assign upperLeftY = {2'd0,niosUpperLeftY,16'd0};
+
   
   wire done;
   reg [16:0] timerCounter;
   reg [15:0] mSecCounter;
   
-  
-  reg [9:0] cursorX = 9'd50;
-  reg [8:0] cursorY = 9'd200;
+
   
   
   always @(posedge CLOCK_50) begin
@@ -479,23 +488,16 @@ end
   hex_7seg hex5 (timerCounter[7:4],HEX5);
   hex_7seg hex4 (timerCounter[3:0],HEX4);
 
-  nios_param_driver npd1 (
-   .clk(CLOCK_50),
-   .reset(reset),
-   //.niosDDA_cmd(nios_opts),  
-   .xCoord(niosUpperLeftX),
-   .yCoord(niosUpperLeftY),
-   .zoom(zoomLevel)
-   );
+
 //////////////////////////// NOTE: CURRENTLY IGNORING NIOS INPUTS HERE ////////////////////////////
   coordGenerator c1 (
     .clk(clk),
     .reset(reset),
 
   // inputs from NIOS
-  .zoomLevel(4'd0),
-  .upperLeftX(~(36'h2_00000001)),
-  .upperLeftY(~(36'h1_00000001)),
+  .zoomLevel(zoom),
+  .upperLeftX(upperLeftX),
+  .upperLeftY(upperLeftY),
   .draw(~KEY[3]),
 
   // inputs from Load Dist
