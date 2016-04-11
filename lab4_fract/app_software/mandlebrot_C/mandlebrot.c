@@ -102,9 +102,19 @@ int main()
 	uint8_t right_history[WINDOWLENGTH] = { 0 };
 	uint16_t zoom = 0;
 	uint16_t oldZoom = 0;
+	uint16_t zoom_count = 0;
 	uint8_t i;
 	while(1)
 	{
+		if (zoom_count > 1000)
+		{
+			zoom_count = 1000;
+		}
+		else 
+		{
+			zoom_count++;
+		}
+
 		uint16_t ravail=read_num_bytes_available(PS2_0_BASE);	
 		if (ravail !=0)
 		{
@@ -166,6 +176,7 @@ int main()
 				}
 				*/
 				// ------------------------------------------------------------------------------------
+				
 
 				if( (abs(x_delta) < 20) && xCursor + x_delta >= 0 && xCursor + x_delta < 640)
 				{
@@ -176,13 +187,15 @@ int main()
 					yCursor += y_delta;
 				}
 				
-				if(x_delta == 0 && y_delta == 0 && (zoom <= 31) && (left_pressed != (byte1 & 1) ) )// (byte1 & 1)) //Left button posedge
+				if(x_delta == 0 && y_delta == 0 && (zoom <= 31) && (left_pressed != (byte1 & 1) ) && (zoom_count >= 200) )// (byte1 & 1)) //Left button posedge
 				{
 					zoom++;
+					zoom_count = 0;
 				}
-				if(x_delta == 0 && y_delta == 0 && (zoom != 0)  && (right_pressed != ((byte1 & (1<<1) )>>1)) )//((byte1 & (1<<1))>>1) ) 
+				if(x_delta == 0 && y_delta == 0 && (zoom != 0)  && (right_pressed != ((byte1 & (1<<1) )>>1)) && (zoom_count >= 200) )//((byte1 & (1<<1))>>1) ) 
 				{
 					zoom--;
+					zoom_count = 0;
 
 				}
 				left_pressed =  byte1 & 1;
