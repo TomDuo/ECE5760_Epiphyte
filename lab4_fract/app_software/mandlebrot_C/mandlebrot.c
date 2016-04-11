@@ -12,6 +12,7 @@
 #define lcd_write_data(base, data)                    IOWR(base, 2, data)
 #define lcd_read_data(base)                           IORD(base, 3) 
 #define INTELLIMOUSE 1
+#define WINDOWLENGTH 40
 alt_up_ps2_dev * ps2_dev;
 volatile int * cursor_update_clk_ptr = (int *) CURSOR_UPDATE_CLK_BASE;
 volatile int * nios_cursorX_ptr = (int *) NIOS_CURSORX_BASE;
@@ -79,7 +80,7 @@ int main()
 	int32_t xCursor=200;
 	int32_t yCursor=200;
 	int32_t prev_upperLeftX = ~(0x20000001); 
-	int32_t prev_upperLeftY = ~(0x10000001); ;
+	int32_t prev_upperLeftY = ~(0x10000001);
 	float upperLeftX[16]; 
 	float upperLeftY[16];
 
@@ -97,8 +98,11 @@ int main()
 
 	uint8_t left_pressed = 0;
 	uint8_t right_pressed = 0;
+	uint8_t left_history[WINDOWLENGTH]  = { 0 };
+	uint8_t right_history[WINDOWLENGTH] = { 0 };
 	uint16_t zoom = 0;
 	uint16_t oldZoom = 0;
+	uint8_t i;
 	while(1)
 	{
 		uint16_t ravail=read_num_bytes_available(PS2_0_BASE);	
@@ -134,51 +138,88 @@ int main()
 			int16_t y_delta = ((byte1 & (1<<5) << 3) )| byteY;
 			y_delta = -1*y_delta;
 			int16_t x_delta = ((byte1 & (1<<4) << 4) )| byteX;
-
+			unsigned char filtered_left_pressed;
+			unsigned char filtered_right_pressed;
 			x_delta = x_delta/8;
 			y_delta = y_delta/8;
 			if(status == 0)
 			{
-				if( (abs(x_delta) < 127) && xCursor + x_delta >= 0 && xCursor + x_delta < 640)
+
+			
+				// NOAH, I ADDED STUFF HERE -----------------------------------------------------------
+				/*
+				for (i=0;i<WINDOWLENGTH;i++)
+				{
+					left_history[i] = left_history[i+1];
+					right_history[i] = right_history[i+1];
+				}
+				left_pressed =  byte1 & 1;
+				right_pressed =  (byte1 & (1<<1) )>>1;
+				left_history[WINDOWLENGTH]  = left_pressed;
+				right_history[WINDOWLENGTH] = right_pressed;
+				filtered_left_pressed = 0;
+				filtered_right_pressed = 0;
+				for (i=0;i<WINDOWLENGTH;i++)
+				{
+					if (left_history[i] == left_pressed) filtered_left_pressed++;
+					if (right_history[i] == right_pressed) filtered_right_pressed++;
+				}
+				*/
+				// ------------------------------------------------------------------------------------
+
+				if( (abs(x_delta) < 20) && xCursor + x_delta >= 0 && xCursor + x_delta < 640)
 				{
 					xCursor += x_delta;
 				}
-				if( (abs(y_delta) < 127) && yCursor + y_delta >= 0 && yCursor + y_delta < 480)
+				if( (abs(y_delta) < 20) && yCursor + y_delta >= 0 && yCursor + y_delta < 480)
 				{
 					yCursor += y_delta;
 				}
 				
-				if( zoom <= 31 && left_pressed == 0 && (byte1 & 1)) //Left button posedge
+				if(x_delta == 0 && y_delta == 0 && (zoom <= 31) && (left_pressed != (byte1 & 1) ) )// (byte1 & 1)) //Left button posedge
 				{
 					zoom++;
 				}
-				if( (zoom != 0  && right_pressed == 0 && (byte1 & (1<<1))>>1))
+				if(x_delta == 0 && y_delta == 0 && (zoom != 0)  && (right_pressed != ((byte1 & (1<<1) )>>1)) )//((byte1 & (1<<1))>>1) ) 
 				{
 					zoom--;
 
 				}
 				left_pressed =  byte1 & 1;
 				right_pressed =  (byte1 & (1<<1) )>>1;
-				
+
+				/*
+				if( (zoom <= 31) && (left_history[0] == 0) && (filtered_left_pressed == (WINDOWLENGTH-1)) && (left_history[7] == 1) )// (byte1 & 1)) //Left button posedge
+				{
+					zoom++;
+				}
+				if( (zoom != 0)  && (right_history[0] == 0) && (filtered_right_pressed == (WINDOWLENGTH-1)) && (right_history[7] == 1) )//((byte1 & (1<<1))>>1) ) 
+				{
+					zoom--;
+
+				}
+				*/
 			}
 
-
-
 		}
-		if(count >= 400)
+		if(count >= 20)
 		{
 		*(cursor_update_clk_ptr) = 0;
 
-		float cursorFloatX = upperLeftX[oldZoom]+ 3.0f*xCursor/((1<<zoom)*640.0f);
-		float cursorFloatY = upperLeftY[oldZoom] + 2.0f*yCursor/((1<<zoom)*480.0f);
-		if(oldZoom > zoom)
+		float cursorFloatX = upperLeftX[oldZoom] + 3.0f*(float)xCursor/((1<<oldZoom)*640.0f);
+		float cursorFloatY = upperLeftY[oldZoom] + 2.0f*(float)yCursor/((1<<oldZoom)*480.0f);
+		if(oldZoom < zoom)
 		{
 			upperLeftX[zoom] = cursorFloatX;
 			upperLeftY[zoom] = cursorFloatY;
+			xCursor=0;
+			yCursor=0;
 		}
-		if(oldZoom < zoom)
+		if(oldZoom > zoom)
 		{
 			//do nothing!!
+		xCursor=0;
+			yCursor=0;
 		}
 
 		int32_t fixed_pt_upperLeftX = (int32_t)(upperLeftX[zoom]*268435456.0f);
@@ -193,16 +234,16 @@ int main()
 		
 		lcd_write_command(LCD_16207_0_BASE,0xC0);
 		//sprintf(buff,"zoom=%i",zoom);
-		sprintf(buff,"%1.4f|%1.4f",cursorFloatX,cursorFloatY);
+		sprintf(buff,"%1.4f_%1.4f",cursorFloatX,cursorFloatY);
 
 		LCD_Show_Text(buff);
-			*(nios_cursorX_ptr) = xCursor;
-			*(nios_cursorY_ptr) = yCursor;
-			*(nios_upper_left_x_ptr) = fixed_pt_upperLeftX;
-			*(nios_upper_left_y_ptr) = fixed_pt_upperLeftY;
+		*(nios_cursorX_ptr) = xCursor;
+		*(nios_cursorY_ptr) = yCursor;
+		*(nios_upper_left_x_ptr) = fixed_pt_upperLeftX;
+		*(nios_upper_left_y_ptr) = fixed_pt_upperLeftY;
 
-			*(nios_zoom_ptr)    = zoom;
-			*(cursor_update_clk_ptr) = 1;
+		*(nios_zoom_ptr)    = zoom;
+		*(cursor_update_clk_ptr) = 1;
 
 		count=0;
 		}

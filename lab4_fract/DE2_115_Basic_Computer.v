@@ -248,11 +248,11 @@ Reset_Delay			u3	(	.iCLK(CLOCK_50),
  *****************************************************************************/
 // Internal Wires
 //  Used to connect the Nios II system clock to the non-shifted output of the PLL
-wire				system_clock;
+wire							  system_clock;
 wire unsigned [9:0]       nios_cursorx;
 wire unsigned [8:0]       nios_cursory;
-wire unsigned [4:0]      nios_zoom;
-wire             cursor_update_clk;
+wire unsigned [4:0]       nios_zoom;
+wire             			  cursor_update_clk;
 assign LCD_ON = 1'b1;
 assign LCD_BLON = 1'b1;
 
@@ -336,9 +336,9 @@ JULIE	julies_vga_ctrl	(
 	.iRST_N 		(DLY2)	
 );
 
-reg [7:0]	mVGA_R;				//memory output to VGA
-reg [7:0]	mVGA_G;
-reg [7:0]	mVGA_B;
+reg [9:0]	mVGA_R;				//memory output to VGA
+reg [9:0]	mVGA_G;
+reg [9:0]	mVGA_B;
 
 wire cursorNearX = (VGA_X-9'd1 == cursorX) || (VGA_X == cursorX) || (VGA_X+9'd1 == cursorX);
 wire cursorNearY = (VGA_Y-8'd1 == cursorY) || (VGA_Y == cursorY) || (VGA_Y+8'd1 == cursorY);
@@ -349,23 +349,36 @@ reg unsigned [8:0] cursorY = 9'd200;
 reg signed [35:0] upperLeftX = ~(36'h2_0000_0001);
 reg signed [35:0] upperLeftY = ~(36'h1_0000_0001);
 reg unsigned [4:0] zoom = 5'd0;
+reg unsigned [4:0] oldZoom = 5'd0;
+reg drawTrigger;
 always @(posedge cursor_update_clk) begin
 	cursorX <= nios_cursorx;
 	cursorY <= nios_cursory;
 	upperLeftX <= nios_upper_leftx;
 	upperLeftY <= nios_upper_lefty;
 	zoom <= nios_zoom;
+	if (reset) begin
+	oldZoom <= nios_zoom;
+	end
+	else if (zoom != oldZoom) begin
+	drawTrigger <= 1;
+	oldZoom <= zoom;
+	end
+	else begin
+	drawTrigger <= 0;
+	oldZoom <= zoom;
+	end
 end
 always @(*) begin
 	if(cursorNearX && cursorNearY) begin
-		mVGA_R = 8'd255;
-		mVGA_G = 8'd255;
-		mVGA_B = 8'd255;
+		mVGA_R = 10'd1023;
+		mVGA_G = 10'd1023;
+		mVGA_B = 10'd1023;
 	end
 	else begin
-		mVGA_R = (8'd179>>(negColorData));
-		mVGA_G = (8'd27>>(negColorData));
-		mVGA_B = (8'd27>>(negColorData));
+		mVGA_R = (10'd1023 - (negColorData<<5));
+		mVGA_G = 10'd0; //(10'd100>>(negColorData));
+		mVGA_B = 10'd0; //(10'd100>>(negColorData));
 	end
 end
 wire [4:0] colorData;
@@ -469,7 +482,7 @@ end
   
   
   always @(posedge CLOCK_50) begin
-    if (~KEY[3]) begin
+    if (~KEY[3]||drawTrigger) begin
       // reset
       timerCounter <= 0;
       mSecCounter  <= 0;
@@ -498,7 +511,7 @@ end
   .zoomLevel(zoom),
   .upperLeftX(upperLeftX),
   .upperLeftY(upperLeftY),
-  .draw(~KEY[3]),
+  .draw(drawTrigger||~KEY[3]),
 
   // inputs from Load Dist
   .iLoadDistRdy(oCoordRdy),
