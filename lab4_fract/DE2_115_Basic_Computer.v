@@ -434,8 +434,8 @@ end
 //////////////////////////////////////////////////////////////////////
 //                           LAB 4 STUFF                            //
 //////////////////////////////////////////////////////////////////////
-  wire [3:0]  iProcReady;
-  wire [3:0]  oDataVal;
+  wire [7:0]  iProcReady;
+  wire [7:0]  oDataVal;
   wire [35:0] oDataXSignal;
   wire [35:0] oDataYSignal;
   wire [9:0]  oVGAX;
@@ -451,24 +451,40 @@ end
   wire m1ProcReady;
   wire m2ProcReady;
   wire m3ProcReady;
+  wire m4ProcReady;
+  wire m5ProcReady;
+  wire m6ProcReady;
+  wire m7ProcReady;
 
   wire [18:0] iProc0VGA;
   wire [18:0] iProc1VGA;
   wire [18:0] iProc2VGA;
   wire [18:0] iProc3VGA;
+  wire [18:0] iProc4VGA;
+  wire [18:0] iProc5VGA;
+  wire [18:0] iProc6VGA;
+  wire [18:0] iProc7VGA;
 
   wire [7:0]  iProc0Color;
   wire [7:0]  iProc1Color;
   wire [7:0]  iProc2Color;
   wire [7:0]  iProc3Color;
+  wire [7:0]  iProc4Color;
+  wire [7:0]  iProc5Color;
+  wire [7:0]  iProc6Color;
+  wire [7:0]  iProc7Color;
 
-  wire [3:0]  iProcVal;
-  wire [3:0]  oProcRdy;
+  wire [7:0]  iProcVal;
+  wire [7:0]  oProcRdy;
 
   assign iProcReady[0] = m0ProcReady;
   assign iProcReady[1] = m1ProcReady;
   assign iProcReady[2] = m2ProcReady;
   assign iProcReady[3] = m3ProcReady;
+  assign iProcReady[4] = m4ProcReady;
+  assign iProcReady[5] = m5ProcReady;
+  assign iProcReady[6] = m6ProcReady;
+  assign iProcReady[7] = m7ProcReady;
   
 
 
@@ -525,7 +541,7 @@ end
   .done(done)
   );
 
-  loadBalancer #(4) lb1 (
+  loadBalancer #(8) lb1 (
     .clk(clk),
     .reset(reset),
 
@@ -550,7 +566,7 @@ end
     .oCoordRdy(oCoordRdy)
 );
 
-  mandlebrotProcessor #(1000) m0 (
+  mandlebrotProcessor #(2000) m0 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -572,7 +588,7 @@ end
     .oVGAVal(iProcVal[0])    
 );
 
-  mandlebrotProcessor #(1000) m1 (
+  mandlebrotProcessor #(2000) m1 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -594,7 +610,7 @@ end
     .oVGAVal(iProcVal[1])
  );
 
-  mandlebrotProcessor #(1000) m2 (
+  mandlebrotProcessor #(2000) m2 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -616,7 +632,7 @@ end
     .oVGAVal(iProcVal[2])
  );
 
-  mandlebrotProcessor #(1000) m3 (
+  mandlebrotProcessor #(2000) m3 (
       .clk(clk),
       .reset(reset),
   // inputs from queue
@@ -638,6 +654,90 @@ end
     .oVGAVal(iProcVal[3])
 );
 
+  mandlebrotProcessor #(2000) m4 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[4]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m4ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[4]), 
+
+  // signals sent to VGA buffer
+    .oColor(iProc4Color),
+    .oVGACoord(iProc4VGA),
+    .oVGAVal(iProcVal[4])    
+);
+  mandlebrotProcessor #(2000) m5 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[5]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m5ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[5]), 
+
+  // signals sent to VGA buffer
+    .oColor(iProc5Color),
+    .oVGACoord(iProc5VGA),
+    .oVGAVal(iProcVal[5])    
+);
+  mandlebrotProcessor #(2000) m6 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[6]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m6ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[6]), 
+
+  // signals sent to VGA buffer
+    .oColor(iProc6Color),
+    .oVGACoord(iProc6VGA),
+    .oVGAVal(iProcVal[6])    
+);
+  mandlebrotProcessor #(2000) m7 (
+      .clk(clk),
+      .reset(reset),
+  // inputs from queue
+    .iDataVal(oDataVal[7]),
+    .iCoordX(oDataXSignal),
+    .iCoordY(oDataYSignal),
+    .iVGAX(oVGAX),
+    .iVGAY(oVGAY),
+
+  // signals sent to queue
+    .oProcReady(m7ProcReady),
+
+  // input from arbitor
+    .valueStored(oProcRdy[7]), 
+
+  // signals sent to VGA buffer
+    .oColor(iProc7Color),
+    .oVGACoord(iProc7VGA),
+    .oVGAVal(iProcVal[7])    
+);
   wire [18:0] arb_addr;
   wire [2:0] arb_data;
   wire arb_wren;
@@ -651,11 +751,19 @@ proc2memArb p2m1 (
   .iProc1VGA(iProc1VGA),
   .iProc2VGA(iProc2VGA),
   .iProc3VGA(iProc3VGA),
+  .iProc4VGA(iProc4VGA),
+  .iProc5VGA(iProc5VGA),
+  .iProc6VGA(iProc6VGA),
+  .iProc7VGA(iProc7VGA),
 
   .iProc0Color(iProc0Color),
   .iProc1Color(iProc1Color),
   .iProc2Color(iProc2Color),
-  .iProc3Color(iProc3Color), 
+  .iProc3Color(iProc3Color),
+  .iProc4Color(iProc4Color),
+  .iProc5Color(iProc5Color),
+  .iProc6Color(iProc6Color),
+  .iProc7Color(iProc7Color), 
 
   // ready signals from processors
   .iProcRdy(iProcVal),

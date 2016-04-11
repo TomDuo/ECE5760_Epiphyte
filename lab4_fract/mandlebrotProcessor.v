@@ -53,9 +53,6 @@ long_mult5760 mul1 (mul1ina,mul1inb,mul1out);
 long_mult5760 mul2 (mul2ina,mul2inb,mul2out);
 long_mult5760 mul3 (mul3ina,mul3inb,mul3out);
 
-wire [4:0] log2Iter;
-quickLog2 ql1 (calcCount,log2Iter);
-
 always @(posedge clk) begin
   state = nextState;
   if (reset) nextState <= s_init;
@@ -120,7 +117,7 @@ always @(posedge clk) begin
     end
     // if you have a magnitude greater than 2, return with log2(iterations)
     else if ((mul1out + mul3out)>36'h4_00000000) begin
-      oColor    <= (calcCount>>5);//{3{iVGAX[0]}};//
+      oColor    <= (calcCount>>6);//{3{iVGAX[0]}};//
       oVGAVal   <= 1;
       nextState <= s_store;
     end

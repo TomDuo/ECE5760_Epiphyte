@@ -2,8 +2,8 @@ clear all
 figure(1); clf;
 
 termination = 100;
-x = linspace(-2,1,640);
-y = linspace(-1,1,480);
+x = linspace(-1.04,-1.04+.75,640);
+y = linspace(-.28,-.28+.5,480);
 x_index = 1:length(x) ;
 y_index = 1:length(y) ;
 M = zeros(length(y),length(x));
