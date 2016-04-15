@@ -15,29 +15,40 @@ start_idx = randi(numel(bwimg_serial)); %randomize where we started recording
 end_idx = numel(x) - randi(numel(bwimg_serial)); %and where we ended recording
 
 x=x(start_idx:end_idx);
-
+xht = hilbert(x);
 Fsx = 1280*1024*60;
 
-xI = conv(x,x);
-xQ = conv(
+%xI = conv(x,x);
+%xQ = conv(x,x);
 
-%%
+
 frame_len_approx=1000*1000;
 correlation_window_length = frame_len_approx*1.5; %We can't be sure how long window is, but we can have a good guess
-autoc  = xcorr(x);
+%autoc  = xcorr(x);
+autoc = cconv(x,fliplr(x));
+
+
 [peaks,locs] = findpeaks(autoc,'MinPeakDistance',.8*frame_len_approx, 'MinPeakProminence', 1);
 
 initial_lag = locs(1);
 distances_between_peaks = diff(locs);
 frame_length = median(distances_between_peaks);
-
-
+y = xht;
+xspec = fftshift(fft(x));
+yspec = fftshift(fft(y));
 
 %numel(bwimg_serial)/autoc_max_idx
 subplot(2,1,1);
 plot(x);
-subplot(2,1,2);
+title('Transmitted signal');
+subplot(2,2,1);
 plot(autoc);
+title('Circular Autocorrelation of received signal');
+subplot(2,1,2);
+plot(xspec);
+title('Spectrum of transmitted baseband');
+plot(yspec);
+title('Spectrum of received (complex baseband)');
 
 
 %%
