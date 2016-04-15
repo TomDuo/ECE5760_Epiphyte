@@ -4,6 +4,7 @@ img= imread('BSOD.jpg'); %y,x,rgb
 bwimg = rgb2gray(img);
 %bwimg = [1 2 3 4 5; 6 7 8 9 10; 11 12 13 14 15; 16 17 18 19 20];
 bwimg_serial = reshape(bwimg.',[1 numel(bwimg)]);        %serialize image
+bwimg_serial = double(bwimg_serial-127);
 %bwimg_serial(1280*200+1:1280*201) = 0;
 %y=bwimg_serial;
 %For now assume fpixel=~78Mhz (true for 1280x1024)
@@ -28,30 +29,40 @@ correlation_window_length = frame_len_approx*1.5; %We can't be sure how long win
 autoc = cconv(x,fliplr(x));
 
 
-[peaks,locs] = findpeaks(autoc,'MinPeakDistance',.8*frame_len_approx, 'MinPeakProminence', 1);
+[peaks,locs] = findpeaks(autoc,'MinPeakDistance',.8*frame_len_approx);%, 'MinPeakProminence', 1);
+
 
 initial_lag = locs(1);
 distances_between_peaks = diff(locs);
 frame_length = median(distances_between_peaks);
-A_lo =cos(4*2*pi*linspace(0,1,length(xht)));
-y = cconv(xht,A_lo);
-xspec = fftshift(fft(x));
-yspec = fftshift(fft(y));
 
+A_lo =exp(-j*(2*pi/8*(0:length(x)-1)));
+hd = Filt();
+y = x.*A_lo;
+y= filter(hd,y);
+xspec = fftshift(fft(x));
+xhtspec = fftshift(fft(xht));
+lo_spec = fftshift(fft(A_lo));
+yspec   = fftshift(fft(y));
 clf;
 %numel(bwimg_serial)/autoc_max_idx
-subplot(2,2,1);
-plot(x);
-title('Transmitted signal');
-subplot(2,2,2);
-plot(autoc);
-title('Circular Autocorrelation of received signal');
-subplot(2,2,3);
+subplot(3,2,1);
 plot(abs(xspec));
 title('Spectrum of transmitted baseband');
-subplot(2,2,4);
+%plot(x);
+%title('Transmitted signal');
+subplot(3,2,2);
+plot(autoc);
+title('Circular Autocorrelation of received signal');
+subplot(3,2,3);
+plot(abs(xhtspec));
+title('Spectrum of Hilbert Transformed baseband');
+subplot(3,2,4);
+plot(abs(lo_spec));
+title('Spectrum of Local Oscillator');
+subplot(3,2,5);
 plot(abs(yspec));
-title('Spectrum of received (complex baseband)');
+title('Mixed Complex Baseband');
 
 
 %%
