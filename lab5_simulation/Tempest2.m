@@ -33,21 +33,24 @@ autoc = cconv(x,fliplr(x));
 initial_lag = locs(1);
 distances_between_peaks = diff(locs);
 frame_length = median(distances_between_peaks);
-y = xht;
+A_lo =cos(4*2*pi*linspace(0,1,length(xht)));
+y = cconv(xht,A_lo);
 xspec = fftshift(fft(x));
 yspec = fftshift(fft(y));
 
+clf;
 %numel(bwimg_serial)/autoc_max_idx
-subplot(2,1,1);
+subplot(2,2,1);
 plot(x);
 title('Transmitted signal');
-subplot(2,2,1);
+subplot(2,2,2);
 plot(autoc);
 title('Circular Autocorrelation of received signal');
-subplot(2,1,2);
-plot(xspec);
+subplot(2,2,3);
+plot(abs(xspec));
 title('Spectrum of transmitted baseband');
-plot(yspec);
+subplot(2,2,4);
+plot(abs(yspec));
 title('Spectrum of received (complex baseband)');
 
 
