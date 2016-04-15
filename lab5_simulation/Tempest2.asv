@@ -5,7 +5,6 @@ bwimg = rgb2gray(img);
 %bwimg = [1 2 3 4 5; 6 7 8 9 10; 11 12 13 14 15; 16 17 18 19 20];
 bwimg_serial = reshape(bwimg.',[1 numel(bwimg)]);        %serialize image
 bwimg_serial = double(bwimg_serial-127);
-%bwimg_serial = double(bwimg_serial);
 %bwimg_serial(1280*200+1:1280*201) = 0;
 %y=bwimg_serial;
 %For now assume fpixel=~78Mhz (true for 1280x1024)
@@ -24,16 +23,14 @@ x=x(start_idx:end_idx);
 
 
 A_lo =exp(-j*(2*pi/8*(0:length(x)-1)));
-hd = Filt78();
+hd = Filt();
 xrecv = x.*A_lo;
 imp = zeros(1,length(x));
 imp(1)=1;
 A=filter(hd,imp);
 y= filter(hd,xrecv);
 
-%y_ADC =  resample(y,100,144);
-y_ADC = resample(y,20,78);
-
+y_ADC =  resample(y,20,78);
 
 xspec = fftshift(fft(x));
 xrecvspec = fftshift(fft(xrecv));
@@ -51,7 +48,6 @@ autoc  = xcorr(x);
 %distances_between_peaks = diff(locs);
 %frame_length = median(distances_between_peaks);
 clf;
-figure(1);
 %numel(bwimg_serial)/autoc_max_idx
 subplot(4,2,1);
 plot(abs(xspec));
@@ -78,52 +74,16 @@ subplot(4,2,6);
 plot(abs(yspec));
 %xlim([3e6 5e6]);
 title('LPFd Mixed Complex Baseband');
-subplot(4,2,7);
-plot(abs(yspec_ADC));
-title('Resampled LPFd Mixed Complex Baseband');
+subplot(
 
 %%
-W=800;
-H=600;
+y=x(1:1280*1024);
+%reconstruct image from serial
 W=1280;
 H=1024;
-scale_2d = 20/78;
-scale_1d = sqrt(scale_2d);
-y_ADC_upsampled = resample(y_ADC,78,20);
-scaled_W = round(W*scale_2d)+1;
-scaled_H = H
-img_out1 = abs(xrecv(1:W*H));
-img_out1 = uint8(255*img_out1/max(img_out1));
-img_out2 = abs(y(1:W*H));
-img_out2 = uint8(255*img_out2/max(img_out2));
-img_out3 = abs(y_ADC_upsampled(1:W*H));
-img_out3 = uint8(255*img_out3/max(img_out3));
+y = reshape(y,[W,H]).';
 
-%reconstruct image from serial
-
-yimg1 = reshape(img_out1,[W,H]).';
-yimg2 = reshape(img_out2,[W,H]).';
-yimg3 = reshape(img_out3,[W,H]).';
-
-figure(2);
-imshow(yimg1)
-title('reconstructed x')
-truesize;
-
-figure(3);
-imshow(yimg2)
-title('reconstructed LPF')
-truesize;
-
-figure(4);
-imshow(yimg3)
-title('reconstructed scaled LPF')
-truesize;
-%hFig1 = figure('Toolbar','none', 'Menubar','none');
-%hIm1 = imshow(yimg1,'InitialMagnification',100);
-%hSP1 = imscrollpanel(hFig,hIm);
-
-%hFig2 = figure('Toolbar','none', 'Menubar','none');
-%hIm2 = imshow(yimg2,'InitialMagnification',100);
-%hSP2 = imscrollpanel(hFig2,hIm2);
+hFig = figure('Toolbar','none', 'Menubar','none');
+hIm = imshow(y,'InitialMagnification',100);
+hSP = imscrollpanel(hFig,hIm);
 %truesize
