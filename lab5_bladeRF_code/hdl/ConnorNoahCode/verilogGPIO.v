@@ -16,6 +16,8 @@ module verilogGPIO(
 	inout reg [32:2] exp_gpio_pin
 );
 
+
+//------------- GPIO CODE -----------------------------------------------
 wire [31:0] exp_gpio_dir;
 reg  [31:0] exp_gpio_read; // when the direction is read, pins are saved here
 reg  [31:0] exp_gpio_write; // when the direction is write, pins written from here
@@ -137,4 +139,47 @@ end
 //EXP_GPIO_12 = GPIO_3
 //EXP_GPIO_13 = GPIO_2
 //EXP_GPIO_14 = GPIO_1
+
+//---------------END GPIO CODE---------------------------------------
+
+//---------------VGA CODE--------------------------------------------
+wire	VGA_CTRL_CLK;
+vga_pll 		p1	(	.areset(),.inclk0(clk),.c0(VGA_CTRL_CLK),.c1());
+
+wire [9:0]	VGA_X;
+wire [8:0]	VGA_Y;
+reg  [9:0]	mVGA_R;				//memory output to VGA
+reg  [9:0]	mVGA_G;
+reg  [9:0]	mVGA_B;
+
+// blink an LED once per second
+reg [9:0] timerCounter;
+reg [15:0] mSecCounter;
+  
+always @(posedge clk) begin
+    if (reset) begin
+      // reset
+      timerCounter <= 0;
+      mSecCounter  <= 0;
+    end
+    else if ((mSecCounter == 16'd50000)) begin
+      timerCounter <= timerCounter + 1;
+      mSecCounter  <= 16'd0;
+    end
+    else begin
+      mSecCounter <= mSecCounter + 1;
+    end
+	 
+	 if (timerCounter == 10'd1000) begin
+		LED1 = LED1^1'b1;
+		timerCounter == 10'd0;
+	 end
+  end
+// end blinking an LED once per second  
+  
+// VGA logic files go here
+// also make the M9k buffer again here too based on the color space we
+//   settle upon
+
+//---------------END VGA CODE----------------------------------------
 endmodule
