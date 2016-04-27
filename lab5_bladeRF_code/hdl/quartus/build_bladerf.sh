@@ -45,7 +45,7 @@ function usage()
 check_quartus_version()
 {
     local readonly VERSION_FILE="$QUARTUS_ROOTDIR/version.txt"
-    echo "$VERSION_FILE"
+
     if [ ! -f "$VERSION_FILE" ]; then
         echo "Could not find Quartus version file." >&2
         return 1
