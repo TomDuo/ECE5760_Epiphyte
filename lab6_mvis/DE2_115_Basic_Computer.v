@@ -269,17 +269,21 @@ assign	TD_RESET	=	1'b1;	//	Allow 27 MHz
 assign	AUD_ADCLRCK	=	AUD_DACLRCK;
 assign	AUD_XCK		=	AUD_CTRL_CLK;
 
-VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)
-								);
+VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(TD_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2()	);
 // END CLOCKS & PLLS --------------------------------------------------------------------------------------
 
 
 // RESET MODULES ------------------------------------------------------------------------------------------
-Reset_Delay			r0	(
-	.iCLK(CLOCK_50),
-	.iRST(reset),
-	.oRST_0(DLY_RST)
-	);
+wire			DLY0;
+wire			DLY1;
+wire			DLY2;
+
+//	Reset Delay Timer
+Reset_Delay			r0	(	.iCLK(CLOCK_50),
+							.iRST(KEY[0]),
+							.oRST_0(DLY_RST),  // Delay by 0.0026 sec
+							.oRST_1(DLY1),  // Delay by 0.0039 sec
+							.oRST_2(DLY2)); // Delay by 0.0838 sec
 	
 wire reset; 
 assign reset = ~KEY[0];
@@ -288,22 +292,22 @@ assign reset = ~KEY[0];
 
 
 // AUDIO MODULES ------------------------------------------------------------------------------------------
-I2C_AV_Config 		u3	(	//	Host Side
+I2C_AV_Config 		i2c_conf	(	//	Host Side
 							.iCLK(CLOCK_50),
 							.iRST_N(KEY[0]),
 							//	I2C Side
 							.I2C_SCLK(I2C_SCLK),
 							.I2C_SDAT(I2C_SDAT)	);
 
-AUDIO_DAC_ADC 			u4	(	//	Audio Side
+AUDIO_DAC_ADC 			audio_dac_adc_mod	(	//	Audio Side
 							.oAUD_BCK(AUD_BCLK),
 							.oAUD_DATA(AUD_DACDAT),
 							.oAUD_LRCK(AUD_DACLRCK),
 							.oAUD_inL(codec_audio_inL), // audio data from ADC 
-							.oAUD_inR(audio_inR), // audio data from ADC 
+							.oAUD_inR(codec_audio_inR), // audio data from ADC 
 							.iAUD_ADCDAT(AUD_ADCDAT),
-							.iAUD_extL(), // audio data to DAC
-							.iAUD_extR(), // audio data to DAC
+							.iAUD_extL(codec_audio_inL), // audio data to DAC
+							.iAUD_extR(codec_audio_inR), // audio data to DAC
 							//	Control Signals
 				         .iCLK_18_4(AUD_CTRL_CLK),
 							.iRST_N(DLY_RST)
@@ -313,28 +317,125 @@ wire signed [15:0] codec_audio_inL, codec_audio_inR ;
 wire signed [15:0] aud_L, aud_R;
 
 cross_clocker #(16) ccL (
-.dest_clk(AUD_DACLRCK),
+.dest_clk(VGA_CTRL_CLK),
 .sig_in(codec_audio_inL),
 .sig_out(aud_L)
 );
 
 cross_clocker #(16) ccR (
-.dest_clk(AUD_DACLRCK),
+.dest_clk(VGA_CTRL_CLK),
 .sig_in(codec_audio_inR),
-.sig_out(aud_F)
+.sig_out(aud_R)
 );
 
-reg [15:0] acount;
-
-wire slow_clock = AUD_DACLRCK;
-
-assign LEDG[7] = slow_clock;
 
 // END AUDIO MODULES --------------------------------------------------------------------------------------
 
 
 // VIDEO MODULES ------------------------------------------------------------------------------------------
+wire		[9:0]	VGA_X;
+wire		[8:0]	VGA_Y;
+reg		[9:0]	iX, prevX;
+reg   	[8:0]	iY;  
+				
+JULIE	julies_vga_ctrl	(	
+	.iRed 		(mVGA_R),
+	.iGreen 		(mVGA_G),
+	.iBlue 		(mVGA_B),
+	.oCurrent_X (VGA_X),
+	.oCurrent_Y (VGA_Y),
+	.oVGA_R 	(VGA_R),
+	.oVGA_G 	(VGA_G),
+	.oVGA_B 	(VGA_B),
+	.oVGA_HS 	(VGA_HS),
+	.oVGA_VS 	(VGA_VS),
+	.oVGA_SYNC 	(VGA_SYNC_N),
+	.oVGA_BLANK (VGA_BLANK_N),
+	.oVGA_CLOCK (VGA_CLK),
+	.iCLK 		(VGA_CTRL_CLK),
+	.iRST_N 	(DLY2)	
+);
 
+reg [7:0]	mVGA_R;				//memory output to VGA
+reg [7:0]	mVGA_G;
+reg [7:0]	mVGA_B;
+reg [8:0] audCompare;
+hotter_buffer buffbuffbuff(
+	.address_a({iX,iY}),
+	.address_b({VGA_X,VGA_Y}),
+	.clock(VGA_CTRL_CLK),
+	.data_a(disp_bits),
+	//.data_b,
+	.wren_a(1'b1),
+	.wren_b(1'b0),
+	//.q_a,
+	.q_b(buff_out)
+);
 
+always @ (posedge AUD_DACLRCK) begin
+	if (iX < 640) begin
+		iX <= iX + 1;
+	end
+	else begin
+		iX <= 10'd0;
+	end
+end
+
+always @ (posedge VGA_CTRL_CLK) begin
+	audCompare <= aud_L[15:8];
+	if (prevX == iX) begin
+		iY <= iY - 1;
+	end
+	else begin
+		iY 	<= 9'd479;
+		prevX	<= iX;
+	end
+	
+	if ((audCompare + 9'd240)==(9'd480-iY)) begin
+		disp_bits <= white;
+	end
+	else begin
+		disp_bits <= black;
+	end
+end
+
+wire [1:0] buff_out;
+reg  [1:0] disp_bits ; // registered data from m4k to VGA
+
+localparam white = 2'b00;
+localparam black = 2'b01;
+localparam blue = 2'b10;
+localparam green = 2'b11;
+
+// make the color white
+always @(*) begin
+case(buff_out)
+	white: begin
+	mVGA_R <= 8'd255;
+	mVGA_G <= 8'd255;
+	mVGA_B <= 8'd255;
+	end
+	blue: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd255;
+	end
+	green: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd255;
+	mVGA_B <= 8'd0;
+	end
+	black: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd0;
+	end
+	default: begin
+	mVGA_R <= 8'd0;
+	mVGA_G <= 8'd0;
+	mVGA_B <= 8'd0;
+	end
+endcase
+end
 // END VIDEO MODULES --------------------------------------------------------------------------------------
 endmodule
