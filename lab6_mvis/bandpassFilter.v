@@ -121,6 +121,8 @@ always @ (posedge clk) begin
     oAud_R <= b0_v_nR + b1_v_n1R + b2_v_n2R;
 
     // compute the power in the band
+	 // should make this better with some long run averages and Parseval's theorem
+	 // also, the filters are all total garbage :(
 	 if (oAud_L[15]) begin
 		power <= ~(oAud_L[14:4]);
 	 end
