@@ -356,86 +356,96 @@ JULIE	julies_vga_ctrl	(
 	.iRST_N 	(DLY2)	
 );
 
-reg [7:0]	mVGA_R;				//memory output to VGA
-reg [7:0]	mVGA_G;
-reg [7:0]	mVGA_B;
-reg [8:0] audCompare;
-hotter_buffer buffbuffbuff(
-	.address_a({iX,iY}),
-	.address_b({VGA_X,VGA_Y}),
-	.clock(VGA_CTRL_CLK),
-	.data_a(disp_bits),
-	//.data_b,
-	.wren_a(1'b1),
-	.wren_b(1'b0),
-	//.q_a,
-	.q_b(buff_out)
+wire [7:0]	mVGA_R;				//memory output to VGA
+wire [7:0]	mVGA_G;
+wire [7:0]	mVGA_B;
+
+screenManager sm0(
+	.clk(VGA_CTRL_CLK),
+	.reset(~KEY[0]),
+	.iVGA_X(VGA_X),
+	.iVGA_Y(VGA_Y),
+	.R(mVGA_R),
+	.G(mVGA_G),
+	.B(mVGA_B)
 );
+//reg [8:0] audCompare;
+//hotter_buffer buffbuffbuff(
+//	.address_a({iX,iY}),
+//	.address_b({VGA_X,VGA_Y}),
+//	.clock(VGA_CTRL_CLK),
+//	.data_a(disp_bits),
+//	//.data_b,
+//	.wren_a(1'b1),
+//	.wren_b(1'b0),
+//	//.q_a,
+//	.q_b(buff_out)
+//);
 
-always @ (posedge AUD_DACLRCK) begin
-	if (iX < 640) begin
-		iX <= iX + 1;
-	end
-	else begin
-		iX <= 10'd0;
-	end
-end
+//always @ (posedge AUD_DACLRCK) begin
+//	if (iX < 640) begin
+//		iX <= iX + 1;
+//	end
+//	else begin
+//		iX <= 10'd0;
+//	end
+//end
 
-always @ (posedge VGA_CTRL_CLK) begin
-	audCompare <= aud_L[15:8];
-	if (prevX == iX) begin
-		iY <= iY - 1;
-	end
-	else begin
-		iY 	<= 9'd479;
-		prevX	<= iX;
-	end
-	
-	if ((audCompare + 9'd240)==(9'd480-iY)) begin
-		disp_bits <= white;
-	end
-	else begin
-		disp_bits <= black;
-	end
-end
-
-wire [1:0] buff_out;
-reg  [1:0] disp_bits ; // registered data from m4k to VGA
-
-localparam white = 2'b00;
-localparam black = 2'b01;
-localparam blue = 2'b10;
-localparam green = 2'b11;
-
-// make the color white
-always @(*) begin
-case(buff_out)
-	white: begin
-	mVGA_R <= 8'd255;
-	mVGA_G <= 8'd255;
-	mVGA_B <= 8'd255;
-	end
-	blue: begin
-	mVGA_R <= 8'd0;
-	mVGA_G <= 8'd0;
-	mVGA_B <= 8'd255;
-	end
-	green: begin
-	mVGA_R <= 8'd0;
-	mVGA_G <= 8'd255;
-	mVGA_B <= 8'd0;
-	end
-	black: begin
-	mVGA_R <= 8'd0;
-	mVGA_G <= 8'd0;
-	mVGA_B <= 8'd0;
-	end
-	default: begin
-	mVGA_R <= 8'd0;
-	mVGA_G <= 8'd0;
-	mVGA_B <= 8'd0;
-	end
-endcase
-end
+//always @ (posedge VGA_CTRL_CLK) begin
+//	audCompare <= aud_L[15:8];
+//	if (prevX == iX) begin
+//		iY <= iY - 1;
+//	end
+//	else begin
+//		iY 	<= 9'd479;
+//		prevX	<= iX;
+//	end
+//	
+//	if ((audCompare + 9'd240)==(9'd480-iY)) begin
+//		disp_bits <= white;
+//	end
+//	else begin
+//		disp_bits <= black;
+//	end
+//end
+//
+//wire [1:0] buff_out;
+//reg  [1:0] disp_bits ; // registered data from m4k to VGA
+//
+//localparam white = 2'b00;
+//localparam black = 2'b01;
+//localparam blue = 2'b10;
+//localparam green = 2'b11;
+//
+//// make the color white
+//always @(*) begin
+//case(buff_out)
+//	white: begin
+//	mVGA_R <= 8'd255;
+//	mVGA_G <= 8'd255;
+//	mVGA_B <= 8'd255;
+//	end
+//	blue: begin
+//	mVGA_R <= 8'd0;
+//	mVGA_G <= 8'd0;
+//	mVGA_B <= 8'd255;
+//	end
+//	green: begin
+//	mVGA_R <= 8'd0;
+//	mVGA_G <= 8'd255;
+//	mVGA_B <= 8'd0;
+//	end
+//	black: begin
+//	mVGA_R <= 8'd0;
+//	mVGA_G <= 8'd0;
+//	mVGA_B <= 8'd0;
+//	end
+//	default: begin
+//	mVGA_R <= 8'd0;
+//	mVGA_G <= 8'd0;
+//	mVGA_B <= 8'd0;
+//	end
+//endcase
+//end
 // END VIDEO MODULES --------------------------------------------------------------------------------------
 endmodule
