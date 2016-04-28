@@ -1,6 +1,22 @@
-module autoGen_BPF #(parameter filterID = 0)(
+module autoGen_BPF #(
+  parameter filterID = 0 // lower num = lower BP
+                         // 0 -> [10Hz 100Hz]
+                         // 1 -> [100Hz 500Hz]
+                         // 2 -> [500Hz 1000Hz]
+                         // 3 -> [1000Hz 5000Hz]
+                         // 4 -> [5000Hz 10000Hz]
+                         // 5 -> [10000Hz 20000Hz]
+)(
+  input clk,
+  input reset,
+  input enable,
 
+  input [15:0] iAud_L,
+  input [15:0] iAud_R,
 
+  output reg [15:0] oAud_L,
+  output reg [15:0] oAud_R,
+  output reg [10:0]  power
 );
 
 reg  signed [19:0] y;
@@ -133,13 +149,31 @@ end
 
 endcase
 always @ (posedge clk) begin
-x <= audIn;
-y <= mul_b1_x+z1;
-z1 <= mul_b2_x+z2-mul_a2_y;
-z2 <= mul_b3_x+z3-mul_a3_y;
-z3 <= mul_b4_x+z4-mul_a4_y;
-z4 <= mul_b5_x+z5-mul_a5_y;
-z4 <= mul_b5_x-mul_a5_y;
+  if (reset) begin
+      oAud_R <= 16'd0;
+      oAud_L <= 16'd0;
+      power  <= 10'd0;
+  end
+  else if (enable) begin
+    x  <= {{4{iAud_L[15]}},iAud_L}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
+    y  <= mul_b1_x+z1;
+    z1 <= mul_b2_x+z2-mul_a2_y;
+    z2 <= mul_b3_x+z3-mul_a3_y;
+    z3 <= mul_b4_x+z4-mul_a4_y;
+    z4 <= mul_b5_x+z5-mul_a5_y;
+    z4 <= mul_b5_x-mul_a5_y;
+    if (y[19]) begin
+      power <= ~(y[19:9]);
+    end
+    else begin
+      power <= (y[19:9]);
+   end
+  end
+  else begin
+    oAud_R <= iAud_R;
+    oAud_L <= oAud_R;
+    power  <= 2'd0;
+  end
 end
 
 endmodule
