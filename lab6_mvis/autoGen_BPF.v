@@ -152,7 +152,7 @@ always @ (posedge clk) begin
   if (reset) begin
       oAud_R <= 16'd0;
       oAud_L <= 16'd0;
-      power  <= 10'd0;
+      power  <= 11'd0;
   end
   else if (enable) begin
     x  <= {{4{iAud_L[15]}},iAud_L}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
@@ -172,7 +172,7 @@ always @ (posedge clk) begin
   else begin
     oAud_R <= iAud_R;
     oAud_L <= oAud_R;
-    power  <= 2'd0;
+    power  <= 11'd0;
   end
 end
 

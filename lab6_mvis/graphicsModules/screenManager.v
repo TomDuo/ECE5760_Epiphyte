@@ -48,7 +48,7 @@ generate
 	genvar i;
 	genvar j;
 	for (i=0; i < 6; i = i + 1) begin:xsweep
-		bandpassFilter #(i) bp (
+		autoGen_BPF #(i) bp (
 			.clk(aud_clk),
 			.reset(reset),
 			.enable(SW[5-i]),
@@ -84,6 +84,7 @@ endgenerate
 
 msbOneHot msb0 (layer,layerOH);
 
+// MATLAB  generated case statement
 always @(posedge clk) begin
 	case(layerOH)
 	(1<<37): begin
