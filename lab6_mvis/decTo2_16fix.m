@@ -54,8 +54,9 @@ function bin = decTo2_16fix(dec)
     for i = 5:-1:1
         if i == 5
            fprintf('18''b%i%i_',bin(18),bin(17)); 
+        else if i==1
+            fprintf('%i%i%i%i;\n',bin(4*i),bin(4*i-1),bin(4*i-2),bin(4*i-3));
         else
            fprintf('%i%i%i%i_',bin(4*i),bin(4*i-1),bin(4*i-2),bin(4*i-3));
         end  
     end
-    fprintf('\n\n')
