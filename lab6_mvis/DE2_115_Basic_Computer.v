@@ -328,7 +328,7 @@ cross_clocker #(16) ccR (
 .sig_out(aud_R)
 );
 
-
+assign LEDR[5:0] = SW[5:0];
 // END AUDIO MODULES --------------------------------------------------------------------------------------
 
 
@@ -360,12 +360,13 @@ wire [7:0]	mVGA_B;
 
 screenManager sm0(
 	.clk(VGA_CTRL_CLK),
+	.aud_clk(AUD_DACLRCK),
 	.reset(~KEY[0]),
 	.iVGA_X(VGA_X),
 	.iVGA_Y(VGA_Y),
-  .iAudL(aud_L),
-  .iAudR(aud_R),
-  .SW(SW[9:0]),
+	.iAudL(aud_L),
+	.iAudR(aud_R),
+	.SW(SW[9:0]),
 	.oR(mVGA_R),
 	.oG(mVGA_G),
 	.oB(mVGA_B)

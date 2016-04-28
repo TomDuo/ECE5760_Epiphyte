@@ -1102,6 +1102,10 @@ set_location_assignment PIN_V24 -to HSMC_CLKOUT_N2
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N2
 set_location_assignment PIN_G24 -to HSMC_CLKOUT_N1
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VERILOG_FILE fixed_comb_mult5760.v
+set_global_assignment -name VERILOG_FILE bandpassFilter.v
 set_global_assignment -name VERILOG_FILE graphicsModules/msbOneHot.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/vga_pll.v
 set_global_assignment -name SOURCE_FILE VGA_Controller/VGA_Param.h
@@ -1123,6 +1127,4 @@ set_global_assignment -name VERILOG_FILE AUDIO_DAC_ADC.v
 set_global_assignment -name CDF_FILE Chain1.cdf
 set_global_assignment -name VERILOG_FILE graphicsModules/colorBlock.v
 set_global_assignment -name VERILOG_FILE graphicsModules/screenManager.v
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

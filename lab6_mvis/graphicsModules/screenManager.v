@@ -1,12 +1,13 @@
 module screenManager (
 	input clk,
+	input aud_clk,
 	input reset,
 
 	input [9:0]  iVGA_X,
 	input [8:0]  iVGA_Y,
-  input [15:0] iAudL,
-  input [15:0] iAudR,
-  input [9:0]  SW,
+	input [15:0] iAudL,
+	input [15:0] iAudR,
+	input [9:0]  SW,
 
 	output reg [7:0] oR,
 	output reg [7:0] oG,
@@ -14,25 +15,25 @@ module screenManager (
 );
 
 // TEST SECTION FOR STROBING THROUGH BRIGHTNESS ---------------------------------------------------
-reg [15:0] count;
-reg [15:0] count2;
-reg [1:0] brightness;
-
-always @(posedge clk) begin
-	if (count < 16'd27000) begin
-		count = count + 1;
-	end
-	else begin
-		count <= 16'd0;
-		if (count2 < 16'd1000) begin
-			count2 <= count2 + 16'd1;
-		end
-		else begin
-			count2 <= 16'd0;
-			brightness <= brightness + 1;
-		end
-	end
-end
+//reg [15:0] count;
+//reg [15:0] count2;
+//reg [1:0] brightness;
+//
+//always @(posedge clk) begin
+//	if (count < 16'd27000) begin
+//		count = count + 1;
+//	end
+//	else begin
+//		count <= 16'd0;
+//		if (count2 < 16'd1000) begin
+//			count2 <= count2 + 16'd1;
+//		end
+//		else begin
+//			count2 <= 16'd0;
+//			brightness <= brightness + 1;
+//		end
+//	end
+//end
 // END TEST SECTION -------------------------------------------------------------------------------
 
 wire [63:0] layer;
@@ -41,17 +42,31 @@ wire [63:0] layerOH;
 wire [7:0] R [0:63];
 wire [7:0] G [0:63];
 wire [7:0] B [0:63];
+wire [7:0] power [0:5];
 
 generate
 	genvar i;
 	genvar j;
 	for (i=0; i < 6; i = i + 1) begin:xsweep
+		bandpassFilter #(i) bp (
+			.clk(aud_clk),
+			.reset(reset),
+			.enable(SW[i]),
+
+			.iAud_L(iAudL),
+			.iAud_R(iAudR),
+
+			.oAud_L(),
+			.oAud_R(),
+			.power(power[i])
+		);
+		
 		for (j=0; j < 6; j = j + 1) begin:ysweep
-			colorBlock #(95,69,0,11-2*i) cb (
+			colorBlock #(95,69,0,11-2*i,j) cb (
 				.clk(clk),
 				.reset(reset),
 				
-				.powSpect(brightness),
+				.pow(power[i]),
 				.iVGA_X(iVGA_X),
 				.iVGA_Y(iVGA_Y),
 				.topLeftX(10+i*105),
