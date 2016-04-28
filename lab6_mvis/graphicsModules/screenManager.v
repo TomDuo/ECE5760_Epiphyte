@@ -1,8 +1,13 @@
 module screenManager (
 	input clk,
 	input reset,
-	input [9:0] iVGA_X,
-	input [8:0] iVGA_Y,
+
+	input [9:0]  iVGA_X,
+	input [8:0]  iVGA_Y,
+  input [15:0] iAudL,
+  input [15:0] iAudR,
+  input [9:0]  SW,
+
 	output reg [7:0] oR,
 	output reg [7:0] oG,
 	output reg [7:0] oB
@@ -61,62 +66,6 @@ generate
 		end
 	end	
 endgenerate
-//wire [7:0] R0, G0, B0;
-//colorBlock #(100,100,0,5) cb0
-//(
-//	.clk(clk),
-//	.reset(reset),
-//	
-//	.powSpect(brightness),
-//	.iVGA_X(iVGA_X),
-//	.iVGA_Y(iVGA_Y),
-//	.topLeftX(10'd10),
-//	.topLeftY(9'd10),
-//	
-//	.oLayer(),
-//	.oVal(layer[0]),
-//	.R(R0),
-//	.G(G0),
-//	.B(B0)
-//);
-//
-//wire [7:0] R1, G1, B1;
-//colorBlock #(20,120,0,9) cb1
-//(
-//	.clk(clk),
-//	.reset(reset),
-//	
-//	.powSpect(brightness),
-//	.iVGA_X(iVGA_X),
-//	.iVGA_Y(iVGA_Y),
-//	.topLeftX(10'd320),
-//	.topLeftY(9'd240),
-//	
-//	.oLayer(),
-//	.oVal(layer[1]),
-//	.R(R1),
-//	.G(G1),
-//	.B(B1)
-//);
-//
-//wire [7:0] R2, G2, B2;
-//colorBlock #(300,300,0,4) cb2
-//(
-//	.clk(clk),
-//	.reset(reset),
-//	
-//	.powSpect(brightness),
-//	.iVGA_X(iVGA_X),
-//	.iVGA_Y(iVGA_Y),
-//	.topLeftX(10'd50),
-//	.topLeftY(9'd50),
-//	
-//	.oLayer(),
-//	.oVal(layer[2]),
-//	.R(R2),
-//	.G(G2),
-//	.B(B2)
-//);
 
 msbOneHot msb0 (layer,layerOH);
 
