@@ -31,6 +31,7 @@ end
 // END TEST SECTION -------------------------------------------------------------------------------
 
 wire [31:0] layer;
+wire [31:0] layerOH;
 
 wire [7:0] R0, G0, B0;
 colorBlock #(100,100,0,5) cb0
@@ -71,7 +72,7 @@ colorBlock #(20,120,0,9) cb1
 );
 
 wire [7:0] R2, G2, B2;
-colorBlock #(300,300,0,2) cb2
+colorBlock #(300,300,0,4) cb2
 (
 	.clk(clk),
 	.reset(reset),
@@ -89,8 +90,15 @@ colorBlock #(300,300,0,2) cb2
 	.B(B2)
 );
 
+msbOneHot msb0 (layer,layerOH);
+
 always @(posedge clk) begin
-	case(layer)
+	case(layerOH)
+	(1<<2): begin
+		R <= R2;
+		B <= B2;
+		G <= G2;
+	end
 	(1<<1): begin
 		R <= R1;
 		B <= B1;

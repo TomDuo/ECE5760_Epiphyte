@@ -51,13 +51,13 @@ always @ (posedge clk) begin
 					B <= 8'd4 << (powSpect);
 				end
 				3: begin // orange, 64 42 0
-					R <= 8'd32 << (powSpect);
+					R <= 8'd31 << (powSpect);
 					G <= 8'd21 << (powSpect);
 					B <= 8'd0 << (powSpect);
 				end
 				4: begin // yellow, 64 64 0
-					R <= 8'd32 << (powSpect);
-					G <= 8'd32 << (powSpect);
+					R <= 8'd31 << (powSpect);
+					G <= 8'd31 << (powSpect);
 					B <= 8'd0 << (powSpect);
 				end
 				5: begin // khaki, 60 58 33
