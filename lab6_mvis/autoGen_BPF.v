@@ -155,8 +155,11 @@ always @ (posedge clk) begin
       power  <= 11'd0;
   end
   else if (enable) begin
-    x  <= {{4{iAud_L[15]}},iAud_L}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
-    y  <= mul_b1_x+z1;
+    // I think these top two need to be blocking
+    x  = {{4{iAud_L[15]}},iAud_L}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
+    y  = mul_b1_x+z1;
+
+    // the rest are nonblocking
     z1 <= mul_b2_x+z2-mul_a2_y;
     z2 <= mul_b3_x+z3-mul_a3_y;
     z3 <= mul_b4_x+z4-mul_a4_y;
