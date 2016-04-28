@@ -1,9 +1,9 @@
-function bin = decTo2_16fix(dec)
-    i = floor(abs(dec))
-    d = abs(dec) - i
+function bin = decTo4_16fix(dec)
+    i = floor(abs(dec));
+    d = abs(dec) - i;
     neg = (dec<0);
     
-    for j = 17:18
+    for j = 19:20
         if i>=1
             i = i/2;
             if (i ~= round(i))
@@ -16,7 +16,7 @@ function bin = decTo2_16fix(dec)
         end
     end
     
-    for i = 16:-1:1
+    for i = 18:-1:1
         d = d*2;
         if (d >= 1)
             bin(i) = 1;
@@ -53,8 +53,8 @@ function bin = decTo2_16fix(dec)
     
     for i = 5:-1:1
         if i == 5
-           fprintf('18''b%i%i_',bin(18),bin(17)); 
-        else if i==1
+           fprintf('20''b%i%i%i%i_',bin(20),bin(19),bin(18),bin(17)); 
+        elseif i==1
             fprintf('%i%i%i%i;\n',bin(4*i),bin(4*i-1),bin(4*i-2),bin(4*i-3));
         else
            fprintf('%i%i%i%i_',bin(4*i),bin(4*i-1),bin(4*i-2),bin(4*i-3));
