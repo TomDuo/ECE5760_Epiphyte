@@ -51,7 +51,7 @@ generate
 		bandpassFilter #(i) bp (
 			.clk(aud_clk),
 			.reset(reset),
-			.enable(SW[i]),
+			.enable(SW[5-i]),
 
 			.iAud_L(iAudL),
 			.iAud_R(iAudR),

@@ -121,7 +121,7 @@ always @ (posedge clk) begin
     oAud_R <= b0_v_nR + b1_v_n1R + b2_v_n2R;
 
     // compute the power in the band
-
+	 power <= (oAud_L>>8);
   end
   else begin
     oAud_R <= iAud_R;
