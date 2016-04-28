@@ -1,10 +1,42 @@
 module msbOneHot ( 
-  input      [31:0] in, 
-  output reg [31:0] out
+  input      [63:0] in, 
+  output reg [63:0] out
   );
 
 always @(*) begin
-  if      (in>=(1<<31)) out <= (1<<31);
+  if (in>=(1<<63)) out <= (1<<63);
+  else if (in>=(1<<62)) out <= (1<<62);
+  else if (in>=(1<<61)) out <= (1<<61);
+  else if (in>=(1<<60)) out <= (1<<60);
+  else if (in>=(1<<59)) out <= (1<<59);
+  else if (in>=(1<<58)) out <= (1<<58);
+  else if (in>=(1<<57)) out <= (1<<57);
+  else if (in>=(1<<56)) out <= (1<<56);
+  else if (in>=(1<<55)) out <= (1<<55);
+  else if (in>=(1<<54)) out <= (1<<54);
+  else if (in>=(1<<53)) out <= (1<<53);
+  else if (in>=(1<<52)) out <= (1<<52);
+  else if (in>=(1<<51)) out <= (1<<51);
+  else if (in>=(1<<50)) out <= (1<<50);
+  else if (in>=(1<<49)) out <= (1<<49);
+  else if (in>=(1<<48)) out <= (1<<48);
+  else if (in>=(1<<47)) out <= (1<<47);
+  else if (in>=(1<<46)) out <= (1<<46);
+  else if (in>=(1<<45)) out <= (1<<45);
+  else if (in>=(1<<44)) out <= (1<<44);
+  else if (in>=(1<<43)) out <= (1<<43);
+  else if (in>=(1<<42)) out <= (1<<42);
+  else if (in>=(1<<41)) out <= (1<<41);
+  else if (in>=(1<<40)) out <= (1<<40);
+  else if (in>=(1<<39)) out <= (1<<39);
+  else if (in>=(1<<38)) out <= (1<<38);
+  else if (in>=(1<<37)) out <= (1<<37);
+  else if (in>=(1<<36)) out <= (1<<36);
+  else if (in>=(1<<35)) out <= (1<<35);
+  else if (in>=(1<<34)) out <= (1<<34);
+  else if (in>=(1<<33)) out <= (1<<33);
+  else if (in>=(1<<32)) out <= (1<<32);
+  else if (in>=(1<<31)) out <= (1<<31);
   else if (in>=(1<<30)) out <= (1<<30);
   else if (in>=(1<<29)) out <= (1<<29);
   else if (in>=(1<<28)) out <= (1<<28);

@@ -365,9 +365,9 @@ screenManager sm0(
 	.reset(~KEY[0]),
 	.iVGA_X(VGA_X),
 	.iVGA_Y(VGA_Y),
-	.R(mVGA_R),
-	.G(mVGA_G),
-	.B(mVGA_B)
+	.oR(mVGA_R),
+	.oG(mVGA_G),
+	.oB(mVGA_B)
 );
 //reg [8:0] audCompare;
 //hotter_buffer buffbuffbuff(

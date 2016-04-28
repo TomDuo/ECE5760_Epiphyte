@@ -93,7 +93,7 @@ always @ (posedge clk) begin
 				11: begin // lightblue, 8 36 64
 					R <= 8'd4 << (powSpect);
 					G <= 8'd18 << (powSpect);
-					B <= 8'd32 << (powSpect);
+					B <= 8'd31 << (powSpect);
 				end
 				12: begin // blue, 16 26 56
 					R <= 8'd8 << (powSpect);
