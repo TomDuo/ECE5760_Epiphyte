@@ -42,7 +42,7 @@ wire [63:0] layerOH;
 wire [7:0] R [0:63];
 wire [7:0] G [0:63];
 wire [7:0] B [0:63];
-wire [7:0] power [0:5];
+wire [10:0] power [0:5];
 
 generate
 	genvar i;
@@ -62,7 +62,7 @@ generate
 		);
 		
 		for (j=0; j < 6; j = j + 1) begin:ysweep
-			colorBlock #(95,69,0,11-2*i,j) cb (
+			colorBlock #(95,69,0,11-2*i,5-j) cb (
 				.clk(clk),
 				.reset(reset),
 				

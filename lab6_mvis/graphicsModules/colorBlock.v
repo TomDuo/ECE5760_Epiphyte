@@ -9,7 +9,7 @@ module colorBlock #(
 	input clk,
 	input reset,
 	
-	input [7:0] pow,
+	input [10:0] pow,
 	input [9:0] iVGA_X,
 	input [8:0] iVGA_Y,
 	input [9:0] topLeftX,
@@ -24,8 +24,8 @@ module colorBlock #(
 
 wire [1:0] powSpect;
 wire comparison;
-assign comparison = (pow>(1<<yLoc+3));
-assign powSpect = pow[yLoc+2:yLoc+1] || {2{comparison}};
+assign comparison = (pow>(1<<(yLoc+6)));
+assign powSpect = pow[yLoc+5:yLoc+4] || {2{comparison}};
 always @ (posedge clk) begin
 	if (reset) begin
 		R<=8'd0;

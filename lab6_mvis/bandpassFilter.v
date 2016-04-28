@@ -16,7 +16,7 @@ module bandpassFilter #(
 
   output reg [15:0] oAud_L,
   output reg [15:0] oAud_R,
-  output reg [7:0]  power
+  output reg [10:0]  power
 );
 
 // internal wires and registers
@@ -121,7 +121,12 @@ always @ (posedge clk) begin
     oAud_R <= b0_v_nR + b1_v_n1R + b2_v_n2R;
 
     // compute the power in the band
-	 power <= (oAud_L>>8);
+	 if (oAud_L[15]) begin
+		power <= ~(oAud_L[14:4]);
+	 end
+	 else begin
+		power <= (oAud_L[14:4]);
+	 end
   end
   else begin
     oAud_R <= iAud_R;
