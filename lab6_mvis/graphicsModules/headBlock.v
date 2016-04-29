@@ -1,6 +1,6 @@
 module headBlock #(
-  parameter topLeftX=280,//x_init = 280,
-  parameter topLeftY=240//y_init = 240
+  parameter x_init=280,//x_init = 280,
+  parameter y_init=240//y_init = 240
 )
 (
   input clk,
@@ -43,7 +43,8 @@ always @(posedge clk) begin
     G <= 8'b0;
     B <= 8'b0;
     oVal <= 1'b0;
-
+	topLeftX <= x_init;
+	topLeftY <= y_init;
 
   end
   else if (enable) begin
@@ -68,15 +69,40 @@ always @(posedge clk) begin
       oVal <= 1'b0;
     end
   end // end reset case
-end
+  
+  if (motion_en) begin
+    if ((iVGA_Y == 0) && (iVGA_X == 0)) begin
+      if (frame_counter < 10'd60) begin
+        frame_counter <= frame_counter + 10'd1;
+      end
+      else begin
+        frame_counter <= 10'd0;
+        stepDir <= ~stepDir;
+      end
+    end
+    else if (prev_frame_count != frame_counter) begin
+	  prev_frame_count <= frame_counter;
+	  if (stepDir) begin
+		 topLeftX <= topLeftX + 10'd1;
+		 topLeftY <= topLeftY - 10'd1; 
+	  end 
+	  else begin
+		 topLeftX <= topLeftX - 10'd1;
+		 topLeftY <= topLeftY + 10'd1; 
+	  end     
+    end // end else if (prev_frame_count...
+  end // end motion
+  
+end // end always block
+
 
 // motion work
-//reg [9:0] frame_counter;
-//reg [9:0] prev_frame_count;
-//reg [9:0] topLeftX;
-//reg [8:0] topLeftY;
-//reg [2:0] stepDiv;
-//reg       stepDir; // 0 = down, 1 = up
+reg [9:0] frame_counter;
+reg [9:0] prev_frame_count;
+reg [9:0] topLeftX;
+reg [8:0] topLeftY;
+reg [2:0] stepDiv;
+reg       stepDir; // 0 = down, 1 = up
 
 //always @(posedge clk) begin
 //  if (reset) begin

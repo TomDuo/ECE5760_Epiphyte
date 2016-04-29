@@ -101,7 +101,7 @@ headBlock  #(bruce_X,bruce_Y) hb0
   .G(G[40]),
   .B(B[40])
 );
-bodyBlock #(bruce_X,bruce_Y+85)  bbb0
+bodyBlock #(bruce_X,bruce_Y+90)  bbb0
 (
   .clk(clk),
   .reset(reset),
@@ -118,7 +118,7 @@ bodyBlock #(bruce_X,bruce_Y+85)  bbb0
   .G(G[37]),
   .B(B[37])
 );
-arm_LBlock #(bruce_X-50,bruce_Y+100) alb0
+arm_LBlock #(bruce_X,bruce_Y+50) alb0
 (
   .clk(clk),
   .reset(reset),
@@ -135,7 +135,7 @@ arm_LBlock #(bruce_X-50,bruce_Y+100) alb0
   .G(G[38]),
   .B(B[38])
 );
-arm_RBlock #(bruce_X+50,bruce_Y+100) arb0
+arm_RBlock #(bruce_X+95,bruce_Y+75) arb0
 (
   .clk(clk),
   .reset(reset),

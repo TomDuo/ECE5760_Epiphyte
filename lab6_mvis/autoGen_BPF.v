@@ -12,11 +12,11 @@ module autoGen_BPF #(
   input reset,
   input enable,
 
-  input [15:0] iAud_L,
-  input [15:0] iAud_R,
+  input signed [15:0] iAud_L,
+  input signed [15:0] iAud_R,
 
-  output reg [15:0] oAud_L,
-  output reg [15:0] oAud_R,
+  output reg signed [15:0] oAud_L,
+  output reg signed [15:0] oAud_R,
   output reg [10:0]  power
 );
 
@@ -171,7 +171,7 @@ always @ (posedge aud_clk) begin
   end
   else if (enable) begin
     // I think these top two need to be blocking
-    x  = {{4{iAud_L[15]}},iAud_L,7'd0}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
+    x  = {{3{iAud_L[15]}},iAud_L,8'd0}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
     y  = mul_b1_x+z1;
 
     // the rest are nonblocking
@@ -181,7 +181,7 @@ always @ (posedge aud_clk) begin
     z4 <= mul_b5_x+z5-mul_a5_y;
     z4 <= mul_b5_x-mul_a5_y;
     if (y[26]) begin
-      mag_y <= ~(y-1);
+      mag_y <= (~y)-27'd1;
     end
     else begin
       mag_y <= y;
