@@ -82,6 +82,24 @@ generate
 	end	
 endgenerate
 
+module headBlock hb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(SW[6]),
+  .motion_en(SW[7]),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  
+  .oLayer(),
+  .oVal(layer[36]),
+  .R(R[36]),
+  .G(G[36]),
+  .B(B[36])
+);
+
 msbOneHot msb0 (layer,layerOH);
 
 // MATLAB  generated case statement
