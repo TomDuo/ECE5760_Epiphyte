@@ -23,10 +23,9 @@ localparam s_b2   = 3'd2;
 localparam s_a2   = 3'd3;
 localparam s_waiting = 3'd4;
 
-// add these with the matlab code!
-localparam b1 = ;
-localparam b2 = ;
-localparam a2 = ;
+localparam b1 = 27'b000_0000_0100_0000_1110_1011_1110;
+localparam b2 = 27'b000_0000_0100_0000_1110_1011_1110;
+localparam a2 = 27'b111_1000_1000_0001_1101_0111_1110;
 
 reg  signed [26:0] mulInA, mulInB, s_b1_out, s_b2_out;
 wire signed [26:0] mulOut;
