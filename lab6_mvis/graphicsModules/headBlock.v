@@ -29,7 +29,11 @@ wire [9:0]  matrix_Y;
 assign matrix_X = iVGA_X - topLeftX;
 assign matrix_Y = iVGA_Y - topLeftY;
 
-// to do: add ROM block here -----------------------------------------------------------------
+headRom (
+  .address(addr),
+  .clock(clk),
+  .q(q)
+  );
 
 // index into matrix and examine content
 always @(posedge clk) begin
