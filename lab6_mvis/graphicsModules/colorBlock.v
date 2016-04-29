@@ -22,10 +22,15 @@ module colorBlock #(
 	output reg [7:0] B
 );
 
-wire [1:0] powSpect;
-wire comparison;
-assign comparison = (pow>(1<<(yLoc+6)));
-assign powSpect = pow[yLoc+5:yLoc+4] || {2{comparison}};
+reg [1:0] powSpect;
+reg comparison;
+always @(posedge clk) begin
+	if ((iVGA_X == 0) && (iVGA_Y == 0)) begin
+		comparison <= (pow>(1<<(yLoc+6)));
+		powSpect <= pow[yLoc+5:yLoc+4] || {2{comparison}};
+	end
+end
+ 
 always @ (posedge clk) begin
 	if (reset) begin
 		R<=8'd0;

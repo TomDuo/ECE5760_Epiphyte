@@ -169,10 +169,10 @@ always @ (posedge clk) begin
     z4 <= mul_b5_x+z5-mul_a5_y;
     z4 <= mul_b5_x-mul_a5_y;
     if (y[26]) begin
-      power <= ~(y[26:16]);
+      power <= ~(y[22:12]);
     end
     else begin
-      power <= (y[26:16]);
+      power <= (y[22:12]);
    end
   end
   else begin
