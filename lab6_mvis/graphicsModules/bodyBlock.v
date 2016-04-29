@@ -1,4 +1,4 @@
-module headBlock #(
+module bodyBlock #(
   parameter topLeftX=280,//x_init = 280,
   parameter topLeftY=240//y_init = 240
 )
@@ -19,8 +19,8 @@ module headBlock #(
   output reg [7:0] B
 );
 
-localparam block_width = 90,
-localparam block_height = 114,
+localparam block_width = 114;
+localparam block_height = 90;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;
@@ -29,7 +29,7 @@ wire [9:0]  matrix_Y;
 assign matrix_X = iVGA_X - topLeftX;
 assign matrix_Y = iVGA_Y - topLeftY;
 
-headROM (
+bodyROM (
   .address(addr),
   .clock(clk),
   .q(q)

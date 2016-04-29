@@ -5,32 +5,17 @@ arm_l = 'arm1.bmp';
 arm_r = 'arm2.bmp';
 body = 'torso.bmp';
 
-x = imread(head);
-head_R = x(:,:,1);
-head_G = x(:,:,2);
-head_B = x(:,:,3);
+xHead = imread(head);
+xArm_L = imread(arm_l);
+xArm_R = imread(arm_r);
+xBody = imread(body);
 
-x = imread(arm_l);
-arm_l_R = x(:,:,1);
-arm_l_G = x(:,:,2);
-arm_l_B = x(:,:,3);
-
-x = imread(arm_r);
-arm_r_R = x(:,:,1);
-arm_r_G = x(:,:,2);
-arm_r_B = x(:,:,3);
-
-
-x = imread(body);
-body_R = x(:,:,1);
-body_G = x(:,:,2);
-body_B = x(:,:,3);
-
-size(head_B)
+x= xHead
+size(x)
 serial_bytes = reshape(x,1,numel(x));
 
 %% create mif file
-name = 'img1';
+name = 'xHead';
 bitdepth=24;
 
 xSize = size(x);

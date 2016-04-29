@@ -7,7 +7,7 @@ module screenManager (
 	input [8:0]  iVGA_Y,
 	input [15:0] iAudL,
 	input [15:0] iAudR,
-	input [9:0]  SW,
+	input [17:0]  SW,
 
 	output reg [7:0] oR,
 	output reg [7:0] oG,
@@ -81,8 +81,9 @@ generate
 		end
 	end	
 endgenerate
-
-module headBlock hb0
+localparam bruce_X = 320;
+localparam bruce_Y = 240;
+headBlock  #(bruce_X,bruce_Y) hb0
 (
   .clk(clk),
   .reset(reset),
@@ -99,12 +100,83 @@ module headBlock hb0
   .G(G[36]),
   .B(B[36])
 );
+bodyBlock #(bruce_X,bruce_Y+70)  bbb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(SW[8]),
+  .motion_en(SW[7]),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  
+  .oLayer(),
+  .oVal(layer[37]),
+  .R(R[37]),
+  .G(G[37]),
+  .B(B[37])
+);
+arm_LBlock #(bruce_X-30,bruce_Y+100) alb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(SW[9]),
+  .motion_en(SW[7]),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  
+  .oLayer(),
+  .oVal(layer[38]),
+  .R(R[38]),
+  .G(G[38]),
+  .B(B[38])
+);
+arm_RBlock #(bruce_X+30,bruce_Y+100) arb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(SW[10]),
+  .motion_en(SW[7]),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  
+  .oLayer(),
+  .oVal(layer[39]),
+  .R(R[39]),
+  .G(G[39]),
+  .B(B[39])
+);
 
 msbOneHot msb0 (layer,layerOH);
 
 // MATLAB  generated case statement
 always @(posedge clk) begin
 	case(layerOH)
+	(1<<41): begin
+		oR <= R[41];
+		oB <= B[41];
+		oG <= G[41];
+	end
+	(1<<40): begin
+		oR <= R[40];
+		oB <= B[40];
+		oG <= G[40];
+	end
+	(1<<39): begin
+		oR <= R[39];
+		oB <= B[39];
+		oG <= G[39];
+	end
+	(1<<38): begin
+		oR <= R[38];
+		oB <= B[38];
+		oG <= G[38];
+	end
 	(1<<37): begin
 		oR <= R[37];
 		oB <= B[37];

@@ -366,7 +366,7 @@ screenManager sm0(
 	.iVGA_Y(VGA_Y),
 	.iAudL(aud_L),
 	.iAudR(aud_R),
-	.SW(SW[9:0]),
+	.SW(SW[17:0]),
 	.oR(mVGA_R),
 	.oG(mVGA_G),
 	.oB(mVGA_B)
