@@ -52,7 +52,7 @@ function bin = decTo4_23fix(dec)
     end
     
     for i = 7:-1:1
-        if i == 5
+        if i == 7
            fprintf('27''b%i%i%i_',bin(27),bin(26),bin(25)); 
         elseif i==1
             fprintf('%i%i%i%i;\n',bin(4*i),bin(4*i-1),bin(4*i-2),bin(4*i-3));
