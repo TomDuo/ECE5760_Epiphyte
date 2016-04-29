@@ -49,7 +49,8 @@ generate
 	genvar j;
 	for (i=0; i < 6; i = i + 1) begin:xsweep
 		autoGen_BPF #(i) bp (
-			.clk(aud_clk),
+			.clk(clk),
+			.aud_clk(aud_clk),
 			.reset(reset),
 			.enable(SW[5-i]),
 

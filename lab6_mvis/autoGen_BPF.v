@@ -8,6 +8,7 @@ module autoGen_BPF #(
                          // 5 -> [10000Hz 20000Hz]
 )(
   input clk,
+  input aud_clk,
   input reset,
   input enable,
 
@@ -151,7 +152,18 @@ end
 endcase
 end
 
-always @ (posedge clk) begin
+wire [26:0] mag_y,lpf_y;
+
+lpf lpf0(
+  .clk(clk),
+  .aud_clk(aud_clk),
+  .reset(reset),
+
+  .in(mag_y),
+  .out(lpf_y)
+);
+
+always @ (posedge aud_clk) begin
   if (reset) begin
       oAud_R <= 16'd0;
       oAud_L <= 16'd0;
@@ -169,11 +181,12 @@ always @ (posedge clk) begin
     z4 <= mul_b5_x+z5-mul_a5_y;
     z4 <= mul_b5_x-mul_a5_y;
     if (y[26]) begin
-      power <= ~(y[22:12]);
+      mag_y <= ~(y-1);
     end
     else begin
-      power <= (y[22:12]);
-   end
+      mag_y <= y;
+    end
+    power <= lpf_y[22:12];
   end
   else begin
     oAud_R <= iAud_R;
