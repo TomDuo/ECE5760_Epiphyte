@@ -4,7 +4,7 @@ module lpf (
   input reset,
 
   input  signed [26:0] in,
-  output signed [26:0] out
+  output reg signed [26:0] out
 );
 
 
@@ -23,9 +23,9 @@ localparam s_b2   = 3'd2;
 localparam s_a2   = 3'd3;
 localparam s_waiting = 3'd4;
 
-localparam b1 = 27'b000_0000_0100_0000_1110_1011_1110;
-localparam b2 = 27'b000_0000_0100_0000_1110_1011_1110;
-localparam a2 = 27'b111_1000_1000_0001_1101_0111_1110;
+localparam b1 = 27'b000_0000_0000_0100_0001_1000_1001;
+localparam b2 = 27'b000_0000_0000_0100_0001_1000_1001;
+localparam a2 = 27'b111_1000_0000_0111_1111_1100_1100;
 
 reg  signed [26:0] mulInA, mulInB, s_b1_out, s_b2_out;
 wire signed [26:0] mulOut;
@@ -68,10 +68,11 @@ always @ (posedge clk) begin
 
   s_waiting: begin
     out <= s_b1_out + s_b2_out - mulOut;
-    if(prev_aud_clk ~= aud_clk) begin
+    if(prev_aud_clk != aud_clk) begin
       nextstate <= s_init;
     end
   end
+  endcase
 end
 
 endmodule

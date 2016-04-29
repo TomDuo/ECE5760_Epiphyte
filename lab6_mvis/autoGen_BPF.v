@@ -152,8 +152,8 @@ end
 endcase
 end
 
-wire [26:0] mag_y,lpf_y;
-
+wire signed [26:0] lpf_y;
+reg  signed [26:0] mag_y;
 lpf lpf0(
   .clk(clk),
   .aud_clk(aud_clk),

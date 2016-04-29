@@ -88,25 +88,25 @@ headBlock  #(bruce_X,bruce_Y) hb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(SW[6]),
-  .motion_en(SW[7]),
+  .enable(SW[7]),
+  .motion_en(SW[6]),
   
   .pow(),
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   
   .oLayer(),
-  .oVal(layer[36]),
-  .R(R[36]),
-  .G(G[36]),
-  .B(B[36])
+  .oVal(layer[40]),
+  .R(R[40]),
+  .G(G[40]),
+  .B(B[40])
 );
-bodyBlock #(bruce_X,bruce_Y+70)  bbb0
+bodyBlock #(bruce_X,bruce_Y+85)  bbb0
 (
   .clk(clk),
   .reset(reset),
   .enable(SW[8]),
-  .motion_en(SW[7]),
+  .motion_en(SW[6]),
   
   .pow(),
   .iVGA_X(iVGA_X),
@@ -118,12 +118,12 @@ bodyBlock #(bruce_X,bruce_Y+70)  bbb0
   .G(G[37]),
   .B(B[37])
 );
-arm_LBlock #(bruce_X-30,bruce_Y+100) alb0
+arm_LBlock #(bruce_X-50,bruce_Y+100) alb0
 (
   .clk(clk),
   .reset(reset),
   .enable(SW[9]),
-  .motion_en(SW[7]),
+  .motion_en(SW[6]),
   
   .pow(),
   .iVGA_X(iVGA_X),
@@ -135,12 +135,12 @@ arm_LBlock #(bruce_X-30,bruce_Y+100) alb0
   .G(G[38]),
   .B(B[38])
 );
-arm_RBlock #(bruce_X+30,bruce_Y+100) arb0
+arm_RBlock #(bruce_X+50,bruce_Y+100) arb0
 (
   .clk(clk),
   .reset(reset),
   .enable(SW[10]),
-  .motion_en(SW[7]),
+  .motion_en(SW[6]),
   
   .pow(),
   .iVGA_X(iVGA_X),
