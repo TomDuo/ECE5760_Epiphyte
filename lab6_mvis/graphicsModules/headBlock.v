@@ -71,7 +71,7 @@ always @(posedge clk) begin
   end // end reset case
   
   if (motion_en) begin
-    if ((iVGA_Y == 0) && (iVGA_X == 0)) begin
+    if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0)) begin
       if (frame_counter < 10'd60) begin
         frame_counter <= frame_counter + 10'd1;
       end
@@ -80,7 +80,8 @@ always @(posedge clk) begin
         stepDir <= ~stepDir;
       end
     end
-    else if (prev_frame_count != frame_counter) begin
+    
+	 if ((prev_frame_count != frame_counter) && frame_counter[3]) begin
 	  prev_frame_count <= frame_counter;
 	  if (stepDir) begin
 		 topLeftX <= topLeftX + 10'd1;

@@ -20,8 +20,8 @@ module arm_LBlock #(
 );
 
 
-localparam block_width = 76;
-localparam block_height = 37;
+localparam block_width = 37;
+localparam block_height = 76;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;
