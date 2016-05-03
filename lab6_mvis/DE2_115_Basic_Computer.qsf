@@ -1104,6 +1104,20 @@ set_location_assignment PIN_G24 -to HSMC_CLKOUT_N1
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VERILOG_FILE headROM.v
+set_global_assignment -name VERILOG_FILE bodyROM.v
+set_global_assignment -name VERILOG_FILE Arm_RROM_bb.v
+set_global_assignment -name VERILOG_FILE Arm_L_bb.v
+set_global_assignment -name VERILOG_FILE Arm_LROM_bb.v
+set_global_assignment -name MIF_FILE tux_torso.mif
+set_global_assignment -name MIF_FILE tux_legs.mif
+set_global_assignment -name MIF_FILE tux_arm_R.mif
+set_global_assignment -name MIF_FILE tux_arm_L.mif
+set_global_assignment -name MIF_FILE torso.mif
+set_global_assignment -name MIF_FILE head.mif
+set_global_assignment -name MIF_FILE arm2.mif
+set_global_assignment -name MIF_FILE arm1.mif
+set_global_assignment -name VERILOG_FILE motionManager.v
 set_global_assignment -name VERILOG_FILE lpf.v
 set_global_assignment -name VERILOG_FILE graphicsModules/headBlock.v
 set_global_assignment -name VERILOG_FILE autoGen_BPF.v
@@ -1131,7 +1145,6 @@ set_global_assignment -name CDF_FILE Chain1.cdf
 set_global_assignment -name VERILOG_FILE graphicsModules/colorBlock.v
 set_global_assignment -name VERILOG_FILE graphicsModules/screenManager.v
 set_global_assignment -name QIP_FILE headRom.qip
-set_global_assignment -name QIP_FILE Arm_L.qip
 set_global_assignment -name VERILOG_FILE graphicsModules/arm_LBlock.v
 set_global_assignment -name VERILOG_FILE graphicsModules/arm_RBlock.v
 set_global_assignment -name VERILOG_FILE graphicsModules/bodyBlock.v

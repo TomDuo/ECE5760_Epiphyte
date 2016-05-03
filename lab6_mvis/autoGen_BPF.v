@@ -171,7 +171,7 @@ always @ (posedge aud_clk) begin
   end
   else if (enable) begin
     // I think these top two need to be blocking
-    x  = {{3{iAud_L[15]}},iAud_L,8'd0}; // iAud_L is [1,1]. Map to 4_16 by extending first bit
+    x  = {{3{iAud_L[15]}},iAud_L,8'd0}; // iAud_L is [-1,1]. Map to 4_16 by extending first bit
     y  = mul_b1_x+z1;
 
     // the rest are nonblocking
@@ -186,7 +186,7 @@ always @ (posedge aud_clk) begin
     else begin
       mag_y <= y;
     end
-    power <= lpf_y[22:12];
+    power <= lpf_y[23:13];
   end
   else begin
     oAud_R <= iAud_R;
