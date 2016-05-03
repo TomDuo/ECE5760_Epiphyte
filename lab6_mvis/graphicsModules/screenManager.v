@@ -82,9 +82,38 @@ generate
 		end
 	end	
 endgenerate
-localparam bruce_X = 320;
-localparam bruce_Y = 240;
-headBlock  #(bruce_X,bruce_Y) hb0
+
+motionManager mm0 (
+  .clk(clk),
+  .reset(reset),
+
+  .BPM(),
+  .beatHit(),
+  .dancer_en(4'b1000), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
+  .motionType(),
+
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+
+  .bruce_x(bruceX),
+  .bruce_y(bruceY),
+
+  .d0_x(),
+  .d0_y(),
+
+  .d1_x(),
+  .d1_y(),
+
+  .d2_x(),
+  .d2_y(),
+);
+
+wire [9:0] bruceX;
+wire [8:0] bruceY;
+
+localparam bruce_X = 240;
+localparam bruce_Y = 280;
+headBlock  hb0
 (
   .clk(clk),
   .reset(reset),
@@ -94,6 +123,8 @@ headBlock  #(bruce_X,bruce_Y) hb0
   .pow(),
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
+  .topLeft_X(bruceX),
+  .topLeft_Y(bruceY),
   
   .oLayer(),
   .oVal(layer[40]),
@@ -101,6 +132,7 @@ headBlock  #(bruce_X,bruce_Y) hb0
   .G(G[40]),
   .B(B[40])
 );
+
 bodyBlock #(bruce_X,bruce_Y+90)  bbb0
 (
   .clk(clk),

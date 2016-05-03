@@ -1,7 +1,4 @@
-module headBlock #(
-  parameter x_init=280,//x_init = 280,
-  parameter y_init=240//y_init = 240
-)
+module headBlock 
 (
   input clk,
   input reset,
@@ -11,6 +8,8 @@ module headBlock #(
   input [10:0] pow,
   input [9:0] iVGA_X,
   input [8:0] iVGA_Y,
+  input [9:0] topLeft_X,
+  input [8:0] topLeft_Y,
   
   output reg [5:0] oLayer,
   output reg oVal,
@@ -21,13 +20,13 @@ module headBlock #(
 
 localparam block_width = 90;
 localparam block_height = 114;
-wire  [23:0] q;        // data out of ROM
+wire [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;
 wire [9:0]  matrix_Y;
 
-assign matrix_X = iVGA_X - topLeftX;
-assign matrix_Y = iVGA_Y - topLeftY;
+assign matrix_X = iVGA_X - topLeft_X;
+assign matrix_Y = iVGA_Y - topLeft_Y;
 
 headROM (
   .address(addr),
@@ -43,13 +42,11 @@ always @(posedge clk) begin
     G <= 8'b0;
     B <= 8'b0;
     oVal <= 1'b0;
-	topLeftX <= x_init;
-	topLeftY <= y_init;
 
   end
   else if (enable) begin
-    if ( (iVGA_X > topLeftX) && (iVGA_X < (topLeftX + block_width)) ) begin
-      if ( (iVGA_Y > topLeftY) && (iVGA_Y < (topLeftY + block_height)) ) begin
+    if ( (iVGA_X > topLeft_X) && (iVGA_X < (topLeft_X + block_width)) ) begin
+      if ( (iVGA_Y > topLeft_Y) && (iVGA_Y < (topLeft_Y + block_height)) ) begin
         addr <= ((block_width*matrix_Y)+matrix_X);
         if (q > 24'b0) begin
           oVal <= 1'b1;
@@ -68,73 +65,7 @@ always @(posedge clk) begin
     else begin // if not in the box, don't return valid
       oVal <= 1'b0;
     end
-  end // end reset case
-  
-  if (motion_en) begin
-    if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0)) begin
-      if (frame_counter < 10'd60) begin
-        frame_counter <= frame_counter + 10'd1;
-      end
-      else begin
-        frame_counter <= 10'd0;
-        stepDir <= ~stepDir;
-      end
-    end
-    
-	 if ((prev_frame_count != frame_counter) && frame_counter[3]) begin
-	  prev_frame_count <= frame_counter;
-	  if (stepDir) begin
-		 topLeftX <= topLeftX + 10'd1;
-		 topLeftY <= topLeftY - 10'd1; 
-	  end 
-	  else begin
-		 topLeftX <= topLeftX - 10'd1;
-		 topLeftY <= topLeftY + 10'd1; 
-	  end     
-    end // end else if (prev_frame_count...
-  end // end motion
-  
+  end // end reset case  
 end // end always block
-
-
-// motion work
-reg [9:0] frame_counter;
-reg [9:0] prev_frame_count;
-reg [9:0] topLeftX;
-reg [8:0] topLeftY;
-reg [2:0] stepDiv;
-reg       stepDir; // 0 = down, 1 = up
-
-//always @(posedge clk) begin
-//  if (reset) begin
-//	 topLeftX <= x_init;
-//    topLeftY <= y_init;
-//	 end
-//  else if (motion_en) begin
-//    if ((iVGA_Y == 0) && (iVGA_X == 0)) begin
-//      if (frame_counter < 10'd60) begin
-//        frame_counter <= frame_counter + 1;
-//      end
-//      else begin
-//        frame_counter <= 10'd0;
-//        stepDir <= 1 ^ stepDir;
-//      end
-//    end
-//    else if (prev_frame_count != frame_counter) begin
-//      prev_frame_count <= frame_counter;
-//        stepDiv <= stepDiv + 1;   
-//      if (stepDiv == 3'd7) begin
-//        if (stepDir) begin
-//          topLeftX <= topLeftX + 1;
-//          topLeftY <= topLeftY - 1; 
-//        end 
-//        else begin
-//          topLeftX <= topLeftX - 1;
-//          topLeftY <= topLeftY + 1; 
-//        end     
-//      end
-//    end
-//  end
-//end
 
 endmodule
