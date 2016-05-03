@@ -47,7 +47,7 @@ always @(posedge clk) begin
     frame_counter <= 32'd0;
     frame_clk <= 1'b0;
   end
-  else if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0)) begin
+  else if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0) && ~frame_clk) begin
     frame_clk <= 1'b1;
     frame_counter <= frame_counter + 32'd1;
   end
@@ -62,18 +62,18 @@ reg [31:0] counter_snapshot;
 reg [9:0]  steps_counter;
 always @(posedge frame_clk) begin
    if (reset) begin
-     counter_snapshot <= frame_counter;
+    counter_snapshot <= frame_counter;
     bruce_x <= bruce_x_init;
     bruce_y <= bruce_y_init;
    end
-   else if ((frame_counter - counter_snapshot) >= 32'd15) begin
+   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd60)) begin
      counter_snapshot <= frame_counter;
      if (steps_counter <= 10'd30) begin
-      steps_counter <= steps_counter + 10'd1;
+       steps_counter <= steps_counter + 10'd1;
        bruce_x <= bruce_x + 10'd1;
        bruce_y <= bruce_y + 10'd1;
      end
-     else if (steps_counter <= 10'd60) begin
+     else if (steps_counter <= 10'd61) begin
        steps_counter <= steps_counter + 10'd1;
        bruce_x <= bruce_x - 10'd1;
        bruce_y <= bruce_y - 10'd1;
