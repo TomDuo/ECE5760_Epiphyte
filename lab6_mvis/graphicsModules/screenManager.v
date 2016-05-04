@@ -84,12 +84,38 @@ generate
 	end	
 endgenerate
 
+wire [15:0] tfAud;
+wire [10:0] tfPow;
+wire [31:0] aud_tics_per_beat;
+
+autoGen_BPF #(0) beatFilter (
+			.clk(clk),
+			.aud_clk(aud_clk),
+			.reset(reset),
+			.enable(1'b1),
+
+			.iAud_L(iAudL),
+			.iAud_R(iAudR),
+
+			.oAud_L(tfAud),
+			.oAud_R(),
+			.power(tfPow)
+		);
+
+tempoFinder tf0 (
+	.aud_clk(aud_clk),
+	.reset(reset),
+	.iPow(tfPow),
+
+	.aud_tics_per_beat(aud_tics_per_beat)
+	);
+
 motionManager #(240,280) mm0 (
   .clk(clk),
   .aud_clk(aud_clk),
   .reset(reset),
 
-  .aud_clk_tics_per_beat({SW[17:7],5'd0}),
+  .aud_clk_tics_per_beat(aud_tics_per_beat),
   .beatHit(~KEY2),
   .dancer_en(4'b1000), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),

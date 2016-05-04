@@ -173,13 +173,13 @@ always @ (posedge aud_clk) begin
     // I think these top two need to be blocking
     x  = {{3{iAud_L[15]}},iAud_L,8'd0}; // iAud_L is [-1,1]. Map to 4_16 by extending first bit
     y  = mul_b1_x+z1;
-
     // the rest are nonblocking
     z1 <= mul_b2_x+z2-mul_a2_y;
     z2 <= mul_b3_x+z3-mul_a3_y;
     z3 <= mul_b4_x+z4-mul_a4_y;
     z4 <= mul_b5_x+z5-mul_a5_y;
     z4 <= mul_b5_x-mul_a5_y;
+    oAud_L <= y[24:9];
     if (y[26]) begin
       mag_y <= (~y)-27'd1;
     end

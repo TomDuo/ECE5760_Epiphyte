@@ -54,7 +54,7 @@ always @(posedge clk) begin
     frame_clk <= 1'b1;
     frame_counter <= frame_counter + 32'd1;
   end
-  else begin
+  else if ((iVGA_Y != 9'd0) || (iVGA_X != 10'd0)) begin
     frame_clk <= 1'b0;
   end
 end
