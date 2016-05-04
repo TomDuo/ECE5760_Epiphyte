@@ -362,6 +362,7 @@ screenManager sm0(
 	.clk(VGA_CTRL_CLK),
 	.aud_clk(AUD_DACLRCK),
 	.reset(~KEY[0]),
+	.KEY2(KEY[2]),
 	.iVGA_X(VGA_X),
 	.iVGA_Y(VGA_Y),
 	.iAudL(aud_L),

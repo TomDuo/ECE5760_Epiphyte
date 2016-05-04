@@ -14,9 +14,10 @@ module motionManager #(
   parameter d2_y_init    = 280
   )(
   input clk,
+  input aud_clk,
   input reset,
 
-  input [7:0] BPM,
+  input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
   input       beatHit,
   input [3:0] dancer_en, // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   input [2:0] motionType,
@@ -40,7 +41,9 @@ module motionManager #(
 
 //----------------------- FRAME COUNTER ---------------------------------------
 reg [31:0] frame_counter;
-reg       frame_clk;
+reg        frame_clk;
+reg [15:0] vga_tics;
+reg        direction;
 
 always @(posedge clk) begin
   if (reset) begin
@@ -57,6 +60,30 @@ always @(posedge clk) begin
 end
 //----------------------- END FRAME COUNTER -----------------------------------
 
+//----------------------- BPM DIRECTION ---------------------------------------
+always @(posedge aud_clk) begin
+  if(reset) begin
+    vga_tics <= 32'd0;
+  end
+  else if (beatHit) begin
+    vga_tics <= 32'd0;
+  end
+  else if (vga_tics > aud_clk_tics_per_beat) begin
+    vga_tics <= 32'd0;
+  end
+  else begin
+    vga_tics <= vga_tics + 32'd1;
+  end
+
+  if (vga_tics <= (aud_clk_tics_per_beat>>1)) begin
+    direction <= 1'b1;
+  end
+  else begin
+    direction <= 1'b0;
+  end
+end
+//----------------------- END BPM DIRECTION -----------------------------------
+
 //----------------------- BRUCE MOTION MANAGEMENT -----------------------------
 reg [31:0] counter_snapshot;
 reg [9:0]  steps_counter;
@@ -66,14 +93,14 @@ always @(posedge frame_clk) begin
     bruce_x <= bruce_x_init;
     bruce_y <= bruce_y_init;
    end
-   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd60)) begin
+   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin
      counter_snapshot <= frame_counter;
-     if (steps_counter <= 10'd30) begin
+     if (direction) begin
        steps_counter <= steps_counter + 10'd1;
        bruce_x <= bruce_x + 10'd1;
        bruce_y <= bruce_y + 10'd1;
      end
-     else if (steps_counter <= 10'd61) begin
+     else if (~direction) begin
        steps_counter <= steps_counter + 10'd1;
        bruce_x <= bruce_x - 10'd1;
        bruce_y <= bruce_y - 10'd1;

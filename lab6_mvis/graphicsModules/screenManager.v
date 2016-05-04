@@ -2,6 +2,7 @@ module screenManager (
 	input clk,
 	input aud_clk,
 	input reset,
+	input KEY2,
 
 	input [9:0]  iVGA_X,
 	input [8:0]  iVGA_Y,
@@ -83,12 +84,13 @@ generate
 	end	
 endgenerate
 
-motionManager mm0 (
+motionManager #(240,280) mm0 (
   .clk(clk),
+  .aud_clk(aud_clk),
   .reset(reset),
 
-  .BPM(),
-  .beatHit(),
+  .aud_clk_tics_per_beat({SW[17:7],5'd0}),
+  .beatHit(~KEY2),
   .dancer_en(4'b1000), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
@@ -117,7 +119,7 @@ headBlock  hb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(SW[7]),
+  .enable(SW[6]),
   .motion_en(SW[6]),
   
   .pow(),
@@ -137,8 +139,8 @@ bodyBlock #(bruce_X,bruce_Y+90)  bbb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(SW[8]),
-  .motion_en(SW[6]),
+  .enable(),
+  .motion_en(),
   
   .pow(),
   .iVGA_X(iVGA_X),
