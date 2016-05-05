@@ -14,7 +14,7 @@ module drawBruce (
 
   output reg [7:0] oR,
   output reg [7:0] oG,
-  output reg [7:0] oB,
+  output reg [7:0] oB
   );
 
 
@@ -30,7 +30,7 @@ headBlock  hb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -38,8 +38,8 @@ headBlock  hb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX),
-  .init_topLeftY(init_topLeftY),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY),
   
   .oLayer(),
   .oVal(layer[4]),
@@ -48,11 +48,11 @@ headBlock  hb0
   .B(B[4])
 );
 
-bodyBlock #(bruce_X,bruce_Y+90)  bbb0
+bodyBlock  bbb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -60,8 +60,8 @@ bodyBlock #(bruce_X,bruce_Y+90)  bbb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX),
-  .init_topLeftY(init_topLeftY+9'd90),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY+9'd90),
   
   .oLayer(),
   .oVal(layer[3]),
@@ -73,7 +73,7 @@ arm_LBlock alb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -81,8 +81,8 @@ arm_LBlock alb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX-10'd20),
-  .init_topLeftY(init_topLeftY+9'd50),
+  .init_X(init_topLeftX-10'd20),
+  .init_Y(init_topLeftY+9'd50),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -95,7 +95,7 @@ arm_RBlock arb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -103,8 +103,8 @@ arm_RBlock arb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX+10'd95),
-  .init_topLeftY(init_topLeftY+9'd75),
+  .init_X(init_topLeftX+10'd95),
+  .init_Y(init_topLeftY+9'd75),
   
   .oLayer(),
   .oVal(layer[1]),
