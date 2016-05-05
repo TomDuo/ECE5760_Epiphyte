@@ -1104,6 +1104,7 @@ set_location_assignment PIN_G24 -to HSMC_CLKOUT_N1
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VERILOG_FILE Pants_ROM.v
 set_global_assignment -name VERILOG_FILE graphicsModules/drawBruce.v
 set_global_assignment -name VERILOG_FILE tempoFinder.v
 set_global_assignment -name VERILOG_FILE headROM.v
@@ -1153,4 +1154,5 @@ set_global_assignment -name VERILOG_FILE graphicsModules/bodyBlock.v
 set_global_assignment -name QIP_FILE bodyROM.qip
 set_global_assignment -name QIP_FILE Arm_LROM.qip
 set_global_assignment -name QIP_FILE Arm_RROM.qip
+set_global_assignment -name VERILOG_FILE graphicsModules/tux_pantsBlock.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -11,7 +11,8 @@ module drawBruce (
   input [8:0] current_topLeft_Y,
   input [9:0] init_topLeftX,
   input [8:0] init_topLeftY,
-
+	
+  output reg oVal,
   output reg [7:0] oR,
   output reg [7:0] oG,
   output reg [7:0] oB
@@ -64,10 +65,10 @@ bodyBlock  bbb0
   .init_Y(init_topLeftY+9'd90),
   
   .oLayer(),
-  .oVal(layer[3]),
-  .R(R[3]),
-  .G(G[3]),
-  .B(B[3])
+  .oVal(layer[1]),
+  .R(R[1]),
+  .G(G[1]),
+  .B(B[1])
 );
 arm_LBlock alb0
 (
@@ -82,7 +83,7 @@ arm_LBlock alb0
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
   .init_X(init_topLeftX-10'd20),
-  .init_Y(init_topLeftY+9'd50),
+  .init_Y(init_topLeftY+9'd80),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -107,16 +108,43 @@ arm_RBlock arb0
   .init_Y(init_topLeftY+9'd75),
   
   .oLayer(),
-  .oVal(layer[1]),
-  .R(R[1]),
-  .G(G[1]),
-  .B(B[1])
+  .oVal(layer[3]),
+  .R(R[3]),
+  .G(G[3]),
+  .B(B[3])
 );
 
+tux_pantsBlock  tpb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(enable),
+  .motion_en(motion_en),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  .topLeft_X(current_topLeft_X),
+  .topLeft_Y(current_topLeft_Y),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY+9'd200),
+  
+  .oLayer(),
+  .oVal(layer[0]),
+  .R(R[0]),
+  .G(G[0]),
+  .B(B[0])
+);
 
 msbOneHot msb0 (layer,layerOH);
 
 always @(posedge clk) begin
+	if (layerOH>0) begin
+		oVal <= 1'b1;
+	end
+	else begin
+		oVal <= 1'b0;
+	end
   case(layerOH)
   (1<<4): begin
     oR <= R[4];

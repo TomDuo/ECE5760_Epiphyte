@@ -148,22 +148,22 @@ wire [9:0] bruceX;
 wire [8:0] bruceY;
 
 localparam bruce_X = 240;
-localparam bruce_Y = 280;
+localparam bruce_Y = 80;
 
 drawBruce db0 (
    .clk(clk),
-   .reset(clk),
-   .enable(1'b1),
+   .reset(reset),
+   .enable(SW[6]),
    .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
    .iVGA_Y(iVGA_Y),
 
-    .current_topLeft_X(10'd240),
-    .current_topLeft_Y(9'd280),
+    .current_topLeft_X(bruceX),
+    .current_topLeft_Y(bruceY),
     .init_topLeftX(10'd240),
-    .init_topLeftY(9'd280),
-
+    .init_topLeftY(9'd80),
+	 .oVal(layer[40]),
     .oR(R[40]),
     .oG(G[40]),
     .oB(B[40]),
