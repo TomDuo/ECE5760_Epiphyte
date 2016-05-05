@@ -2,8 +2,10 @@ clear;
 [x, fs] = audioread('transformers_cut.wav');
 
 
-lb = [10 100 500 1000 5000 10000];
-ub = [100 500 1000 5000 10000 20000];
+%lb = [10 40 160 640 5000 10000];
+%ub = [100 500 1000 5000 10000 20000];
+lb = 10.*3.^[0:6];
+ub= 10.*3.^[1:7];
 %lb = lb*2*pi;
 %ub = ub*2*pi;
 MODE=0;
@@ -12,10 +14,12 @@ out= zeros(length(lb),length(x));
 abs_out = zeros(length(lb),length(x));
 lpf_abs_out = zeros(length(lb),length(x));
 env_out = zeros(length(lb),length(x));
+lpf_ks = [];
 for i = 1:length(lb)
   [b,a] = butter(2,[lb(i)/fs, ub(i)/fs]);
-  [lpf_z, lpf_p, lpf_k] = butter(2,10/fs);
-  %lpf_k = lpf_k*(2^i);
+  [lpf_z, lpf_p, lpf_k] = butter(2,lb(1)/fs);
+  lpf_k = lpf_k*3*(i+1);
+  lpf_ks = [lpf_ks lpf_k];
   [lpf_b,lpf_a] = zp2tf(lpf_z,lpf_p,lpf_k);
   out(i,:) = filter(b,a,x);
   abs_out(i,:) = abs(out(i,:));
@@ -28,16 +32,22 @@ for i = 1:length(lb)
   ylim([-1 1]);
   elseif MODE==0
       clf;
-      title(sprintf('fFilter (%i,%i)',lb(i),ub(i)));
 
-      subplot(4,1,1);
+      %subplot(4,1,1);
+                  subplot(2,1,1);
+
+
       plot(t,out(i,:));
-      subplot(4,1,2);
-      plot(t,abs_out(i,:));
-      subplot(4,1,3);
+            title(sprintf('fFilter (%i,%i)',lb(i),ub(i)));
+
+      %subplot(4,1,2);
+      %plot(t,abs_out(i,:));
+      %subplot(4,1,3);
+            subplot(2,1,2);
+
       plot(t,lpf_abs_out(i,:));
-      subplot(4,1,4);
-      plot(t,env_out(i,:));
+      %subplot(4,1,4);
+      %plot(t,env_out(i,:));
       pause;
       
   end
