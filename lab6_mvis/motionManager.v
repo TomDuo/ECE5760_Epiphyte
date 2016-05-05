@@ -91,20 +91,20 @@ reg [9:0]  steps_counter;
 always @(posedge frame_clk) begin
    if (reset) begin
     counter_snapshot <= frame_counter;
-    bruce_x <= bruce_x_init;
-    bruce_y <= bruce_y_init;
+    obruce_x <= ibruce_x_init;
+    obruce_y <= ibruce_y_init;
    end
    else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin
      counter_snapshot <= frame_counter;
      if (direction) begin
        steps_counter <= steps_counter + 10'd1;
-       bruce_x <= bruce_x + 10'd1;
-       bruce_y <= bruce_y + 10'd1;
+       obruce_x <= obruce_x + 10'd1;
+       obruce_y <= obruce_y + 10'd1;
      end
      else if (~direction) begin
        steps_counter <= steps_counter + 10'd1;
-       bruce_x <= bruce_x - 10'd1;
-       bruce_y <= bruce_y - 10'd1;
+       obruce_x <= obruce_x - 10'd1;
+       obruce_y <= obruce_y - 10'd1;
      end
      else begin
        steps_counter <= 10'd0;
@@ -120,21 +120,21 @@ reg [9:0]  steps_counterd0;
 always @(posedge frame_clk) begin
    if (reset) begin
      counter_snapshotd0 <= frame_counter;
-    d0_x    <= d0_x_init;
-    d0_y    <= d0_y_init;
+    od0_x    <= id0_x_init;
+    od0_y    <= id0_y_init;
    end
    
    else if ((frame_counter - counter_snapshotd0) >= 32'd15) begin
      counter_snapshotd0 <= frame_counter;
      if (steps_counterd0 <= 10'd30) begin
       steps_counterd0 <= steps_counterd0 + 10'd1;
-       d0_x <= d0_x + 10'd1;
-       d0_y <= d0_y + 10'd1;
+       od0_x <= od0_x + 10'd1;
+       od0_y <= od0_y + 10'd1;
      end
      else if (steps_counterd0 <= 10'd60) begin
        steps_counterd0 <= steps_counterd0 + 10'd1;
-       d0_x <= d0_x - 10'd1;
-       d0_y <= d0_y - 10'd1;
+       od0_x <= od0_x - 10'd1;
+       od0_y <= od0_y - 10'd1;
      end
      else begin
        steps_counterd0 <= 10'd0;
@@ -150,21 +150,21 @@ reg [9:0]  steps_counterd1;
 always @(posedge frame_clk) begin
    if (reset) begin
      counter_snapshotd1 <= frame_counter;
-    d1_x    <= d1_x_init;
-    d1_y    <= d1_y_init;
+    od1_x    <= id1_x_init;
+    od1_y    <= id1_y_init;
    end
    
    else if ((frame_counter - counter_snapshotd1) >= 32'd15) begin
      counter_snapshotd1 <= frame_counter;
      if (steps_counterd1 <= 10'd30) begin
       steps_counterd1 <= steps_counterd1 + 10'd1;
-       d1_x <= d1_x + 10'd1;
-       d1_y <= d1_y + 10'd1;
+       od1_x <= od1_x + 10'd1;
+       od1_y <= od1_y + 10'd1;
      end
      else if (steps_counterd1 <= 10'd60) begin
        steps_counterd1 <= steps_counterd1 + 10'd1;
-       d1_x <= d1_x - 10'd1;
-       d1_y <= d1_y - 10'd1;
+       od1_x <= od1_x - 10'd1;
+       od1_y <= od1_y - 10'd1;
      end
      else begin
        steps_counterd1 <= 10'd0;
@@ -180,21 +180,21 @@ reg [9:0]  steps_counterd2;
 always @(posedge frame_clk) begin
    if (reset) begin
      counter_snapshotd2 <= frame_counter;
-    d2_x    <= d2_x_init;
-    d2_y    <= d2_y_init;
+    od2_x    <= id2_x_init;
+    od2_y    <= id2_y_init;
    end
    
    else if ((frame_counter - counter_snapshotd2) >= 32'd15) begin
      counter_snapshotd2 <= frame_counter;
      if (steps_counterd2 <= 10'd30) begin
       steps_counterd2 <= steps_counterd2 + 10'd1;
-       d2_x <= d2_x + 10'd1;
-       d2_y <= d2_y + 10'd1;
+       od2_x <= od2_x + 10'd1;
+       od2_y <= od2_y + 10'd1;
      end
      else if (steps_counterd2 <= 10'd60) begin
        steps_counterd2 <= steps_counterd2 + 10'd1;
-       d2_x <= d2_x - 10'd1;
-       d2_y <= d2_y - 10'd1;
+       od2_x <= od2_x - 10'd1;
+       od2_y <= od2_y - 10'd1;
      end
      else begin
        steps_counterd2 <= 10'd0;

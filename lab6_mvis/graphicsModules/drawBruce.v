@@ -11,10 +11,11 @@ module drawBruce (
   input [8:0] current_topLeft_Y,
   input [9:0] init_topLeftX,
   input [8:0] init_topLeftY,
-
+	
+  output reg oVal,
   output reg [7:0] oR,
   output reg [7:0] oG,
-  output reg [7:0] oB,
+  output reg [7:0] oB
   );
 
 
@@ -30,7 +31,7 @@ headBlock  hb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -38,8 +39,8 @@ headBlock  hb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX),
-  .init_topLeftY(init_topLeftY),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY),
   
   .oLayer(),
   .oVal(layer[4]),
@@ -48,11 +49,11 @@ headBlock  hb0
   .B(B[4])
 );
 
-bodyBlock #(bruce_X,bruce_Y+90)  bbb0
+bodyBlock  bbb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -60,20 +61,20 @@ bodyBlock #(bruce_X,bruce_Y+90)  bbb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX),
-  .init_topLeftY(init_topLeftY+9'd90),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY+9'd90),
   
   .oLayer(),
-  .oVal(layer[3]),
-  .R(R[3]),
-  .G(G[3]),
-  .B(B[3])
+  .oVal(layer[1]),
+  .R(R[1]),
+  .G(G[1]),
+  .B(B[1])
 );
 arm_LBlock alb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -81,8 +82,8 @@ arm_LBlock alb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX-10'd20),
-  .init_topLeftY(init_topLeftY+9'd50),
+  .init_X(init_topLeftX-10'd20),
+  .init_Y(init_topLeftY+9'd80),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -95,7 +96,7 @@ arm_RBlock arb0
 (
   .clk(clk),
   .reset(reset),
-  .enable(Snable),
+  .enable(enable),
   .motion_en(motion_en),
   
   .pow(),
@@ -103,20 +104,47 @@ arm_RBlock arb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_topLeftX(init_topLeftX+10'd95),
-  .init_topLeftY(init_topLeftY+9'd75),
+  .init_X(init_topLeftX+10'd95),
+  .init_Y(init_topLeftY+9'd75),
   
   .oLayer(),
-  .oVal(layer[1]),
-  .R(R[1]),
-  .G(G[1]),
-  .B(B[1])
+  .oVal(layer[3]),
+  .R(R[3]),
+  .G(G[3]),
+  .B(B[3])
 );
 
+tux_pantsBlock  tpb0
+(
+  .clk(clk),
+  .reset(reset),
+  .enable(enable),
+  .motion_en(motion_en),
+  
+  .pow(),
+  .iVGA_X(iVGA_X),
+  .iVGA_Y(iVGA_Y),
+  .topLeft_X(current_topLeft_X),
+  .topLeft_Y(current_topLeft_Y),
+  .init_X(init_topLeftX),
+  .init_Y(init_topLeftY+9'd160),
+  
+  .oLayer(),
+  .oVal(layer[0]),
+  .R(R[0]),
+  .G(G[0]),
+  .B(B[0])
+);
 
 msbOneHot msb0 (layer,layerOH);
 
 always @(posedge clk) begin
+	if (layerOH>0) begin
+		oVal <= 1'b1;
+	end
+	else begin
+		oVal <= 1'b0;
+	end
   case(layerOH)
   (1<<4): begin
     oR <= R[4];

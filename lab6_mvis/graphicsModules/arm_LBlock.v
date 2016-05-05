@@ -31,7 +31,7 @@ wire [9:0]  matrix_Y;
 assign matrix_X = iVGA_X - init_X;
 assign matrix_Y = iVGA_Y - init_Y;
 
-Arm_LROM (
+Arm_LROM alrom0(
   .address(addr),
   .clock(clk),
   .q(q)

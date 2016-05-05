@@ -110,7 +110,7 @@ tempoFinder tf0 (
 	.aud_tics_per_beat(aud_tics_per_beat)
 	);
 
-motionManager #(240,280) mm0 (
+motionManager  mm0 (
   .clk(clk),
   .aud_clk(aud_clk),
   .reset(reset),
@@ -148,25 +148,25 @@ wire [9:0] bruceX;
 wire [8:0] bruceY;
 
 localparam bruce_X = 240;
-localparam bruce_Y = 280;
+localparam bruce_Y = 80;
 
-drawBruce (
+drawBruce db0 (
    .clk(clk),
-   .reset(clk),
+   .reset(reset),
    .enable(SW[6]),
-   .motion_en(SW[6]),
+   .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
    .iVGA_Y(iVGA_Y),
 
     .current_topLeft_X(bruceX),
     .current_topLeft_Y(bruceY),
-    .init_topLeftX(bruce_X),
-    .init_topLeftY(bruce_Y),
-
+    .init_topLeftX(10'd240),
+    .init_topLeftY(9'd80),
+	 .oVal(layer[40]),
     .oR(R[40]),
-    .oG(R[40]),
-    .oB(R[40]),
+    .oG(G[40]),
+    .oB(B[40]),
   );
 
 msbOneHot msb0 (layer,layerOH);

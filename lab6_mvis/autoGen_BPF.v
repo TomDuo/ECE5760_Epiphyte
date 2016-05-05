@@ -178,7 +178,7 @@ always @ (posedge aud_clk) begin
     z2 <= mul_b3_x+z3-mul_a3_y;
     z3 <= mul_b4_x+z4-mul_a4_y;
     z4 <= mul_b5_x+z5-mul_a5_y;
-    z4 <= mul_b5_x-mul_a5_y;
+    z5 <= mul_b5_x-mul_a5_y;
     oAud_L <= y[24:9];
     if (y[26]) begin
       mag_y <= (~y)-27'd1;

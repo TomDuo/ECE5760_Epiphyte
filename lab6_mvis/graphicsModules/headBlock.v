@@ -30,7 +30,7 @@ wire [9:0]  matrix_Y;
 assign matrix_X = iVGA_X - topLeft_X;
 assign matrix_Y = iVGA_Y - topLeft_Y;
 
-headROM (
+headROM hr0(
   .address(addr),
   .clock(clk),
   .q(q)

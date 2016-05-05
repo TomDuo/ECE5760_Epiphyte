@@ -1,4 +1,4 @@
-module bodyBlock 
+module tux_pantsBlock 
 (
   input clk,
   input reset,
@@ -20,8 +20,9 @@ module bodyBlock
   output reg [7:0] B
 );
 
+
 localparam block_width = 114;
-localparam block_height = 90;
+localparam block_height = 142;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;
@@ -29,7 +30,8 @@ wire [9:0]  matrix_Y;
 
 assign matrix_X = iVGA_X - init_X;
 assign matrix_Y = iVGA_Y - init_Y;
-bodyROM brom0(
+
+Pants_ROM prom0(
   .address(addr),
   .clock(clk),
   .q(q)
@@ -69,45 +71,5 @@ always @(posedge clk) begin
     end
   end // end reset case
 end
-
-// motion work
-//reg [9:0] frame_counter;
-//reg [9:0] prev_frame_count;
-//reg [9:0] init_X;
-//reg [8:0] init_Y;
-//reg [2:0] stepDiv;
-//reg       stepDir; // 0 = down, 1 = up
-
-//always @(posedge clk) begin
-//  if (reset) begin
-//	 init_X <= x_init;
-//    init_Y <= y_init;
-//	 end
-//  else if (motion_en) begin
-//    if ((iVGA_Y == 0) && (iVGA_X == 0)) begin
-//      if (frame_counter < 10'd60) begin
-//        frame_counter <= frame_counter + 1;
-//      end
-//      else begin
-//        frame_counter <= 10'd0;
-//        stepDir <= 1 ^ stepDir;
-//      end
-//    end
-//    else if (prev_frame_count != frame_counter) begin
-//      prev_frame_count <= frame_counter;
-//        stepDiv <= stepDiv + 1;   
-//      if (stepDiv == 3'd7) begin
-//        if (stepDir) begin
-//          init_X <= init_X + 1;
-//          init_Y <= init_Y - 1; 
-//        end 
-//        else begin
-//          init_X <= init_X - 1;
-//          init_Y <= init_Y + 1; 
-//        end     
-//      end
-//    end
-//  end
-//end
 
 endmodule
