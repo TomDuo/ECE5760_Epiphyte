@@ -1,7 +1,4 @@
-module arm_LBlock #(
-  parameter topLeftX=280,//x_init = 280,
-  parameter topLeftY=240//y_init = 240
-)
+module arm_LBlock 
 (
   input clk,
   input reset,
@@ -11,6 +8,10 @@ module arm_LBlock #(
   input [10:0] pow,
   input [9:0] iVGA_X,
   input [8:0] iVGA_Y,
+  input [9:0] topLeft_X,
+  input [8:0] topLeft_Y,
+  input [9:0] init_X,
+  input [8:0] init_Y,
   
   output reg [5:0] oLayer,
   output reg oVal,
@@ -27,8 +28,8 @@ reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;
 wire [9:0]  matrix_Y;
 
-assign matrix_X = iVGA_X - topLeftX;
-assign matrix_Y = iVGA_Y - topLeftY;
+assign matrix_X = iVGA_X - init_X;
+assign matrix_Y = iVGA_Y - init_Y;
 
 Arm_LROM (
   .address(addr),
@@ -48,8 +49,8 @@ always @(posedge clk) begin
 
   end
   else if (enable) begin
-    if ( (iVGA_X > topLeftX) && (iVGA_X < (topLeftX + block_width)) ) begin
-      if ( (iVGA_Y > topLeftY) && (iVGA_Y < (topLeftY + block_height)) ) begin
+    if ( (iVGA_X > init_X) && (iVGA_X < (init_X + block_width)) ) begin
+      if ( (iVGA_Y > init_Y) && (iVGA_Y < (init_Y + block_height)) ) begin
         addr <= ((block_width*matrix_Y)+matrix_X);
         if (q > 24'b0) begin
           oVal <= 1'b1;
@@ -74,15 +75,15 @@ end
 // motion work
 //reg [9:0] frame_counter;
 //reg [9:0] prev_frame_count;
-//reg [9:0] topLeftX;
-//reg [8:0] topLeftY;
+//reg [9:0] init_X;
+//reg [8:0] init_Y;
 //reg [2:0] stepDiv;
 //reg       stepDir; // 0 = down, 1 = up
 
 //always @(posedge clk) begin
 //  if (reset) begin
-//	 topLeftX <= x_init;
-//    topLeftY <= y_init;
+//	 init_X <= x_init;
+//    init_Y <= y_init;
 //	 end
 //  else if (motion_en) begin
 //    if ((iVGA_Y == 0) && (iVGA_X == 0)) begin
@@ -99,12 +100,12 @@ end
 //        stepDiv <= stepDiv + 1;   
 //      if (stepDiv == 3'd7) begin
 //        if (stepDir) begin
-//          topLeftX <= topLeftX + 1;
-//          topLeftY <= topLeftY - 1; 
+//          init_X <= init_X + 1;
+//          init_Y <= init_Y - 1; 
 //        end 
 //        else begin
-//          topLeftX <= topLeftX - 1;
-//          topLeftY <= topLeftY + 1; 
+//          init_X <= init_X - 1;
+//          init_Y <= init_Y + 1; 
 //        end     
 //      end
 //    end

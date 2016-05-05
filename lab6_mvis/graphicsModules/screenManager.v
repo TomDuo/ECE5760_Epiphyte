@@ -123,17 +123,25 @@ motionManager #(240,280) mm0 (
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
 
-  .bruce_x(bruceX),
-  .bruce_y(bruceY),
+  .ibruce_x_init(bruce_X),
+  .ibruce_y_init(bruce_Y),
+  .obruce_x(bruceX),
+  .obruce_y(bruceY),
 
-  .d0_x(),
-  .d0_y(),
+  .id0_x_init(),
+  .id0_y_init(),
+  .od0_x(),
+  .od0_y(),
 
-  .d1_x(),
-  .d1_y(),
+  .id1_x_init(),
+  .id1_y_init(),
+  .od1_x(),
+  .od1_y(),
 
-  .d2_x(),
-  .d2_y(),
+  .id2_x_init(),
+  .id2_y_init(),
+  .od2_x(),
+  .od2_y(),
 );
 
 wire [9:0] bruceX;
@@ -141,77 +149,25 @@ wire [8:0] bruceY;
 
 localparam bruce_X = 240;
 localparam bruce_Y = 280;
-headBlock  hb0
-(
-  .clk(clk),
-  .reset(reset),
-  .enable(SW[6]),
-  .motion_en(SW[6]),
-  
-  .pow(),
-  .iVGA_X(iVGA_X),
-  .iVGA_Y(iVGA_Y),
-  .topLeft_X(bruceX),
-  .topLeft_Y(bruceY),
-  
-  .oLayer(),
-  .oVal(layer[40]),
-  .R(R[40]),
-  .G(G[40]),
-  .B(B[40])
-);
 
-bodyBlock #(bruce_X,bruce_Y+90)  bbb0
-(
-  .clk(clk),
-  .reset(reset),
-  .enable(),
-  .motion_en(),
-  
-  .pow(),
-  .iVGA_X(iVGA_X),
-  .iVGA_Y(iVGA_Y),
-  
-  .oLayer(),
-  .oVal(layer[37]),
-  .R(R[37]),
-  .G(G[37]),
-  .B(B[37])
-);
-arm_LBlock #(bruce_X,bruce_Y+50) alb0
-(
-  .clk(clk),
-  .reset(reset),
-  .enable(SW[9]),
-  .motion_en(SW[6]),
-  
-  .pow(),
-  .iVGA_X(iVGA_X),
-  .iVGA_Y(iVGA_Y),
-  
-  .oLayer(),
-  .oVal(layer[38]),
-  .R(R[38]),
-  .G(G[38]),
-  .B(B[38])
-);
-arm_RBlock #(bruce_X+95,bruce_Y+75) arb0
-(
-  .clk(clk),
-  .reset(reset),
-  .enable(SW[10]),
-  .motion_en(SW[6]),
-  
-  .pow(),
-  .iVGA_X(iVGA_X),
-  .iVGA_Y(iVGA_Y),
-  
-  .oLayer(),
-  .oVal(layer[39]),
-  .R(R[39]),
-  .G(G[39]),
-  .B(B[39])
-);
+drawBruce (
+   .clk(clk),
+   .reset(clk),
+   .enable(SW[6]),
+   .motion_en(SW[6]),
+
+   .iVGA_X(iVGA_X),
+   .iVGA_Y(iVGA_Y),
+
+    .current_topLeft_X(bruceX),
+    .current_topLeft_Y(bruceY),
+    .init_topLeftX(bruce_X),
+    .init_topLeftY(bruce_Y),
+
+    .oR(R[40]),
+    .oG(R[40]),
+    .oB(R[40]),
+  );
 
 msbOneHot msb0 (layer,layerOH);
 
