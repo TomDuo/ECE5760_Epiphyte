@@ -3,16 +3,8 @@
 //   - enable dancers with the switches input
 //   - select type of motion with switches input
 //   - output parameters for the top left x and y for given dancers
-module motionManager #(
-  parameter bruce_x_init = 240,
-  parameter bruce_y_init = 280,
-  parameter d0_x_init    = 40,
-  parameter d0_y_init    = 280,
-  parameter d1_x_init    = 140,
-  parameter d1_y_init    = 280,
-  parameter d2_x_init    = 440,
-  parameter d2_y_init    = 280
-  )(
+module motionManager 
+(
   input clk,
   input aud_clk,
   input reset,
@@ -25,17 +17,26 @@ module motionManager #(
   input [9:0] iVGA_X,
   input [8:0] iVGA_Y,
 
-  output reg [9:0] bruce_x,
-  output reg [8:0] bruce_y,
+  input [9:0] ibruce_x_init,
+  input [8:0] ibruce_y_init,
+  input [9:0] id0_x_init,
+  input [8:0] id0_y_init,
+  input [9:0] id1_x_init,
+  input [8:0] id1_y_init,
+  input [9:0] id2_x_init,
+  input [8:0] id2_y_init,
 
-  output reg [9:0] d0_x,
-  output reg [8:0] d0_y,
+  output reg [9:0] obruce_x,
+  output reg [8:0] obruce_y,
 
-  output reg [9:0] d1_x,
-  output reg [8:0] d1_y,
+  output reg [9:0] od0_x,
+  output reg [8:0] od0_y,
 
-  output reg [9:0] d2_x,
-  output reg [8:0] d2_y
+  output reg [9:0] od1_x,
+  output reg [8:0] od1_y,
+
+  output reg [9:0] od2_x,
+  output reg [8:0] od2_y
 );
 
 

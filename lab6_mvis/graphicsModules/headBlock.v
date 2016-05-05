@@ -10,6 +10,8 @@ module headBlock
   input [8:0] iVGA_Y,
   input [9:0] topLeft_X,
   input [8:0] topLeft_Y,
+  input [9:0] init_X,
+  input [8:0] init_Y,
   
   output reg [5:0] oLayer,
   output reg oVal,
