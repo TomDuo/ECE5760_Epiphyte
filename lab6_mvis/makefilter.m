@@ -1,16 +1,17 @@
 % filter generation
-
+clc
 fs = 48000;
 
 lb = [10 100 500 1000 5000 10000];
 ub = [100 500 1000 5000 10000 20000];
 lb = 10.*3.^[0:6];
 ub= 10.*3.^[1:7];
-  
+i=1;
+[b,a] = butter(2,[lb(i)/fs, ub(i)/fs]);
   fprintf('reg  signed [26:0] y;\n');
   fprintf('reg  signed [26:0] x;\n');
-for i= 1:length(lb)
-  if i ~= length(lb)
+for i= 1:length(b)
+  if i ~= length(b)
     fprintf('reg  signed [26:0] z%i;\n',i );
   end
   fprintf('reg  signed [26:0] a%i;\n',i );
@@ -40,8 +41,9 @@ fprintf('end\n');
 fprintf('always @ (posedge clk) begin\n');
 fprintf('x <= audIn;\n')
 fprintf('y <= mul_b1_x+z1;\n');
-for i = 1:length(lb)-2
+for i = 1:length(b)-2
   fprintf('z%i <= mul_b%i_x+z%i-mul_a%i_y;\n',i,i+1,i+1,i+1);
 end
+i=i+1;
 fprintf('z%i <= mul_b%i_x-mul_a%i_y;\n',i,i+1,i+1);
 fprintf('end\n')

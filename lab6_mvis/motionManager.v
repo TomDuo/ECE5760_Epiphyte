@@ -99,12 +99,12 @@ always @(posedge frame_clk) begin
      if (direction) begin
        steps_counter <= steps_counter + 10'd1;
        obruce_x <= obruce_x + 10'd1;
-       obruce_y <= obruce_y + 10'd1;
+       obruce_y <= obruce_y + 9'd1;
      end
      else if (~direction) begin
        steps_counter <= steps_counter + 10'd1;
        obruce_x <= obruce_x - 10'd1;
-       obruce_y <= obruce_y - 10'd1;
+       obruce_y <= obruce_y - 9'd1;
      end
      else begin
        steps_counter <= 10'd0;

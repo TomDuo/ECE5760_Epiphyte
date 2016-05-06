@@ -127,7 +127,7 @@ tux_pantsBlock  tpb0
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
   .init_X(init_topLeftX),
-  .init_Y(init_topLeftY+9'd160),
+  .init_Y(init_topLeftY+9'd170),
   
   .oLayer(),
   .oVal(layer[0]),

@@ -113,9 +113,9 @@ tempoFinder tf0 (
 motionManager  mm0 (
   .clk(clk),
   .aud_clk(aud_clk),
-  .reset(reset),
+  .reset(~KEY2),
 
-  .aud_clk_tics_per_beat(aud_tics_per_beat),
+  .aud_clk_tics_per_beat(16'd48000),
   .beatHit(~KEY2),
   .dancer_en(4'b1000), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
@@ -123,8 +123,8 @@ motionManager  mm0 (
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
 
-  .ibruce_x_init(bruce_X),
-  .ibruce_y_init(bruce_Y),
+  .ibruce_x_init(10'd240),
+  .ibruce_y_init(9'd80),
   .obruce_x(bruceX),
   .obruce_y(bruceY),
 
@@ -161,8 +161,8 @@ drawBruce db0 (
 
     .current_topLeft_X(bruceX),
     .current_topLeft_Y(bruceY),
-    .init_topLeftX(10'd240),
-    .init_topLeftY(9'd80),
+    .init_topLeftX(bruceX),
+    .init_topLeftY(bruceY),
 	 .oVal(layer[40]),
     .oR(R[40]),
     .oG(G[40]),
