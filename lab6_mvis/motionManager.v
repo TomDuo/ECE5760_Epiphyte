@@ -49,7 +49,8 @@ reg        direction;
 always @(posedge clk) begin
   if (reset) begin
     frame_counter <= 32'd0;
-    frame_clk <= 1'b0;
+    frame_clk <= ~frame_clk; 	// have this keep moving so that we can reach reset 
+										// in other blocks
   end
   else if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0) && ~frame_clk) begin
     frame_clk <= 1'b1;
@@ -94,7 +95,7 @@ always @(posedge frame_clk) begin
     obruce_x <= ibruce_x_init;
     obruce_y <= ibruce_y_init;
    end
-   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin
+   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin 
      counter_snapshot <= frame_counter;
      if (direction) begin
        steps_counter <= steps_counter + 10'd1;
@@ -124,7 +125,7 @@ always @(posedge frame_clk) begin
     od0_y    <= id0_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd0) >= 32'd15) begin
+   else if ((frame_counter - counter_snapshotd0) >= 32'd360) begin
      counter_snapshotd0 <= frame_counter;
      if (steps_counterd0 <= 10'd30) begin
       steps_counterd0 <= steps_counterd0 + 10'd1;
@@ -154,7 +155,7 @@ always @(posedge frame_clk) begin
     od1_y    <= id1_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd1) >= 32'd15) begin
+   else if ((frame_counter - counter_snapshotd1) >= 32'd360) begin
      counter_snapshotd1 <= frame_counter;
      if (steps_counterd1 <= 10'd30) begin
       steps_counterd1 <= steps_counterd1 + 10'd1;
@@ -184,7 +185,7 @@ always @(posedge frame_clk) begin
     od2_y    <= id2_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd2) >= 32'd15) begin
+   else if ((frame_counter - counter_snapshotd2) >= 32'd360) begin
      counter_snapshotd2 <= frame_counter;
      if (steps_counterd2 <= 10'd30) begin
       steps_counterd2 <= steps_counterd2 + 10'd1;

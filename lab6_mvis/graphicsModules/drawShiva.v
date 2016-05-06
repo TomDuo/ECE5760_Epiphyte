@@ -1,4 +1,4 @@
-module drawBruce (
+module drawShiva (
   input clk,
   input reset,
   input enable,
@@ -27,7 +27,7 @@ wire [7:0] G [0:4];
 wire [7:0] B [0:4];
 
 
-headBlock  hb0
+shiva_headBlock  hb0
 (
   .clk(clk),
   .reset(reset),
@@ -49,7 +49,7 @@ headBlock  hb0
   .B(B[4])
 );
 
-bodyBlock  bbb0
+tux_bodyBlock  bbb0
 (
   .clk(clk),
   .reset(reset),
@@ -70,7 +70,7 @@ bodyBlock  bbb0
   .G(G[1]),
   .B(B[1])
 );
-arm_LBlock alb0
+tux_arm_LBlock alb0
 (
   .clk(clk),
   .reset(reset),
@@ -92,7 +92,7 @@ arm_LBlock alb0
   .B(B[2])
 );
 
-arm_RBlock arb0
+tux_arm_RBlock arb0
 (
   .clk(clk),
   .reset(reset),

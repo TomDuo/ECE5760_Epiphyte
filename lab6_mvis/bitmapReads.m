@@ -1,6 +1,8 @@
 % read in the bitmaps
-bitmap_names = {'head.bmp', 'arm1.bmp', 'arm2.bmp', 'torso.bmp','tux_arm_L.bmp',...
-   'tux_arm_R.bmp','tux_legs.bmp','tux_torso.bmp', };
+bitmap_names = {'Noah_Head.bmp','Connor_Head.bmp','Shiva_Head.bmp','banner.bmp'};
+
+%{'head.bmp', 'arm1.bmp', 'arm2.bmp', 'torso.bmp','tux_arm_L.bmp',...
+ %  'tux_arm_R.bmp','tux_legs.bmp','tux_torso.bmp', };
 
 %% create mif file
 

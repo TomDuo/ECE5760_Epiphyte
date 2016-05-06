@@ -28,7 +28,7 @@ wire [9:0]  matrix_X;
 wire [9:0]  matrix_Y;
 
 assign matrix_X = iVGA_X - init_X;
-assign matrix_Y = iVGA_Y - init_Y;
+assign matrix_Y = iVGA_Y - topLeft_Y;
 
 Arm_RROM arrom (
   .address(addr),
@@ -49,7 +49,7 @@ always @(posedge clk) begin
   end
   else if (enable) begin
     if ( (iVGA_X > init_X) && (iVGA_X < (init_X + block_width)) ) begin
-      if ( (iVGA_Y > init_Y) && (iVGA_Y < (init_Y + block_height)) ) begin
+      if ( (iVGA_Y > topLeft_Y) && (iVGA_Y < (topLeft_Y + block_height)) ) begin
         addr <= ((block_width*matrix_Y)+matrix_X);
         if (q > 24'b0) begin
           oVal <= 1'b1;

@@ -123,29 +123,35 @@ motionManager  mm0 (
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
 
-  .ibruce_x_init(10'd240),
+  .ibruce_x_init(10'd190),
   .ibruce_y_init(9'd80),
   .obruce_x(bruceX),
   .obruce_y(bruceY),
 
-  .id0_x_init(),
-  .id0_y_init(),
-  .od0_x(),
-  .od0_y(),
+  .id0_x_init(10'd40),
+  .id0_y_init(9'd105),
+  .od0_x(connorX),
+  .od0_y(connorY),
 
-  .id1_x_init(),
-  .id1_y_init(),
-  .od1_x(),
-  .od1_y(),
+  .id1_x_init(10'd340),
+  .id1_y_init(9'd105),
+  .od1_x(noahX),
+  .od1_y(noahY),
 
-  .id2_x_init(),
-  .id2_y_init(),
-  .od2_x(),
-  .od2_y(),
+  .id2_x_init(10'd340),
+  .id2_y_init(9'd80),
+  .od2_x(shivaX),
+  .od2_y(shivaY),
 );
 
 wire [9:0] bruceX;
 wire [8:0] bruceY;
+wire [9:0] connorX;
+wire [8:0] connorY;
+wire [9:0] noahX;
+wire [8:0] noahY;
+wire [9:0] shivaX;
+wire [8:0] shivaY;
 
 localparam bruce_X = 240;
 localparam bruce_Y = 80;
@@ -161,13 +167,70 @@ drawBruce db0 (
 
     .current_topLeft_X(bruceX),
     .current_topLeft_Y(bruceY),
-    .init_topLeftX(bruceX),
-    .init_topLeftY(bruceY),
+    .init_topLeftX(10'd140),
+    .init_topLeftY(9'd80),
 	 .oVal(layer[40]),
     .oR(R[40]),
     .oG(G[40]),
     .oB(B[40]),
   );
+
+drawConnor dc0 (
+   .clk(clk),
+   .reset(reset),
+   .enable(SW[7]),
+   .motion_en(1'b0),
+
+   .iVGA_X(iVGA_X),
+   .iVGA_Y(iVGA_Y),
+
+    .current_topLeft_X(connorX),
+    .current_topLeft_Y(connorY),
+    .init_topLeftX(10'd40),
+    .init_topLeftY(9'd80),
+	 .oVal(layer[39]),
+    .oR(R[39]),
+    .oG(G[39]),
+    .oB(B[39]),
+  );
+
+drawNoah dn0 (
+   .clk(clk),
+   .reset(reset),
+   .enable(SW[8]),
+   .motion_en(1'b0),
+
+   .iVGA_X(iVGA_X),
+   .iVGA_Y(iVGA_Y),
+
+    .current_topLeft_X(noahX),
+    .current_topLeft_Y(noahY),
+    .init_topLeftX(10'd240),
+    .init_topLeftY(9'd80),
+	 .oVal(layer[38]),
+    .oR(R[38]),
+    .oG(G[38]),
+    .oB(B[38]),
+  );
+
+//drawShiva ds0 (
+//   .clk(clk),
+//   .reset(reset),
+//   .enable(SW[9]),
+//   .motion_en(1'b0),
+//
+//   .iVGA_X(iVGA_X),
+//   .iVGA_Y(iVGA_Y),
+//
+//    .current_topLeft_X(shivaX),
+//    .current_topLeft_Y(shivaY),
+//    .init_topLeftX(10'd340),
+//    .init_topLeftY(9'd80),
+//	 .oVal(layer[37]),
+//    .oR(R[37]),
+//    .oG(G[37]),
+//    .oB(B[37]),
+//  );
 
 msbOneHot msb0 (layer,layerOH);
 
