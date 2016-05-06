@@ -117,7 +117,7 @@ motionManager  mm0 (
 
   .aud_clk_tics_per_beat(16'd48000),
   .beatHit(~KEY2),
-  .dancer_en(4'b1000), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
+  .dancer_en(SW[17:14]), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
   .iVGA_X(iVGA_X),
@@ -129,12 +129,12 @@ motionManager  mm0 (
   .obruce_y(bruceY),
 
   .id0_x_init(10'd40),
-  .id0_y_init(9'd105),
+  .id0_y_init(9'd100),
   .od0_x(connorX),
   .od0_y(connorY),
 
   .id1_x_init(10'd340),
-  .id1_y_init(9'd105),
+  .id1_y_init(9'd100),
   .od1_x(noahX),
   .od1_y(noahY),
 
@@ -167,7 +167,7 @@ drawBruce db0 (
 
     .current_topLeft_X(bruceX),
     .current_topLeft_Y(bruceY),
-    .init_topLeftX(10'd140),
+    .init_topLeftX(10'd190),
     .init_topLeftY(9'd80),
 	 .oVal(layer[40]),
     .oR(R[40]),
@@ -187,7 +187,7 @@ drawConnor dc0 (
     .current_topLeft_X(connorX),
     .current_topLeft_Y(connorY),
     .init_topLeftX(10'd40),
-    .init_topLeftY(9'd80),
+    .init_topLeftY(9'd100),
 	 .oVal(layer[39]),
     .oR(R[39]),
     .oG(G[39]),
@@ -205,8 +205,8 @@ drawNoah dn0 (
 
     .current_topLeft_X(noahX),
     .current_topLeft_Y(noahY),
-    .init_topLeftX(10'd240),
-    .init_topLeftY(9'd80),
+    .init_topLeftX(10'd340),
+    .init_topLeftY(9'd100),
 	 .oVal(layer[38]),
     .oR(R[38]),
     .oG(G[38]),

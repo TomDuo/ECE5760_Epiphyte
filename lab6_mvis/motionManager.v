@@ -125,14 +125,14 @@ always @(posedge frame_clk) begin
     od0_y    <= id0_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd0) >= 32'd360) begin
+   else if (dancer_en[0] && (frame_counter - counter_snapshotd0) >= 32'd360) begin
      counter_snapshotd0 <= frame_counter;
-     if (steps_counterd0 <= 10'd30) begin
+     if (direction) begin
       steps_counterd0 <= steps_counterd0 + 10'd1;
        od0_x <= od0_x + 10'd1;
        od0_y <= od0_y + 10'd1;
      end
-     else if (steps_counterd0 <= 10'd60) begin
+     else if (~direction) begin
        steps_counterd0 <= steps_counterd0 + 10'd1;
        od0_x <= od0_x - 10'd1;
        od0_y <= od0_y - 10'd1;
@@ -155,14 +155,14 @@ always @(posedge frame_clk) begin
     od1_y    <= id1_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd1) >= 32'd360) begin
+   else if (dancer_en[1] && (frame_counter - counter_snapshotd1) >= 32'd360) begin
      counter_snapshotd1 <= frame_counter;
-     if (steps_counterd1 <= 10'd30) begin
+     if (direction) begin
       steps_counterd1 <= steps_counterd1 + 10'd1;
        od1_x <= od1_x + 10'd1;
        od1_y <= od1_y + 10'd1;
      end
-     else if (steps_counterd1 <= 10'd60) begin
+     else if (~direction) begin
        steps_counterd1 <= steps_counterd1 + 10'd1;
        od1_x <= od1_x - 10'd1;
        od1_y <= od1_y - 10'd1;
@@ -185,14 +185,14 @@ always @(posedge frame_clk) begin
     od2_y    <= id2_y_init;
    end
    
-   else if ((frame_counter - counter_snapshotd2) >= 32'd360) begin
+   else if (dancer_en[2] && (frame_counter - counter_snapshotd2) >= 32'd360) begin
      counter_snapshotd2 <= frame_counter;
-     if (steps_counterd2 <= 10'd30) begin
+     if (direction) begin
       steps_counterd2 <= steps_counterd2 + 10'd1;
        od2_x <= od2_x + 10'd1;
        od2_y <= od2_y + 10'd1;
      end
-     else if (steps_counterd2 <= 10'd60) begin
+     else if (~direction) begin
        steps_counterd2 <= steps_counterd2 + 10'd1;
        od2_x <= od2_x - 10'd1;
        od2_y <= od2_y - 10'd1;

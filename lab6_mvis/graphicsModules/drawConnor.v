@@ -62,7 +62,7 @@ tux_bodyBlock  bbb0
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
   .init_X(init_topLeftX),
-  .init_Y(init_topLeftY+9'd90),
+  .init_Y(init_topLeftY+9'd100),
   
   .oLayer(),
   .oVal(layer[1]),
@@ -81,9 +81,9 @@ tux_arm_LBlock alb0
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
-  .topLeft_Y(current_topLeft_Y+9'd80),
-  .init_X(init_topLeftX-10'd20),
-  .init_Y(init_topLeftY+9'd80),
+  .topLeft_Y(current_topLeft_Y+9'd95),
+  .init_X(init_topLeftX-10'd15),
+  .init_Y(init_topLeftY+9'd95),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -103,8 +103,8 @@ tux_arm_RBlock arb0
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
-  .topLeft_Y(current_topLeft_Y+9'd75),
-  .init_X(init_topLeftX+10'd95),
+  .topLeft_Y(current_topLeft_Y+9'd95),
+  .init_X(init_topLeftX+10'd90),
   .init_Y(init_topLeftY+9'd95),
   
   .oLayer(),
@@ -127,7 +127,7 @@ tux_pantsBlock  tpb0
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
   .init_X(init_topLeftX),
-  .init_Y(init_topLeftY+9'd145),
+  .init_Y(init_topLeftY+9'd152),
   
   .oLayer(),
   .oVal(layer[0]),
