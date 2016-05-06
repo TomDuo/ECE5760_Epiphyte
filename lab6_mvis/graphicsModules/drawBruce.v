@@ -82,7 +82,7 @@ arm_LBlock alb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y+9'd80),
-  .init_X(init_topLeftX-10'd20),
+  .init_X(init_topLeftX-10'd15),
   .init_Y(init_topLeftY+9'd70),
   
   .oLayer(),

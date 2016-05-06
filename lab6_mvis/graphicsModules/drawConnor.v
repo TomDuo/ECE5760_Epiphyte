@@ -103,9 +103,9 @@ tux_arm_RBlock arb0
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
-  .topLeft_Y(current_topLeft_Y-9'd15),
+  .topLeft_Y(current_topLeft_Y),
   .init_X(init_topLeftX+10'd90),
-  .init_Y(init_topLeftY-9'd15),
+  .init_Y(init_topLeftY),
   
   .oLayer(),
   .oVal(layer[3]),
