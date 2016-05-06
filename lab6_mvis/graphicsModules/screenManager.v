@@ -139,7 +139,7 @@ motionManager  mm0 (
   .od1_y(noahY),
 
   .id2_x_init(10'd340),
-  .id2_y_init(9'd80),
+  .id2_y_init(9'd100),
   .od2_x(shivaX),
   .od2_y(shivaY),
 );
@@ -167,7 +167,7 @@ drawBruce db0 (
 
     .current_topLeft_X(bruceX),
     .current_topLeft_Y(bruceY),
-    .init_topLeftX(10'd190),
+    .init_topLeftX(10'd160),
     .init_topLeftY(9'd80),
 	 .oVal(layer[40]),
     .oR(R[40]),
@@ -205,7 +205,7 @@ drawNoah dn0 (
 
     .current_topLeft_X(noahX),
     .current_topLeft_Y(noahY),
-    .init_topLeftX(10'd340),
+    .init_topLeftX(10'd280),
     .init_topLeftY(9'd100),
 	 .oVal(layer[38]),
     .oR(R[38]),
@@ -213,24 +213,24 @@ drawNoah dn0 (
     .oB(B[38]),
   );
 
-//drawShiva ds0 (
-//   .clk(clk),
-//   .reset(reset),
-//   .enable(SW[9]),
-//   .motion_en(1'b0),
-//
-//   .iVGA_X(iVGA_X),
-//   .iVGA_Y(iVGA_Y),
-//
-//    .current_topLeft_X(shivaX),
-//    .current_topLeft_Y(shivaY),
-//    .init_topLeftX(10'd340),
-//    .init_topLeftY(9'd80),
-//	 .oVal(layer[37]),
-//    .oR(R[37]),
-//    .oG(G[37]),
-//    .oB(B[37]),
-//  );
+drawShiva ds0 (
+   .clk(clk),
+   .reset(reset),
+   .enable(SW[9]),
+   .motion_en(1'b0),
+
+   .iVGA_X(iVGA_X),
+   .iVGA_Y(iVGA_Y),
+
+    .current_topLeft_X(shivaX),
+    .current_topLeft_Y(shivaY),
+    .init_topLeftX(10'd400),
+    .init_topLeftY(9'd80),
+	 .oVal(layer[37]),
+    .oR(R[37]),
+    .oG(G[37]),
+    .oB(B[37]),
+  );
 
 msbOneHot msb0 (layer,layerOH);
 

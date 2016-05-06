@@ -20,8 +20,8 @@ module tux_bodyBlock
   output reg [7:0] B
 );
 
-localparam block_width = 114;
-localparam block_height = 90;
+localparam block_width = 95;
+localparam block_height = 83;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;

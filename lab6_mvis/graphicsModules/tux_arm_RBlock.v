@@ -21,7 +21,7 @@ module tux_arm_RBlock
 );
 
 
-localparam block_width = 36;
+localparam block_width = 33;
 localparam block_height = 99;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM

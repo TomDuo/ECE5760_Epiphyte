@@ -20,8 +20,8 @@ module noah_headBlock
   output reg [7:0] B
 );
 
-localparam block_width = 90;
-localparam block_height = 114;
+localparam block_width = 72;
+localparam block_height = 101;
 wire [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;

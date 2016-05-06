@@ -21,8 +21,8 @@ module tux_arm_LBlock
 );
 
 
-localparam block_width = 36;
-localparam block_height = 99;
+localparam block_width = 30;
+localparam block_height = 96;
 wire  [23:0] q;        // data out of ROM
 reg  [13:0] addr;     // addr into ROM
 wire [9:0]  matrix_X;

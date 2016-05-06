@@ -61,7 +61,7 @@ bodyBlock  bbb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_X(init_topLeftX),
+  .init_X(init_topLeftX+10'd10),
   .init_Y(init_topLeftY+9'd90),
   
   .oLayer(),
@@ -83,7 +83,7 @@ arm_LBlock alb0
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y+9'd80),
   .init_X(init_topLeftX-10'd20),
-  .init_Y(init_topLeftY+9'd80),
+  .init_Y(init_topLeftY+9'd70),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -126,8 +126,8 @@ tux_pantsBlock  tpb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_X(init_topLeftX),
-  .init_Y(init_topLeftY+9'd170),
+  .init_X(init_topLeftX+10'd15),
+  .init_Y(init_topLeftY+9'd163),
   
   .oLayer(),
   .oVal(layer[0]),
