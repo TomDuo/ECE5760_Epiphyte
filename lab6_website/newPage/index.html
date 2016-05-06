@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<!--
+	Big Picture by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Connor and Noah's 5760 Final Project</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+
+
+	    <!-- Note: All core EaselJS classes are listed here: -->
+	    <script type="text/javascript" src="./src/createjs/events/Event.js"></script>
+	    <script type="text/javascript" src="./src/createjs/events/EventDispatcher.js"></script>
+	    <script type="text/javascript" src="./src/createjs/utils/IndexOf.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/utils/UID.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/utils/Ticker.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/geom/Matrix2D.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/geom/Point.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/geom/Rectangle.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Shadow.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/SpriteSheet.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Graphics.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/DisplayObject.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Container.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Stage.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Bitmap.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Sprite.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/BitmapAnimation.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/BitmapText.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Shape.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/Text.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/display/DOMElement.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/events/MouseEvent.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/filters/Filter.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/ui/ButtonHelper.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/ui/Touch.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/utils/SpriteSheetUtils.js"></script>
+	    <script type="text/javascript" src="./src/easeljs/utils/SpriteSheetBuilder.js"></script>
+	    <script type="text/javascript" src="./pad.js"></script>
+    	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.poptrox.min.js"></script>
+		<script src="js/jquery.scrolly.min.js"></script>
+		<script src="js/jquery.scrollzer.min.js"></script>
+		<script src="js/jquery.scrollgress.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-wide.css" />
+			<link rel="stylesheet" href="css/style-normal.css" />
+			<link href="demoStyles.css" rel="stylesheet" type="text/css" />
+		</noscript>
+
+	    <!-- Latest compiled and minified CSS -->
+	    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="./css/style.css">
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+
+	<body onload="init();">
+
+		<!-- Header -->
+			<div id="header" class="skel-layers-fixed">
+
+				<div class="top">
+
+					<!-- Logo -->
+						<div id="logo">
+							<h1 id="logo">Final Project Demo</h1>
+						</div>
+
+						<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li><a href="#home"id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Home</span></a></li>
+								<li><a href="#intro"id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Introduction</span></a></li>
+								<li><a href="#report" id="about-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Design and Testing Report</span></a></li>
+								<li><a href="#gallery"id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Gallery</span></a></li>
+								<li><a href="#team"id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Team</span></a></li>
+								<li><a href="#contact"id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Contact</span></a></li>
+							</ul>
+						</nav>
+
+				</div>
+			</div>
+
+		<!-- Main -->
+		<div id="main">
+		<!-- Home -->
+			<section id="home" class="one dark cover">
+				<div class="container 75%">
+					<header>
+						<h2>ECE 5760 Final Project: NAME GOES HERE</h2>
+						<h3><strong>by Connor Archard and Noah Levy</strong></h3>
+					</header>
+					
+					<p>For our final project in ECE 5760, we made hardware-agnostic video eavesdropping system that demonstrates the security vulnerability of modern monitors to wireless attacks through the use of increasingly prevalent software defined radios. This system has many other, less-nefarious applications such as developing wireless screen sharing or projector systems that do not require any standardization beyond the nearly ubiquitous rastering pattern of monitor update. </p>
+					
+				</div>
+			</section>
+		
+		<!-- One -->
+			<section id="intro" class="two">
+				<div class="container 75%">
+					<header>
+						<h2>"Sound Bite"</h2>
+					</header>
+					<p></p>
+					<header>
+						<h2>Introduction</h2>
+					</header>
+					<p></p>
+
+					<h2>Check out our Demo Video!</h2>
+					<iframe width="420" height="315" src="https://www.youtube.com/embed/vyld4mhxC7M" frameborder="0" allowfullscreen></iframe>				
+				</div>
+			</section>
+		
+		<!-- Two -->
+			<section id="report" class="three">
+				<div class="container 75%">
+					<header>
+						<h2>Design and Testing</h2>
+					</header>
+					<p>
+					</p>
+
+					<h3>RTL Design</h3>
+					Block level diagram for the Cypress FX3. See FX3 Datasheet reference.
+					<img src="./images/cypressFX3_blockDiagram.PNG" alt="FX3 Block Diagram" style="width:640px;height:350px;">
+					Timing requirements from "imaging sensor" to teh Cypress FX3 running a USB Video Control (UVC) driver. See UVC Application Notes Reference
+					<img src="./images/cypressFX3_timingDiag.PNG" alt="FX3 Block Diagram" style="width:680px;height:399px;">
+					<h3>Software Design</h3>
+					<h3>Testing</h3>
+					 <p></p>
+					<h2>Results</h2>
+
+
+					<h3>Demonstration</h3>
+					<p>See embedded video in the Introduction Section!</p>
+
+
+					<h2>Conclusions</h2>
+
+					<h3>Societal Impacts</h3>
+
+					<h3>Ethical Considerations</h3>
+
+
+					<h2>Appendices</h2>
+					<h3>Budgeting</h3>
+					<div id="wrapper">
+						<table border="2" style="width:80%">
+						<tbead>
+		 					<tr>
+		 						<td><b>Part:</b></td>
+		 						<td><b>Description:</b></td>
+		 						<td><b>Cost:</b></td>
+		 					</tr>
+		 				</thead>
+		 				<tbody>
+	 					<tr>
+	 						<td>BladRFx115</td>
+	 						<td>RF Front end tied to a Cyclone IV FPGA and a Cypress FX3 that was used as the development board for this project</td>
+	 						<td>$650</td>
+	 					</tr>
+	 					<tr>
+	 						<td>''Logi'' Antenna</td>
+	 						<td>Log periodic antenna used to </td>
+	 						<td>$35.00</td>
+	 					</tr>
+	 					<tr>
+	 						<td>Coaxial Cable</td>
+	 						<td>Connected the antenna and the BladeRF</td>
+	 						<td>$0.00 (included in BladeRF kit)</td>
+	 					</tr>
+	 					<tr>
+	 						<td>USB Cable</td>
+	 						<td>Connected the BladeRF and the computer</td>
+	 						<td>$0.00 (included in BladeRF kit)</td>
+	 					</tr>
+		 				</tbody>
+		 			</table>
+		 			<p></p>
+		 			<p></p>
+		 			<p></p>
+		 			<h3>Software Listing</h3>
+					<p><strong>Top File</strong> - The main Verilog file that connected all of the modules on the Cyclone IV together and to the Cypress FX3 over JTAG. View <a class="" href="https://github.com/carchard/ECE5760_Epiphyte" role="button" type="button" class="button style2 down">here</a>.<p></p>
+
+					<p><strong>To see a full listing of our final code, view it on github: <a class="" href="https://github.com/carchard/ECE5760_Epiphyte" role="button" type="button" class="button style2 down">here</a></p>
+
+					<h3>References</h3>
+					<p><a class="" href="https://github.com/martinmarinov/TempestSDR/blob/master/documentation/acs-dissertation.pdf" role="button">Martin Marinov M.Eng Dissertation: "Remote Video Eavesdropping Using a Software-Defined Radio Platform"</a></p>
+					<p><a class="" href="http://martin.hinner.info/vga/" role="button">VGA Standards Information</a></p>
+					<p><a class="" href="https://github.com/Nuand/bladeRF" role="button">BladeRF Repository and Wiki</a></p>
+					<p><a class="" href="http://www.cypress.com/file/139246/download" role="button">Cypress FX3 Datasheet</a></p>
+					<p><a class="" href="https://www.element14.com/community/servlet/JiveServlet/previewBody/54502-102-1-273428/Cypress.User_Guide_3.pdf" role="button">Cypress GPIF II Development Guide</a></p>
+					<p><a class="" href="http://www.cypress.com/file/139296/download" role="button">Cypress FX3 Quickstart Guide</a></p>
+					<p><a class="" href="http://www.cypress.com/documentation/application-notes/an75779-how-implement-image-sensor-interface-using-ez-usb-fx3-usb" role="button">Cypress FX3 UVC Application Notes</a></p>
+					<p><a class="" href="http://www.cypress.com/documentation/application-notes/an65974-designing-ez-usb-fx3-slave-fifo-interface" role="button">Cypress FX3 to FPGA Application Notes</a></p>
+					
+					
+					</div>
+				</div>
+			</section>
+
+		<!-- Work -->
+			<section id="gallery" class="style3 primary">
+				<div class="container 75%">
+					<header>
+						<h2>Gallery</h2>
+						<p>Snapshots of our work/progress.</p>
+					</header>
+					
+					<!-- Lightbox Gallery  -->
+						<div class="container 75% gallery">
+							<div class="row 0% images">
+								<div class="6u"><a href="./images/schematic.png" class="image fit from-left"><img src="./images/schematic.png" title="Wiring Diagram" alt="" /></a></div>
+								<div class="6u"><a href="./images/plotter_underside.jpg" class="image fit from-right"><img src="./images/plotter_underside.jpg" title="Plotter Underside" alt="" /></a></div>
+							</div>
+							<div class="row 0% images">
+								<div class="6u"><a href="./images/motor_and_potentiometer.jpg" class="image fit from-left"><img src="./images/motor_and_potentiometer.jpg" title="Motor and Potentiometer" alt="" /></a></div>
+								<div class="6u"><a href="./images/working_in_lab.jpg" class="image fit from-right"><img src="./images/working_in_lab.jpg" title="Testing in the lab" alt="" /></a></div>
+							</div>
+							<div class="row 0% images">
+								<div class="6u"><a href="./images/4760_final_flowchart.png" class="image fit from-left"><img src="./images/4760_final_flowchart.png" title="The sparkling shell" alt="" /></a></div>
+								<div class="6u"><a href="./images/drawn_circuit.JPG" class="image fit from-right"><img src="./images/drawn_circuit.JPG" title="Test Circuit" alt="" /></a></div>
+							</div>
+						</div>
+
+				</div>
+			</section>
+			
+
+
+		<!-- Contact -->
+			<section id="team" class="three">
+				<div class="container 75%">
+					<header>
+						<h2>Team</h2>
+					</header>
+					<div class="row">
+						<div class="col-lg-6">
+						  <img class="img-circle img-responsive center-block" alt="100x100" src="./images/Connor.jpg" />
+						  <h3 class="text-center">Connor Archard</h3>
+						  <p class="text-center">Cornell ECE BS '15, Cornell Sysen ME '16</p>
+						  <p class="text-center">
+						    <a class="" href="https://www.linkedin.com/pub/connor-archard/87/8a0/aa8" role="button">Personal Website</a>
+						  </p>
+						</div>
+
+						<div class="col-lg-6">
+						  <img class="img-circle img-responsive center-block" alt="100x100" src="./images/Noah.jpg" />
+						  <h3 class="text-center">Noah Levy</h3>
+						  <p class="text-center">Cornell ECE BS '16, Cornell ECE ME '17.</p>
+						  <p class="text-center">
+						    <a class="" href="https://www.linkedin.com/in/noah-levy-518b4686" role="button">Personal Website</a>
+						  </p>
+						</div>
+					</div>
+				</div>    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+			</section>
+		<!-- Contact -->
+			<section id="contact" class="three">
+				<div class="container 75%">
+					<header>
+						<h2>Say Hello.</h2>
+						<p>Or email us at <address><a href="mailto:cwa37@cornell.edu">cwa37@cornell.edu</a></address> and <address><a href="mailto:nml45@cornell.edu">nml45@cornell.edu</a></address>All work shown on this website belongs to us and may not be copied without our notification and prior agreement.</p>
+					</header>
+					</div>
+				</div>
+			</section>
+		</div>
+
+	</body>
+</html>
