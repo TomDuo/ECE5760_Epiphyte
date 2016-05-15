@@ -120,6 +120,8 @@ module DE2_115_Basic_Computer (
   input         ENETCLK_25,    // Ethernet clock source
 
   output        ENET0_GTX_CLK, // GMII Transmit Clock 1
+  
+  
   input         ENET0_INT_N,   // Interrupt open drain output 1
   input         ENET0_LINK100, // Parallel LED output of 100BASE-TX link 1
   output        ENET0_MDC,     // Management data clock ref 1
@@ -370,7 +372,12 @@ screenManager sm0(
 	.SW(SW[17:0]),
 	.oR(mVGA_R),
 	.oG(mVGA_G),
-	.oB(mVGA_B)
+	.oB(mVGA_B),
+	.HEX0(HEX0),
+	.HEX1(HEX1),
+	.HEX2(HEX2),
+	.HEX3(HEX3)
+	
 );
 
 // END VIDEO MODULES --------------------------------------------------------------------------------------

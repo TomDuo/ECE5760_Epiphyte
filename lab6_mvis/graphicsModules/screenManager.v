@@ -12,7 +12,12 @@ module screenManager (
 
 	output reg [7:0] oR,
 	output reg [7:0] oG,
-	output reg [7:0] oB
+	output reg [7:0] oB,
+	
+	output wire [6:0] HEX0,
+	output wire [6:0] HEX1,
+	output wire [6:0] HEX2,
+	output wire [6:0] HEX3
 );
 
 // TEST SECTION FOR STROBING THROUGH BRIGHTNESS ---------------------------------------------------
@@ -62,7 +67,7 @@ generate
 			.oAud_R(),
 			.power(power[i])
 		);
-		
+
 		for (j=0; j < 6; j = j + 1) begin:ysweep
 			colorBlock #(95,69,0,11-2*i,5-j) cb (
 				.clk(clk),
@@ -155,7 +160,7 @@ wire [8:0] shivaY;
 
 localparam bruce_X = 240;
 localparam bruce_Y = 80;
-
+/*
 drawBruce db0 (
    .clk(clk),
    .reset(reset),
@@ -231,8 +236,14 @@ drawShiva ds0 (
     .oG(G[37]),
     .oB(B[37]),
   );
-
+*/
 msbOneHot msb0 (layer,layerOH);
+
+wire [10:0] pow3word = power[3];
+hex_7seg(pow3word[3:0],HEX0);
+hex_7seg(pow3word[7:4],HEX1);
+hex_7seg(pow3word[10:8],HEX2);
+//hex7seg(pow3word[3:0],HEX3);
 
 // MATLAB  generated case statement
 always @(posedge clk) begin
