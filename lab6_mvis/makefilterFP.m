@@ -15,7 +15,7 @@ order = 2;
 
 %could also use butter, or cheby1 or cheby2 or besself
 % but note that besself is lowpass only!
-[b, a] = butter(order, freq) ;
+[b, a] = ellip(order, freq) ;
 [s,g] = tf2sos(b,a) ;
 %[b, a] = cheby1(order, 0.1, freq) ;
 %[b, a] = besself(order, freq) ;
