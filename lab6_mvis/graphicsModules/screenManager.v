@@ -54,24 +54,25 @@ wire [7:0] R [0:63];
 wire [7:0] G [0:63];
 wire [7:0] B [0:63];
 wire [10:0] power [0:6];
-wire signed [15:0] audOutMatrix [0:6];
+localparam ao_width = 13;
+wire signed [ao_width:0] audOutMatrix [0:6];
 
-wire signed [15:0] ao0 = audOutMatrix[0];
-wire signed [15:0] ao1 = audOutMatrix[1];
-wire signed [15:0] ao2 = audOutMatrix[2];
-wire signed [15:0] ao3 = audOutMatrix[3];
-wire signed [15:0] ao4 = audOutMatrix[4];
-wire signed [15:0] ao5 = audOutMatrix[5];
-wire signed [15:0] ao6 = audOutMatrix[6];
+//wire signed [ao_width:0] ao0 = audOutMatrix[0];
+//wire signed [ao_width:0] ao1 = audOutMatrix[1];
+//wire signed [ao_width:0] ao2 = audOutMatrix[2];
+//wire signed [ao_width:0] ao3 = audOutMatrix[3];
+//wire signed [ao_width:0] ao4 = audOutMatrix[4];
+//wire signed [ao_width:0] ao5 = audOutMatrix[5];
+//wire signed [ao_width:0] ao6 = audOutMatrix[6];
 
 
-assign audOut = ao0[15:4] + ao1[15:4] + ao2[15:4] + ao3[15:4] + ao4[15:4] + ao5[15:4] + ao6[15:4]; 
-
+//assign audOut = ao0[ao_width:4] + ao1[ao_width:4] + ao2[ao_width:4] + ao3[ao_width:4] + ao4[ao_width:4] + ao5[ao_width:4] + ao6[ao_width:4]; 
+assign audOut = audOutMatrix[0] + audOutMatrix[1] +audOutMatrix[2] +audOutMatrix[3] +audOutMatrix[4] +audOutMatrix[5]+audOutMatrix[6];
 generate
 	genvar i;
 	genvar j;
 	for (i=0; i < 7; i = i + 1) begin:xsweep
-		autoGen_BPF #(i) bp (
+		autoGen_BPF #(i,ao_width) bp (
 			.clk(clk),
 			.aud_clk(aud_clk),
 			.reset(reset),

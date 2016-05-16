@@ -1,11 +1,14 @@
 module autoGen_BPF #(
-	parameter filterID= 0 // lower num<= lower BP4
+	parameter filterID= 0,
+	parameter aowidth=13
+	// lower num<= lower BP4
 	// 0 -> [10Hz 100Hz]
 	// 1 -> [100Hz 500Hz]
 	// 2 -> [500Hz 1000Hz]
 	// 3 -> [1000Hz 5000Hz]
 	// 4 -> [5000Hz 10000Hz]
 	// 5 -> [10000Hz 20000Hz]
+	
 	)(
 		input clk,
 		input aud_clk,
@@ -14,7 +17,7 @@ module autoGen_BPF #(
 
 		input signed [15:0] iAud,
 
-		output reg signed [15:0] oAud,
+		output reg signed [aowidth:0] oAud,
 		output reg [10:0]  power
 	);
 
@@ -180,7 +183,7 @@ module autoGen_BPF #(
 		end
 
 		else if (enable) begin
-			oAud <= y[24:9];
+			oAud <= y[24:11];
 			if (y[26]) begin
 				mag_y <= (~y)-27'd1;
 			end
