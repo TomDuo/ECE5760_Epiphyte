@@ -64,7 +64,7 @@ integer n = 0;
       .a0(sosMat[1][3]),
       .a1(sosMat[1][4]),
       .a2(sosMat[1][5]),
-      .in(in),
+      .in(out1),
       .out(out2)
      );
      wire [26:0] mout;

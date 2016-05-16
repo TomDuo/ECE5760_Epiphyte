@@ -4,10 +4,10 @@ fs = 48e3;
 ftarget = 1000;
 maxlen = 2e3;
 n = 1:maxlen;
-x = .9*sin(2*pi*ftarget/fs*n);
+x = .5*sin(2*pi*ftarget/fs*n)+.5*sin(2*pi*5000/fs*n);
 assert(fs==48e3,'We DUMB');
 
-x = (x*(2^10));
+x = (x*(2^15));
 x= round(x);
 fid = fopen('testVect.v','w');
 fprintf(fid, ['module testVect (\n' ...
