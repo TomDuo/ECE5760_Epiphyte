@@ -17,7 +17,11 @@ module screenManager (
 	output wire [6:0] HEX0,
 	output wire [6:0] HEX1,
 	output wire [6:0] HEX2,
-	output wire [6:0] HEX3
+	output wire [6:0] HEX3,
+	output wire [6:0] HEX4,
+	output wire [6:0] HEX5,
+	output wire [6:0] HEX6,
+	output wire [6:0] HEX7
 );
 
 // TEST SECTION FOR STROBING THROUGH BRIGHTNESS ---------------------------------------------------
@@ -240,9 +244,15 @@ drawShiva ds0 (
 msbOneHot msb0 (layer,layerOH);
 
 wire [10:0] pow3word = power[3];
-hex_7seg(pow3word[3:0],HEX0);
-hex_7seg(pow3word[7:4],HEX1);
-hex_7seg(pow3word[10:8],HEX2);
+
+hex_7seg(iAudL[3:0],HEX0);
+hex_7seg(iAudL[7:4],HEX1);
+hex_7seg(iAudL[11:8],HEX2);
+hex_7seg(iAudL[15:12],HEX3);
+hex_7seg(iAudR[3:0],HEX4);
+hex_7seg(iAudR[7:4],HEX5);
+hex_7seg(iAudR[11:8],HEX6);
+hex_7seg(iAudR[15:12],HEX7);
 //hex7seg(pow3word[3:0],HEX3);
 
 // MATLAB  generated case statement
