@@ -7,7 +7,7 @@ n = 1:maxlen;
 x = .9*sin(2*pi*ftarget/fs*n);
 assert(fs==48e3,'We DUMB');
 
-x = (x*(2^14));
+x = (x*(2^10));
 x= round(x);
 fid = fopen('testVect.v','w');
 fprintf(fid, ['module testVect (\n' ...
@@ -19,4 +19,4 @@ for n=0:maxlen-1
 end
 fprintf(fid,'\nend\n');
 fprintf(fid,'\n\nendmodule');
-fclose(fid);
+fclose(fid);3

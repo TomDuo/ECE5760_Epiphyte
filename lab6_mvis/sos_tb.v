@@ -68,7 +68,7 @@ integer n = 0;
       .out(out2)
      );
      wire [26:0] mout;
-fixed_comb_mult5760 fc(27'h800000,27'h1000000,mout);
+fixed_comb_mult5760 fc(~27'h1000000,~27'h1000000,mout);
     initial begin
 sosMat[0][0] = 27'h559A;
 sosMat[0][1] = 27'hAB35;
