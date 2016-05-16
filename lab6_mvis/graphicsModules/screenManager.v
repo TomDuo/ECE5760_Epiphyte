@@ -52,17 +52,17 @@ wire [63:0] layerOH;
 wire [7:0] R [0:63];
 wire [7:0] G [0:63];
 wire [7:0] B [0:63];
-wire [10:0] power [0:5];
+wire [10:0] power [0:6];
 
 generate
 	genvar i;
 	genvar j;
-	for (i=0; i < 6; i = i + 1) begin:xsweep
+	for (i=0; i < 7; i = i + 1) begin:xsweep
 		autoGen_BPF #(i) bp (
 			.clk(clk),
 			.aud_clk(aud_clk),
 			.reset(reset),
-			.enable(SW[5-i]),
+			.enable(SW[6-i]),
 
 			.iAud_L(iAudL),
 			.iAud_R(iAudR),
@@ -72,8 +72,8 @@ generate
 			.power(power[i])
 		);
 
-		for (j=0; j < 6; j = j + 1) begin:ysweep
-			colorBlock #(95,69,0,11-2*i,5-j) cb (
+		for (j=0; j < 7; j = j + 1) begin:ysweep
+			colorBlock #(85,69,0,13-2*i,5-j) cb (
 				.clk(clk),
 				.reset(reset),
 				
@@ -84,10 +84,10 @@ generate
 				.topLeftY(10+j*79),
 				
 				.oLayer(),
-				.oVal(layer[6*i+j]),
-				.R(R[6*i+j]),
-				.G(G[6*i+j]),
-				.B(B[6*i+j])
+				.oVal(layer[7*i+j]),
+				.R(R[7*i+j]),
+				.G(G[7*i+j]),
+				.B(B[7*i+j])
 			);
 		end
 	end	
@@ -258,6 +258,96 @@ hex_7seg(iAudR[15:12],HEX7);
 // MATLAB  generated case statement
 always @(posedge clk) begin
 	case(layerOH)
+		(1<<59): begin
+		oR <= R[59];
+		oB <= B[59];
+		oG <= G[59];
+	end
+	(1<<58): begin
+		oR <= R[58];
+		oB <= B[58];
+		oG <= G[58];
+	end
+	(1<<57): begin
+		oR <= R[57];
+		oB <= B[57];
+		oG <= G[57];
+	end
+	(1<<56): begin
+		oR <= R[56];
+		oB <= B[56];
+		oG <= G[56];
+	end
+	(1<<55): begin
+		oR <= R[55];
+		oB <= B[55];
+		oG <= G[55];
+	end
+	(1<<54): begin
+		oR <= R[54];
+		oB <= B[54];
+		oG <= G[54];
+	end
+	(1<<53): begin
+		oR <= R[53];
+		oB <= B[53];
+		oG <= G[53];
+	end
+	(1<<52): begin
+		oR <= R[52];
+		oB <= B[52];
+		oG <= G[52];
+	end
+	(1<<51): begin
+		oR <= R[51];
+		oB <= B[51];
+		oG <= G[51];
+	end
+	(1<<50): begin
+		oR <= R[50];
+		oB <= B[50];
+		oG <= G[50];
+	end
+	(1<<49): begin
+		oR <= R[49];
+		oB <= B[49];
+		oG <= G[49];
+	end
+	(1<<48): begin
+		oR <= R[48];
+		oB <= B[48];
+		oG <= G[48];
+	end
+	(1<<47): begin
+		oR <= R[47];
+		oB <= B[47];
+		oG <= G[47];
+	end
+	(1<<46): begin
+		oR <= R[46];
+		oB <= B[46];
+		oG <= G[46];
+	end
+	(1<<45): begin
+		oR <= R[45];
+		oB <= B[45];
+		oG <= G[45];
+	end
+	(1<<44): begin
+		oR <= R[44];
+		oB <= B[44];
+		oG <= G[44];
+	end
+	(1<<43): begin
+		oR <= R[43];
+		oB <= B[43];
+		oG <= G[43];
+	end
+	(1<<42): begin
+		oR <= R[42];
+		oB <= B[42];
+		oG <= G[42];
+	end
 	(1<<41): begin
 		oR <= R[41];
 		oB <= B[41];
