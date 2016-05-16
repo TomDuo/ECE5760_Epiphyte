@@ -107,11 +107,11 @@
 			<section id="home" class="one dark cover">
 				<div class="container 75%">
 					<header>
-						<h2>ECE 5760 Final Project: NAME GOES HERE</h2>
+						<h2>ECE 5760 Final Project: Bruce in a Club</h2>
 						<h3><strong>by Connor Archard and Noah Levy</strong></h3>
 					</header>
 					
-					<p>For our final project in ECE 5760, we made hardware-agnostic video eavesdropping system that demonstrates the security vulnerability of modern monitors to wireless attacks through the use of increasingly prevalent software defined radios. This system has many other, less-nefarious applications such as developing wireless screen sharing or projector systems that do not require any standardization beyond the nearly ubiquitous rastering pattern of monitor update. </p>
+					<p></p>
 					
 				</div>
 			</section>
@@ -122,11 +122,11 @@
 					<header>
 						<h2>"Sound Bite"</h2>
 					</header>
-					<p></p>
+					<p>For our final project in ECE 5760, we made a music visualizer that interprets the rhythm and spectral content of a song played through the line-in on the Altera DE2-115 to create novel graphical and auditory output. </p>
 					<header>
 						<h2>Introduction</h2>
 					</header>
-					<p></p>
+					<p>Bruce in the club reads in audio to the DE2-115 through the Wolfson Audio Codec. The output of the ADC on the audio codec is passed through a filter bank in order to analyze the spectral content of the song that is being played. A graphics module takes this information to render frames that display the spectral content of the input song to the user and to animate four dancers on the screen. When music is detected, a module will take the output of the lowest frequency filter to interpret the beat of the song and will propogate this information along to the graphics modules to control the dancers' animations. By taking advantage of parallel computing capabilities of FPGAs, the graphics module was able to track up to 128 objects on the screen at a time while tracking each object's relative depth to facilitate visual occlusion in a manner similar to the common occlusion culling technique in computer vision. This system resulted in a music visualizer that did not rely on screen buffering and would instead calculate the pixel value for each location on the screen ''in real time.'' While this might be considered computationally wasteful, it took advantage of the inherant strengths of the DE2-115 platform to elegantly do away with visual artifacts, facilitate 3D visualization, and allow for the import of arbitrary bitmaps to be displayed on the monitor.</p>
 
 					<h2>Check out our Demo Video!</h2>
 					<iframe width="420" height="315" src="https://www.youtube.com/embed/vyld4mhxC7M" frameborder="0" allowfullscreen></iframe>				
@@ -143,10 +143,6 @@
 					</p>
 
 					<h3>RTL Design</h3>
-					Block level diagram for the Cypress FX3. See FX3 Datasheet reference.
-					<img src="./images/cypressFX3_blockDiagram.PNG" alt="FX3 Block Diagram" style="width:640px;height:350px;">
-					Timing requirements from "imaging sensor" to teh Cypress FX3 running a USB Video Control (UVC) driver. See UVC Application Notes Reference
-					<img src="./images/cypressFX3_timingDiag.PNG" alt="FX3 Block Diagram" style="width:680px;height:399px;">
 					<h3>Software Design</h3>
 					<h3>Testing</h3>
 					 <p></p>
@@ -177,32 +173,27 @@
 		 				</thead>
 		 				<tbody>
 	 					<tr>
-	 						<td>BladRFx115</td>
-	 						<td>RF Front end tied to a Cyclone IV FPGA and a Cypress FX3 that was used as the development board for this project</td>
-	 						<td>$650</td>
+	 						<td>DE2-115</td>
+	 						<td>Altera development board used as the platform for this project</td>
+	 						<td>$0</td>
 	 					</tr>
 	 					<tr>
-	 						<td>''Logi'' Antenna</td>
-	 						<td>Log periodic antenna used to </td>
-	 						<td>$35.00</td>
+	 						<td>VGA Monitor</td>
+	 						<td>Display used to output the music visualization</td>
+	 						<td>$0</td>
 	 					</tr>
 	 					<tr>
-	 						<td>Coaxial Cable</td>
-	 						<td>Connected the antenna and the BladeRF</td>
-	 						<td>$0.00 (included in BladeRF kit)</td>
+	 						<td>VGA and Aux Cables</td>
+	 						<td>Connected the FPGA to a display and to a music source</td>
+	 						<td>$0</td>
 	 					</tr>
-	 					<tr>
-	 						<td>USB Cable</td>
-	 						<td>Connected the BladeRF and the computer</td>
-	 						<td>$0.00 (included in BladeRF kit)</td>
-	 					</tr>
-		 				</tbody>
+	 					</tbody>
 		 			</table>
 		 			<p></p>
 		 			<p></p>
 		 			<p></p>
 		 			<h3>Software Listing</h3>
-					<p><strong>Top File</strong> - The main Verilog file that connected all of the modules on the Cyclone IV together and to the Cypress FX3 over JTAG. View <a class="" href="https://github.com/carchard/ECE5760_Epiphyte" role="button" type="button" class="button style2 down">here</a>.<p></p>
+					<p><strong>Top File</strong> - The main Verilog file that connected all of the modules on the Cyclone IV together . View <a class="" href="https://github.com/carchard/ECE5760_Epiphyte" role="button" type="button" class="button style2 down">here</a>.</p>
 
 					<p><strong>To see a full listing of our final code, view it on github: <a class="" href="https://github.com/carchard/ECE5760_Epiphyte" role="button" type="button" class="button style2 down">here</a></p>
 
