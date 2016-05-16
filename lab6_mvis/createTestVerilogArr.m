@@ -7,7 +7,7 @@ n = 1:maxlen;
 x = .9*sin(2*pi*ftarget/fs*n);
 assert(fs==48e3,'We DUMB');
 
-x = (x*(2^15));
+x = (x*(2^14));
 x= round(x);
 fid = fopen('testVect.v','w');
 fprintf(fid, ['module testVect (\n' ...
