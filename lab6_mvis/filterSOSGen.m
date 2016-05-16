@@ -1,8 +1,8 @@
 clear;
 close all;
 clc;
-lb = 10.*2.^[4:10];
-ub= 10.*2.^[5:11];
+lb = 10.*1.8.^[6:12];
+ub= 10.*1.8.^[7:13];
 sosSize = [2 6];
 fs=48e3;
 fprintf('\n\n\nreg signed [26:0] sosMat [0:%i][0:5];\n\n',sosSize(1)-1);;

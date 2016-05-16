@@ -66,121 +66,122 @@ module autoGen_BPF #(
 			power  <= 11'd0;
 			power_accumulator <= 38'd0;
 			count <= 16'd0;
-			case(filterID)
-				0: begin
+case(filterID)
 
-					sosMat[0][0]<= 27'h4;
-					sosMat[0][1]<= 27'h7;
-					sosMat[0][2]<= 27'h4;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h7002A9F;
-					sosMat[0][5]<= 27'h7FD57B;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h7001220;
-					sosMat[1][5]<= 27'h7FEDE5;
-				end
 
-				1: begin
+0: begin
 
-					sosMat[0][0]<= 27'h20;
-					sosMat[0][1]<= 27'h41;
-					sosMat[0][2]<= 27'h20;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h7008049;
-					sosMat[0][5]<= 27'h7F809B;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h7003674;
-					sosMat[1][5]<= 27'h7FC9B5;
-				end
+sosMat[0][0] <= 27'h291;
+sosMat[0][1] <= 27'h522;
+sosMat[0][2] <= 27'h291;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h7021C37;
+sosMat[0][5] <= 27'h7E1044;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h701571B;
+sosMat[1][5] <= 27'h7EBBDC;
+end
 
-				2: begin
+1: begin
 
-					sosMat[0][0]<= 27'h121;
-					sosMat[0][1]<= 27'h241;
-					sosMat[0][2]<= 27'h121;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h70184AB;
-					sosMat[0][5]<= 27'h7E834C;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h700A40E;
-					sosMat[1][5]<= 27'h7F5D65;
-				end
+sosMat[0][0] <= 27'h83B;
+sosMat[0][1] <= 27'h1076;
+sosMat[0][2] <= 27'h83B;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h704060D;
+sosMat[0][5] <= 27'h7C892D;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h702826D;
+sosMat[1][5] <= 27'h7DBAC5;
+end
 
-				3: begin
+2: begin
 
-					sosMat[0][0]<= 27'h9FB;
-					sosMat[0][1]<= 27'h13F7;
-					sosMat[0][2]<= 27'h9FB;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h704AFB4;
-					sosMat[0][5]<= 27'h7B972A;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h701F26C;
-					sosMat[1][5]<= 27'h7E1A8C;
-				end
+sosMat[0][0] <= 27'h1A33;
+sosMat[0][1] <= 27'h3465;
+sosMat[0][2] <= 27'h1A33;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h707F53B;
+sosMat[0][5] <= 27'h79D588;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h704D41D;
+sosMat[1][5] <= 27'h7BF0B3;
+end
 
-				4: begin
+3: begin
 
-					sosMat[0][0]<= 27'h559A;
-					sosMat[0][1]<= 27'hAB35;
-					sosMat[0][2]<= 27'h559A;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h70F2DF7;
-					sosMat[0][5]<= 27'h733A23;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h7060F49;
-					sosMat[1][5]<= 27'h7A63B8;
-				end
+sosMat[0][0] <= 27'h5242;
+sosMat[0][1] <= 27'hA484;
+sosMat[0][2] <= 27'h5242;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h7108E90;
+sosMat[0][5] <= 27'h75208A;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h709AEEF;
+sosMat[1][5] <= 27'h78C61D;
+end
 
-				5: begin
+4: begin
 
-					sosMat[0][0]<= 27'h2A10D;
-					sosMat[0][1]<= 27'h54219;
-					sosMat[0][2]<= 27'h2A10D;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h7361459;
-					sosMat[0][5]<= 27'h5D8091;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h7141A74;
-					sosMat[1][5]<= 27'h6FC27F;
-				end
+sosMat[0][0] <= 27'hFC51;
+sosMat[0][1] <= 27'h1F8A2;
+sosMat[0][2] <= 27'hFC51;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h724872D;
+sosMat[0][5] <= 27'h6D28D0;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h714892A;
+sosMat[1][5] <= 27'h733933;
+end
 
-				6: begin
+5: begin
 
-					sosMat[0][0]<= 27'h111E50;
-					sosMat[0][1]<= 27'h223CA0;
-					sosMat[0][2]<= 27'h111E50;
-					sosMat[0][3]<= 27'h800000;
-					sosMat[0][4]<= 27'h7D09DA1;
-					sosMat[0][5]<= 27'h35833B;
-					sosMat[1][0]<= 27'h800000;
-					sosMat[1][1]<= 27'h7000000;
-					sosMat[1][2]<= 27'h800000;
-					sosMat[1][3]<= 27'h800000;
-					sosMat[1][4]<= 27'h74BA6D6;
-					sosMat[1][5]<= 27'h522505;
+sosMat[0][0] <= 27'h2E8FC;
+sosMat[0][1] <= 27'h5D1F8;
+sosMat[0][2] <= 27'h2E8FC;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h754825C;
+sosMat[0][5] <= 27'h60714E;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h72E5353;
+sosMat[1][5] <= 27'h6991EB;
+end
 
-				end
-			endcase
-		end
+6: begin
+
+sosMat[0][0] <= 27'h81E27;
+sosMat[0][1] <= 27'h103C4D;
+sosMat[0][2] <= 27'h81E27;
+sosMat[0][3] <= 27'h800000;
+sosMat[0][4] <= 27'h7C32771;
+sosMat[0][5] <= 27'h4ED8AB;
+sosMat[1][0] <= 27'h800000;
+sosMat[1][1] <= 27'h7000000;
+sosMat[1][2] <= 27'h800000;
+sosMat[1][3] <= 27'h800000;
+sosMat[1][4] <= 27'h76CE03E;
+sosMat[1][5] <= 27'h5881D6;
+end
+endcase
+					end
 
 		else if (enable) begin
 			oAud <= y[24:11];
