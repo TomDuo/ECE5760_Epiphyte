@@ -148,11 +148,21 @@
 					<!-- Noah section -->
 					</p>
 					<h4>Audio Modules</h4>
-					 <p>
+					 <p></p>
 					<!-- Connor section -->
 
 					<!-- Noah section -->
+					<p>
+				    A filter bank is not the only way to display the snapshot of the magnitude spectral content of a signal. A DFT (Discrete Fourier Transform), DHT (Discrete Hartley Transform) or DCT (Discrete Cosine Transform) could also be used to output the magnitude of the sampled spectra. However, for our application there were compelling reasons to go with a filter bank instead: in general, the DFT,DHT,and DCT can be implemented in O(nlogn), but these implementations tend to be fairly complicated; and they're outputs are inherently linearly spaced. As a result, FFT-type IP cores are usually used as black boxes on FPGAs. Since using a black box would not sufficiently contribute to our understanding of anything, and since we wanted our "frequency bins" to be logarithmically spaced, we decided to use a bank of IIR (infinite impulse response) band-pass filters of varying widths across the audible range. 
 					</p>
+					<p>
+					From here we had the choice of a floating or fixed point filter implementation. On the 5760 website, there is already a good <a class="" href="http://martin.hinner.info/vga/" role="button">example</a> of a IIR filter implemented using 18-bit floating point on the DE2. Floating point is useful for filters when signals vary over a wide dynamic range. In general, this helps prevent overflow issues from cascading to a filter's output, but floating point numbers themselves are rather messy to implement. Just like the DFT option, we chose not to use floating point for our application so that we could avoid having to base our filters on the work of others.</p>
+
+					<p>
+					We implemented fixed point IIR filters using cascaded biquadratic difference equations.
+					</p>
+
+
 					<h4>Systems Integration</h4>
 					 <p>
 					<!-- Connor section -->
