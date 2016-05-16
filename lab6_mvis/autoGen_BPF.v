@@ -191,10 +191,10 @@ module autoGen_BPF #(
 				mag_y <= y;
 			end
 
-			if (count == 16'd48000) begin
+			if (count == 16'd9600) begin
 				count <= 16'd0;
 				power_accumulator <= 38'd0;
-				power <= power_accumulator[37:27];
+				power <= power_accumulator[35:25];
 			end
 			else begin 
 				power_accumulator <= power_accumulator + mag_y;
