@@ -126,10 +126,11 @@
 					<header>
 						<h2>Introduction</h2>
 					</header>
-					<p>Bruce in the club reads in audio to the DE2-115 through the Wolfson Audio Codec. The output of the ADC on the audio codec is passed through a filter bank in order to analyze the spectral content of the song that is being played. A graphics module takes this information to render frames that display the spectral content of the input song to the user and to animate four dancers on the screen. When music is detected, a module will take the output of the lowest frequency filter to interpret the beat of the song and will propogate this information along to the graphics modules to control the dancers' animations. By taking advantage of parallel computing capabilities of FPGAs, the graphics module was able to track up to 64 objects on the screen at a time while tracking each object's relative depth to facilitate visual occlusion in a manner similar to the common occlusion culling technique in computer vision. This system resulted in a music visualizer that did not rely on screen buffering and would instead calculate the pixel value for each location on the screen ''in real time.'' While this might be considered computationally wasteful, it took advantage of the inherant strengths of the DE2-115 platform to elegantly do away with visual artifacts, facilitate 3D visualization, and allow for the import of arbitrary bitmaps to be displayed on the monitor.</p>
+					<p>Bruce in the club reads in audio to the DE2-115 through the Wolfson Audio Codec. The output of the ADC on the audio codec is passed through a filter bank in order to analyze the spectral content of the song that is being played. A graphics module takes this information to render frames that display the spectral content of the input song to the user and to animate four dancers on the screen. When music is detected, a module will take the output of the lowest frequency filter to interpret the beat of the song and will propagate this information along to the graphics modules to control the dancers' animations. By taking advantage of parallel computing capabilities of FPGAs, the graphics module was able to track up to 64 objects on the screen at a time while tracking each object's relative depth to facilitate visual occlusion in a manner similar to the common occlusion culling technique in computer vision. This system resulted in a music visualizer that did not rely on screen buffering and would instead calculate the pixel value for each location on the screen ''in real time.'' While this might be considered computationally wasteful, it took advantage of the inherent strengths of the DE2-115 platform to elegantly do away with visual artifacts, facilitate 3D visualization, and allow for the import of arbitrary bitmaps to be displayed on the monitor.</p>
 
 					<h2>Check out our Demo Video!</h2>
-					<iframe width="420" height="315" src="https://www.youtube.com/embed/vyld4mhxC7M" frameborder="0" allowfullscreen></iframe>				
+					<!--<iframe width="420" height="315" src="https://www.youtube.com/embed/vyld4mhxC7M" frameborder="0" allowfullscreen></iframe>	-->
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLzdPghmYexriGUsJQ83yOziJBiYHRooXf" frameborder="0" allowfullscreen></iframe>			
 				</div>
 			</section>
 		
@@ -200,7 +201,9 @@
 					<!-- Noah section -->
 					</p>
 					<h2>Results</h2>
-
+					<p>
+					During our final lab period we were able to demonstrate real time graphics, audio-filtering, and animation from the FPGA. Specifically, by using a "tone generator" app and a cellphone we were able to demonstrate the agreement between the displayed spectrogram and reality. By toggling switches, we were able to "notch" the audio output of the filter bank and cancel the tone being played. Additionally, while playing a song we were able to show that the animations moved according to the "beat" of the audio. Each animated character can be toggled on and off and made to "dance" individually. The system succeeded as a demonstrator of a complex graphical and fixed-point audio system with a quirky front-end. Overall we were pleased with out results. 
+					</p>
 
 					<h3>Demonstration</h3>
 					<p>See embedded video in the Introduction Section!</p>
@@ -211,7 +214,7 @@
 					<!-- Connor section -->
 
 					<!-- Noah section -->
-
+					We learned a lot doing this lab. We were able to build on our experience from earlier in the semester working with fixed point math and gained some knowledge about how to implement very-low level graphics on the FPGA. Second order sections and numerical stability considerations in filter design for HDL are both widely applicable to many problems within the FPGA tradespace. In the process, we got to build a bruce-in-a-club simulator that we think is pretty cool.
 					</p>
 
 					<h3>Societal Impacts</h3>
@@ -227,7 +230,7 @@
 					<!-- Connor section -->
 
 					<!-- Noah section -->
-					As far as we know, our project does not violate any laws or endanger anyone. Admittedly, we used the likeness of Shiva Rajagopal and Bruce Land without explicit permission. We felt this was justified to maintain a veil of secrecy and excitement regarding our project. Obviously, after the big reveal if one of them had objected to this we would remove there image from our system and update our code and website accordingly.
+					As far as we know, our project does not violate any laws or endanger anyone. Admittedly, we used the likeness of Bruce Land without explicit permission. We felt this was justified to maintain a veil of secrecy and excitement regarding our project. Obviously, after the big reveal if one of them had objected to this we would remove there image from our system and update our code and website accordingly.
 					</p>
 
 
