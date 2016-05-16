@@ -25,6 +25,8 @@ module autoGen_BPF #(
     wire signed [26:0] lpf_y;
     wire signed [26:0] in;
 
+    reg  signed [37:0] power_accumulator;
+    reg  unsigned [15:0] count; 
     assign in = {{3{iAud_L[15]}}, iAud_L,8'd0};
     reg  signed [26:0] mag_y;
     reg  signed [26:0] sosMat [0:1][0:5];
@@ -57,20 +59,13 @@ module autoGen_BPF #(
         .in(bq1_out),
         .out(y)
     );
-    lpf lpf0(
-        .clk(clk),
-        .aud_clk(aud_clk),
-        .reset(reset),
-
-        .in(mag_y),
-        .out(lpf_y)
-    );
-
-    always @ (posedge aud_clk) begin
+        always @ (posedge aud_clk) begin
         if (reset) begin
             oAud_R <= 16'd0;
             oAud_L <= 16'd0;
             power  <= 11'd0;
+            power_accumulator <= 38'd0;
+            count <= 16'd0;
             case(filterID)
                 0: begin
 
@@ -194,7 +189,16 @@ module autoGen_BPF #(
             else begin
                 mag_y <= y;
             end
-            power <= lpf_y[23:13];
+
+            if (count == 16'd48000) begin
+                count <= 16'd0;
+                power_accumulator <= 38'd0;
+                power <= power_accumulator[37:27];
+            end
+            else begin 
+                power_accumulator <= power_accumulator + mag_y;
+                count <= count + 16'd1;
+            end
         end
         else begin
             oAud_R <= iAud_R;
