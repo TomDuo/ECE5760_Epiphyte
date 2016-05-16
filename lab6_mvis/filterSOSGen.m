@@ -1,8 +1,8 @@
 clear;
 close all;
 clc;
-lb = 10.*3.^[0:6];
-ub= 10.*3.^[1:7];
+lb = 10.*2.^[4:10];
+ub= 10.*2.^[5:11];
 sosSize = [2 6];
 fs=48e3;
 fprintf('\n\n\nreg signed [26:0] sosMat [0:%i][0:5];\n\n',sosSize(1)-1);;
@@ -19,7 +19,7 @@ for fIndex = 1:length(lb)
     sosSize = size(soshi);
     for y = 1:sosSize(1)
         for x = 1:sosSize(2)
-            fprintf('sosMat[%i][%i] = 27''h%s;\n',y-1,x-1,dec2hex(float_2_fix4_23(soshi(y,x))));
+            fprintf('sosMat[%i][%i] <= 27''h%s;\n',y-1,x-1,dec2hex(float_2_fix4_23(soshi(y,x))));
         end
     end
     fprintf('end\n');
