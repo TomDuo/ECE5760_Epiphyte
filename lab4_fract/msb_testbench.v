@@ -23,7 +23,7 @@ module top;
     $dumpvars;
     #11;
     reset = 1'b0;
-    repeat(16000) begin
+    repeat(200000) begin
     in <= in + 1;
     #10;
     end

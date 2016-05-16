@@ -173,6 +173,11 @@ always @ (posedge aud_clk) begin
       oAud_R <= 16'd0;
       oAud_L <= 16'd0;
       power  <= 11'd0;
+      x  <= 27'd0;
+      z1 <= 27'd0;
+      z2 <= 27'd0;
+      z3 <= 27'd0;
+      z4 <= 27'd0;
   end
   else if (enable) begin
     // I think these top two need to be blocking

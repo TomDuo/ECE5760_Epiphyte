@@ -5,7 +5,9 @@ clc
 %For lowpass, set equal to normalized Freq (cutoff/(Fs/2))
 %For bandpass, set equal to normalized Freq vector ([low high]/(Fs/2))
 Fs = 48000
-freq = [0.2 0.4] ;
+freq = [0.2 0.4];
+%lb = 10.*3.^[0:6];
+%ub= 10.*3.^[1:7];
 %Filter order:
 %    use 2,4,6 for lowpass 
 %        1,2,3 for bandpass

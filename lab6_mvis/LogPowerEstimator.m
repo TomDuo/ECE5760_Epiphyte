@@ -15,10 +15,10 @@ abs_out = zeros(length(lb),length(x));
 lpf_abs_out = zeros(length(lb),length(x));
 env_out = zeros(length(lb),length(x));
 lpf_ks = [];
-order = 3;
+order = 2;
 for i = 1:length(lb)
   %[b,a] = butter(order,[lb(i)/fs, ub(i)/fs]);
-    [b,a] = ellip(order,5,60,[lb(i)/fs, ub(i)/fs]);
+   [b,a] = ellip(order,5,60,[lb(i)/fs, ub(i)/fs]);
 
   lb
   ub
