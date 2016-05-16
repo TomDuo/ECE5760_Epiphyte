@@ -330,7 +330,7 @@ cross_clocker #(16) ccR (
 .sig_out(aud_R)
 );
 
-assign LEDR[5:0] = SW[5:0];
+assign LEDR[17:0] = SW[17:0];
 // END AUDIO MODULES --------------------------------------------------------------------------------------
 
 

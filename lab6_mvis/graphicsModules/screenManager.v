@@ -109,28 +109,6 @@ wire [15:0] tfAud;
 wire [10:0] tfPow;
 wire [31:0] aud_tics_per_beat;
 
-/*
-autoGen_BPF #(0) beatFilter (
-			.clk(clk),
-			.aud_clk(aud_clk),
-			.reset(reset),
-			.enable(1'b1),
-
-			.iAud_L(iAudL),
-			.iAud_R(iAudR),
-
-			.oAud_L(tfAud),
-			.oAud_R(),
-			.power(tfPow)
-		);
-
-tempoFinder tf0 (
-	.aud_clk(aud_clk),
-	.reset(reset),
-	.iPow(tfPow),
-
-	.aud_tics_per_beat(aud_tics_per_beat)
-	);
 
 motionManager  mm0 (
   .clk(clk),
@@ -165,7 +143,7 @@ motionManager  mm0 (
   .od2_x(shivaX),
   .od2_y(shivaY),
 );
-*/
+
 
 wire [9:0] bruceX;
 wire [8:0] bruceY;
@@ -178,11 +156,11 @@ wire [8:0] shivaY;
 
 localparam bruce_X = 240;
 localparam bruce_Y = 80;
-/*
+
 drawBruce db0 (
    .clk(clk),
    .reset(reset),
-   .enable(SW[6]),
+   .enable(SW[7]),
    .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
@@ -192,16 +170,16 @@ drawBruce db0 (
     .current_topLeft_Y(bruceY),
     .init_topLeftX(10'd160),
     .init_topLeftY(9'd80),
-	 .oVal(layer[40]),
-    .oR(R[40]),
-    .oG(G[40]),
-    .oB(B[40]),
+	 .oVal(layer[56]),
+    .oR(R[56]),
+    .oG(G[56]),
+    .oB(B[56]),
   );
 
 drawConnor dc0 (
    .clk(clk),
    .reset(reset),
-   .enable(SW[7]),
+   .enable(SW[8]),
    .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
@@ -211,16 +189,16 @@ drawConnor dc0 (
     .current_topLeft_Y(connorY),
     .init_topLeftX(10'd40),
     .init_topLeftY(9'd100),
-	 .oVal(layer[39]),
-    .oR(R[39]),
-    .oG(G[39]),
-    .oB(B[39]),
+	 .oVal(layer[55]),
+    .oR(R[55]),
+    .oG(G[55]),
+    .oB(B[55]),
   );
 
 drawNoah dn0 (
    .clk(clk),
    .reset(reset),
-   .enable(SW[8]),
+   .enable(SW[9]),
    .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
@@ -230,16 +208,16 @@ drawNoah dn0 (
     .current_topLeft_Y(noahY),
     .init_topLeftX(10'd280),
     .init_topLeftY(9'd100),
-	 .oVal(layer[38]),
-    .oR(R[38]),
-    .oG(G[38]),
-    .oB(B[38]),
+	 .oVal(layer[54]),
+    .oR(R[54]),
+    .oG(G[54]),
+    .oB(B[54]),
   );
 
 drawShiva ds0 (
    .clk(clk),
    .reset(reset),
-   .enable(SW[9]),
+   .enable(SW[10]),
    .motion_en(1'b0),
 
    .iVGA_X(iVGA_X),
@@ -247,14 +225,14 @@ drawShiva ds0 (
 
     .current_topLeft_X(shivaX),
     .current_topLeft_Y(shivaY),
-    .init_topLeftX(10'd400),
+    .init_topLeftX(10'd340),
     .init_topLeftY(9'd80),
-	 .oVal(layer[37]),
-    .oR(R[37]),
-    .oG(G[37]),
-    .oB(B[37]),
+	 .oVal(layer[53]),
+    .oR(R[53]),
+    .oG(G[53]),
+    .oB(B[53]),
   );
-*/
+
 msbOneHot msb0 (layer,layerOH);
 
 wire [10:0] pow3word = power[3];

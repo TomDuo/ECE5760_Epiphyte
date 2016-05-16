@@ -195,7 +195,7 @@ endcase
 			if (count == 16'd9600) begin
 				count <= 16'd0;
 				power_accumulator <= 38'd0;
-				
+				/*
 				if(filterID == 0) begin
 				power <= power_accumulator[39:29];
 				end
@@ -203,8 +203,9 @@ endcase
 				power <= power_accumulator[37:27];
 				end
 				else begin
-				power <= power_accumulator[35:25];
-				end
+				*/
+				power <= power_accumulator[36:26];
+				//end
 			end
 			else begin 
 				power_accumulator <= power_accumulator + mag_y;
