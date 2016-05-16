@@ -27,7 +27,7 @@ reg comparison;
 always @(posedge clk) begin
 	if ((iVGA_X == 0) && (iVGA_Y == 0)) begin
 		comparison <= (pow>(1<<(yLoc+6)));
-		powSpect <= 2'd0; //pow[yLoc+5:yLoc+4] || {2{comparison}};
+		powSpect <= pow[yLoc+5:yLoc+4] || {2{comparison}};
 	end
 end
  
