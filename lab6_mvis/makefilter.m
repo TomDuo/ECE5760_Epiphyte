@@ -25,11 +25,11 @@ for i = 1:length(lb)
   fprintf('%i: begin\n',i-1);
   [b,a] = butter(2,[lb(i)/fs, ub(i)/fs]);
   for n = 1:length(b)
-    fprintf('b%i <= ', n);
+    fprintf('b%i <= ', n-1);
     decTo4_23fix(b(n));
   end
   for n = 1:length(a)
-    fprintf('a%i <= ', n);
+    fprintf('a%i <= ', n-1);
     decTo4_23fix(a(n));
   end
   fprintf('end\n\n');
