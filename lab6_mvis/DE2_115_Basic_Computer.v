@@ -308,8 +308,8 @@ AUDIO_DAC_ADC 			audio_dac_adc_mod	(	//	Audio Side
 							.oAUD_inL(codec_audio_inL), // audio data from ADC 
 							.oAUD_inR(codec_audio_inR), // audio data from ADC 
 							.iAUD_ADCDAT(AUD_ADCDAT),
-							.iAUD_extL(codec_audio_inL), // audio data to DAC
-							.iAUD_extR(codec_audio_inR), // audio data to DAC
+							.iAUD_extL(aud_out), // audio data to DAC
+							.iAUD_extR(aud_out), // audio data to DAC
 							//	Control Signals
 				         .iCLK_18_4(AUD_CTRL_CLK),
 							.iRST_N(DLY_RST)
@@ -359,7 +359,7 @@ JULIE	julies_vga_ctrl	(
 wire [7:0]	mVGA_R;				//manager output to VGA
 wire [7:0]	mVGA_G;
 wire [7:0]	mVGA_B;
-
+wire signed [15:0] aud_out;
 screenManager sm0(
 	.clk(VGA_CTRL_CLK),
 	.aud_clk(AUD_DACLRCK),
@@ -367,8 +367,8 @@ screenManager sm0(
 	.KEY2(KEY[2]),
 	.iVGA_X(VGA_X),
 	.iVGA_Y(VGA_Y),
-	.iAudL(aud_L),
-	.iAudR(aud_R),
+	.iAud(aud_L),
+   .audOut(aud_out),
 	.SW(SW[17:0]),
 	.oR(mVGA_R),
 	.oG(mVGA_G),

@@ -6,8 +6,9 @@ module screenManager (
 
 	input [9:0]  iVGA_X,
 	input [8:0]  iVGA_Y,
-	input [15:0] iAudL,
-	input [15:0] iAudR,
+	input [15:0] iAud,
+	output signed [15:0] audOut,
+
 	input [17:0]  SW,
 
 	output reg [7:0] oR,
@@ -53,6 +54,18 @@ wire [7:0] R [0:63];
 wire [7:0] G [0:63];
 wire [7:0] B [0:63];
 wire [10:0] power [0:6];
+wire signed [15:0] audOutMatrix [0:6];
+
+wire signed [15:0] ao0 = audOutMatrix[0];
+wire signed [15:0] ao1 = audOutMatrix[1];
+wire signed [15:0] ao2 = audOutMatrix[2];
+wire signed [15:0] ao3 = audOutMatrix[3];
+wire signed [15:0] ao4 = audOutMatrix[4];
+wire signed [15:0] ao5 = audOutMatrix[5];
+wire signed [15:0] ao6 = audOutMatrix[6];
+
+
+assign audOut = ao0[15:4] + ao1[15:4] + ao2[15:4] + ao3[15:4] + ao4[15:4] + ao5[15:4] + ao6[15:4]; 
 
 generate
 	genvar i;
@@ -64,23 +77,21 @@ generate
 			.reset(reset),
 			.enable(SW[6-i]),
 
-			.iAud_L(iAudL),
-			.iAud_R(iAudR),
+			.iAud(iAud),
 
-			.oAud_L(),
-			.oAud_R(),
+			.oAud(audOutMatrix[i]),
 			.power(power[i])
 		);
 
 		for (j=0; j < 7; j = j + 1) begin:ysweep
-			colorBlock #(85,69,0,13-2*i,5-j) cb (
+			colorBlock #(75,69,0,13-2*i,5-j) cb (
 				.clk(clk),
 				.reset(reset),
 				
 				.pow(power[i]),
 				.iVGA_X(iVGA_X),
 				.iVGA_Y(iVGA_Y),
-				.topLeftX(10+i*105),
+				.topLeftX(10+i*90),
 				.topLeftY(10+j*79),
 				
 				.oLayer(),
@@ -97,6 +108,7 @@ wire [15:0] tfAud;
 wire [10:0] tfPow;
 wire [31:0] aud_tics_per_beat;
 
+/*
 autoGen_BPF #(0) beatFilter (
 			.clk(clk),
 			.aud_clk(aud_clk),
@@ -152,6 +164,7 @@ motionManager  mm0 (
   .od2_x(shivaX),
   .od2_y(shivaY),
 );
+*/
 
 wire [9:0] bruceX;
 wire [8:0] bruceY;
@@ -245,6 +258,7 @@ msbOneHot msb0 (layer,layerOH);
 
 wire [10:0] pow3word = power[3];
 
+/*
 hex_7seg(iAudL[3:0],HEX0);
 hex_7seg(iAudL[7:4],HEX1);
 hex_7seg(iAudL[11:8],HEX2);
@@ -253,6 +267,7 @@ hex_7seg(iAudR[3:0],HEX4);
 hex_7seg(iAudR[7:4],HEX5);
 hex_7seg(iAudR[11:8],HEX6);
 hex_7seg(iAudR[15:12],HEX7);
+*/
 //hex7seg(pow3word[3:0],HEX3);
 
 // MATLAB  generated case statement

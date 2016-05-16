@@ -12,11 +12,9 @@ module autoGen_BPF #(
 		input reset,
 		input enable,
 
-		input signed [15:0] iAud_L,
-		input signed [15:0] iAud_R,
+		input signed [15:0] iAud,
 
-		output reg signed [15:0] oAud_L,
-		output reg signed [15:0] oAud_R,
+		output reg signed [15:0] oAud,
 		output reg [10:0]  power
 	);
 
@@ -25,9 +23,9 @@ module autoGen_BPF #(
 	wire signed [26:0] lpf_y;
 	wire signed [26:0] in;
 
-	reg  signed [37:0] power_accumulator;
+	reg  signed [39:0] power_accumulator;
 	reg  unsigned [15:0] count; 
-	assign in = {{3{iAud_L[15]}}, iAud_L,8'd0};
+	assign in = {{3{iAud[15]}}, iAud,8'd0};
 	reg  signed [26:0] mag_y;
 	reg  signed [26:0] sosMat [0:1][0:5];
 
@@ -61,8 +59,7 @@ module autoGen_BPF #(
 	);
 	always @ (posedge aud_clk) begin
 		if (reset) begin
-			oAud_R <= 16'd0;
-			oAud_L <= 16'd0;
+			oAud <= 16'd0;
 			power  <= 11'd0;
 			power_accumulator <= 38'd0;
 			count <= 16'd0;
@@ -183,7 +180,7 @@ module autoGen_BPF #(
 		end
 
 		else if (enable) begin
-			oAud_L <= y[24:9];
+			oAud <= y[24:9];
 			if (y[26]) begin
 				mag_y <= (~y)-27'd1;
 			end
@@ -194,7 +191,16 @@ module autoGen_BPF #(
 			if (count == 16'd9600) begin
 				count <= 16'd0;
 				power_accumulator <= 38'd0;
+				
+				if(filterID == 0) begin
+				power <= power_accumulator[39:29];
+				end
+				else if(filterID == 1) begin
+				power <= power_accumulator[37:27];
+				end
+				else begin
 				power <= power_accumulator[35:25];
+				end
 			end
 			else begin 
 				power_accumulator <= power_accumulator + mag_y;
@@ -202,8 +208,7 @@ module autoGen_BPF #(
 			end
 		end
 		else begin
-			oAud_R <= iAud_R;
-			oAud_L <= oAud_R;
+			oAud <= 16'd0;
 			power  <= 11'd0;
 		end
 	end
