@@ -208,6 +208,8 @@ always @ (posedge aud_clk) begin
     y3 <= y2;
     y4 <= y3;
     y <= mul_b0_x0 + mul_b1_x1 + mul_b2_x2 + mul_b3_x3 + mul_b4_x4 - mul_a1_y1 - mul_a2_y2 - mul_a3_y3 - mul_a4_y4;
+    //y <= x4; //+ x1*b1 + x2*b2 + x3*b3 + x4*b4 - y1*a1 - y2*a2 - y3*a3 - y4*a4; 
+
     oAud_L <= y[24:9];
     if (y[26]) begin
       mag_y <= (~y)-27'd1;
