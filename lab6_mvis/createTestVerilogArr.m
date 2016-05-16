@@ -1,10 +1,10 @@
 clear;
 [x, fs] = audioread('transformers_cut.wav');
-
+fs = 48e3;
 ftarget = 1000;
 maxlen = 2e3;
-
-x = .9*sin(2*pi*ftarget/fs*1:maxlen);
+n = 1:maxlen;
+x = .9*sin(2*pi*ftarget/fs*n);
 assert(fs==48e3,'We DUMB');
 
 x = (x*(2^15));

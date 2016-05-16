@@ -25,9 +25,7 @@ reg  signed [26:0] x;
 reg  signed [26:0] z1;
 reg  signed [26:0] a1;
 reg  signed [26:0] b1;
-wire signed [26:0] mul_a1_y;
 wire signed [26:0] mul_b1_x;
-fixed_comb_mult5760 mula1 (y,a1,mul_a1_y);
 fixed_comb_mult5760 mulb1 (x,b1,mul_b1_x);
 
 reg  signed [26:0] z2;

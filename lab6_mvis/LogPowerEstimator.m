@@ -14,8 +14,7 @@ out= zeros(length(lb),length(x));
 abs_out = zeros(length(lb),length(x));
 lpf_abs_out = zeros(length(lb),length(x));
 env_out = zeros(length(lb),length(x));
-lpf_ks = [];
-order = 2;
+sorder = 2;
 for i = 1:length(lb)
   %[b,a] = butter(order,[lb(i)/fs, ub(i)/fs]);
    [b,a] = ellip(order,5,60,[lb(i)/fs, ub(i)/fs]);
@@ -29,7 +28,7 @@ for i = 1:length(lb)
   out(i,:) = filter(b,a,x);
   abs_out(i,:) = abs(out(i,:));
   lpf_abs_out(   i,:) = filter(lpf_b,lpf_a,abs_out(i,:).^2);
-  env_out(i,:) = out(i,:).*cos(2*pi*lb(i)/fs.*t);%exp(j.*2*pi*lb(i).*t);
+  env_out(i,:) = abs_out(
   if MODE==2
       fvtool(b,a);
       pause
