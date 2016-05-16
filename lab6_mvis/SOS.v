@@ -45,12 +45,12 @@ wire signed [26:0] mul_a1_y1;
 wire signed [26:0] mul_a2_y2;
 
 
-fixed_comb_mult5760 mulb0 (x,b0,mul_b0_x0);
-fixed_comb_mult5760 mulb1 (x1,b1,mul_b1_x1);
-fixed_comb_mult5760 mulb2 (x2,b2,mul_b2_x2);
+fixed_clocked_mult5760 mulb0 (aud_clk,x1,b0,mul_b0_x0);
+fixed_clocked_mult5760 mulb1 (aud_clk,x1,b1,mul_b1_x1);
+fixed_clocked_mult5760 mulb2 (aud_clk,x2,b2,mul_b2_x2);
 
-fixed_comb_mult5760 mula1 (y1,a1,mul_a1_y1);
-fixed_comb_mult5760 mula2 (y2,a2,mul_a2_y2);
+fixed_clocked_mult5760 mula1 (aud_clk,y1,a1,mul_a1_y1);
+fixed_clocked_mult5760 mula2 (aud_clk,y2,a2,mul_a2_y2);
 
   always @ (posedge aud_clk) begin
   if (reset) begin
@@ -67,10 +67,10 @@ fixed_comb_mult5760 mula2 (y2,a2,mul_a2_y2);
       x1 <= x;
       x2 <= x1;
       
+      y <= mul_b0_x0 + mul_b1_x1 + mul_b2_x2 - mul_a1_y1 - mul_a2_y2;
       y1 <= y;
       y2 <= y1; 
 
-      y <= mul_b0_x0 + mul_b1_x1 + mul_b2_x2 - mul_a1_y1 - mul_a2_y2;
   end
 end
 endmodule
