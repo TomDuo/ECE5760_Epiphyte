@@ -28,15 +28,6 @@ wire [10:0] pow_810_2430;
 wire [10:0] pow_2430_7290;
 wire [10:0] pow_7290_21870;
 
-
-
-
-
-
-
-
-
-
 always #5 clk = ~clk;
 always #35 audclk = ~audclk;
 
@@ -45,7 +36,7 @@ integer n = 0;
   testVect tv(
       .aud(aud)
   );
-  autoGen_BPF #(1) bpf10_30(
+  autoGen_BPF #(0) bpf10_30(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -56,7 +47,7 @@ integer n = 0;
       .power(pow_10_30)
   );
 
-  autoGen_BPF #(2) bpf30_90(
+  autoGen_BPF #(1) bpf30_90(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -67,7 +58,7 @@ integer n = 0;
       .power(pow_30_90)
   );
 
-  autoGen_BPF #(3) bpf_90_270(
+  autoGen_BPF #(2) bpf_90_270(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -78,7 +69,7 @@ integer n = 0;
       .power(pow_90_270)
   );
 
-  autoGen_BPF #(4) bpf270_810(
+  autoGen_BPF #(3) bpf270_810(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -89,7 +80,7 @@ integer n = 0;
       .power(pow_270_810)
   );
 
-  autoGen_BPF #(5) bpf810_2430(
+  autoGen_BPF #(4) bpf810_2430(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -100,7 +91,7 @@ integer n = 0;
       .power(pow_810_2430)
   );
 
-  autoGen_BPF #(6) bpf2430_7290(
+  autoGen_BPF #(5) bpf2430_7290(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
@@ -110,7 +101,7 @@ integer n = 0;
       .oAud_L(oAud_2430_7290),
       .power(pow_2430_7290)
   );
-  autoGen_BPF #(7) bpf7290_21870(
+  autoGen_BPF #(6) bpf7290_21870(
       .clk(clk),
       .aud_clk(audclk),
       .reset(reset),
