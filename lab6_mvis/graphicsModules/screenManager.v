@@ -70,16 +70,16 @@ always @* begin
 end
 
 
-autoGen_BPF #(0,ao_width) abs_lpf (
-			.clk(clk),
-			.aud_clk(aud_clk),
-			.reset(reset),
-			.enable(1'b1),
-
-			.iAud(abs_iAud),
-
-			.oAud(abs_out),
-		);
+//autoGen_BPF #(0,ao_width) abs_lpf (
+//			.clk(clk),
+//			.aud_clk(aud_clk),
+//			.reset(reset),
+//			.enable(1'b1),
+//
+//			.iAud(abs_iAud),
+//
+//			.oAud(abs_out),
+//		);
 
 //assign audOut = ao0[ao_width:4] + ao1[ao_width:4] + ao2[ao_width:4] + ao3[ao_width:4] + ao4[ao_width:4] + ao5[ao_width:4] + ao6[ao_width:4]; 
 assign audOut = audOutMatrix[0] + audOutMatrix[1] +audOutMatrix[2] +audOutMatrix[3] +audOutMatrix[4] +audOutMatrix[5]+audOutMatrix[6];
@@ -130,8 +130,9 @@ motionManager  mm0 (
   .aud_clk(aud_clk),
   .reset(~KEY2),
 
-  .aud_clk_tics_per_beat(16'd48000),
-  .beatHit(~KEY2),
+  //.aud_clk_tics_per_beat(16'd48000),
+  //.beatHit(~KEY2), 
+  .beatSignalIn(power[0]),
   .dancer_en(SW[17:14]), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
@@ -191,62 +192,62 @@ drawBruce db0 (
     .oB(B[56]),
   );
 
-drawConnor dc0 (
-   .clk(clk),
-   .reset(reset),
-   .enable(SW[8]),
-   .motion_en(1'b0),
-
-   .iVGA_X(iVGA_X),
-   .iVGA_Y(iVGA_Y),
-
-    .current_topLeft_X(connorX),
-    .current_topLeft_Y(connorY),
-    .init_topLeftX(10'd40),
-    .init_topLeftY(9'd100),
-	 .oVal(layer[55]),
-    .oR(R[55]),
-    .oG(G[55]),
-    .oB(B[55]),
-  );
-
-drawNoah dn0 (
-   .clk(clk),
-   .reset(reset),
-   .enable(SW[9]),
-   .motion_en(1'b0),
-
-   .iVGA_X(iVGA_X),
-   .iVGA_Y(iVGA_Y),
-
-    .current_topLeft_X(noahX),
-    .current_topLeft_Y(noahY),
-    .init_topLeftX(10'd300),
-    .init_topLeftY(9'd100),
-	 .oVal(layer[54]),
-    .oR(R[54]),
-    .oG(G[54]),
-    .oB(B[54]),
-  );
-
-drawShiva ds0 (
-   .clk(clk),
-   .reset(reset),
-   .enable(SW[10]),
-   .motion_en(1'b0),
-
-   .iVGA_X(iVGA_X),
-   .iVGA_Y(iVGA_Y),
-
-    .current_topLeft_X(shivaX),
-    .current_topLeft_Y(shivaY),
-    .init_topLeftX(10'd430),
-    .init_topLeftY(9'd80),
-	 .oVal(layer[53]),
-    .oR(R[53]),
-    .oG(G[53]),
-    .oB(B[53]),
-  );
+//drawConnor dc0 (
+//   .clk(clk),
+//   .reset(reset),
+//   .enable(SW[8]),
+//   .motion_en(1'b0),
+//
+//   .iVGA_X(iVGA_X),
+//   .iVGA_Y(iVGA_Y),
+//
+//    .current_topLeft_X(connorX),
+//    .current_topLeft_Y(connorY),
+//    .init_topLeftX(10'd40),
+//    .init_topLeftY(9'd100),
+//	 .oVal(layer[55]),
+//    .oR(R[55]),
+//    .oG(G[55]),
+//    .oB(B[55]),
+//  );
+//
+//drawNoah dn0 (
+//   .clk(clk),
+//   .reset(reset),
+//   .enable(SW[9]),
+//   .motion_en(1'b0),
+//
+//   .iVGA_X(iVGA_X),
+//   .iVGA_Y(iVGA_Y),
+//
+//    .current_topLeft_X(noahX),
+//    .current_topLeft_Y(noahY),
+//    .init_topLeftX(10'd300),
+//    .init_topLeftY(9'd100),
+//	 .oVal(layer[54]),
+//    .oR(R[54]),
+//    .oG(G[54]),
+//    .oB(B[54]),
+//  );
+//
+//drawShiva ds0 (
+//   .clk(clk),
+//   .reset(reset),
+//   .enable(SW[10]),
+//   .motion_en(1'b0),
+//
+//   .iVGA_X(iVGA_X),
+//   .iVGA_Y(iVGA_Y),
+//
+//    .current_topLeft_X(shivaX),
+//    .current_topLeft_Y(shivaY),
+//    .init_topLeftX(10'd430),
+//    .init_topLeftY(9'd80),
+//	 .oVal(layer[53]),
+//    .oR(R[53]),
+//    .oG(G[53]),
+//    .oB(B[53]),
+//  );
 
 msbOneHot msb0 (layer,layerOH);
 

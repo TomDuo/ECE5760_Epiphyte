@@ -9,9 +9,9 @@ module motionManager
   input aud_clk,
   input reset,
 
-  input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
-  input [15:0] beatSignalIn,
-  input beatHit,
+  //input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
+  input [10:0] beatSignalIn,
+  //input beatHit,
   input [3:0] dancer_en, // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
 
   input [9:0] iVGA_X,
@@ -63,6 +63,19 @@ end
 //----------------------- END FRAME COUNTER -----------------------------------
 
 //----------------------- BPM DIRECTION ---------------------------------------
+wire [31:0] aud_clk_tics_per_beat;
+wire beatHit;
+
+tempoFinder #( 11'h040
+	) tf1(
+	.aud_clk(aud_clk),
+	.reset(reset),
+	.iPow(beatSignalIn),
+
+	.aud_tics_per_beat(aud_clk_tics_per_beat),
+	.beatHit(beatHit)
+	);
+
 always @(posedge aud_clk) begin
   if(reset) begin
     vga_tics <= 32'd0;
