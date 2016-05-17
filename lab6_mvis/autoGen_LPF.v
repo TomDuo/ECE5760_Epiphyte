@@ -57,17 +57,18 @@ module autoGen_LPF
 			power_accumulator <= 38'd0;
 			count <= 16'd0;
 			sosMat[0][0] <= 27'h1;
-sosMat[0][1] <= 27'h1;
-sosMat[0][2] <= 27'h1;
+sosMat[0][0] <= 27'h0;
+sosMat[0][1] <= 27'h0;
+sosMat[0][2] <= 27'h0;
 sosMat[0][3] <= 27'h800000;
-sosMat[0][4] <= 27'h7001869;
-sosMat[0][5] <= 27'h7FE79A;
+sosMat[0][4] <= 27'h700279E;
+sosMat[0][5] <= 27'h7FD865;
 sosMat[1][0] <= 27'h800000;
-sosMat[1][1] <= 27'h7000000;
+sosMat[1][1] <= 27'h1000000;
 sosMat[1][2] <= 27'h800000;
 sosMat[1][3] <= 27'h800000;
-sosMat[1][4] <= 27'h70002E4;
-sosMat[1][5] <= 27'h7FFD1C;
+sosMat[1][4] <= 27'h700106D;
+sosMat[1][5] <= 27'h7FEF97;
 		end
 
 		else if (enable) begin
