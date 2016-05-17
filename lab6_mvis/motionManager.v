@@ -46,7 +46,7 @@ reg [31:0] frame_counter;
 reg        frame_clk;
 reg [15:0] vga_tics;
 reg        direction;
-localparam MAX_TOL = 10'd20;
+localparam MAX_TOL = 10'd7;
 always @(posedge clk) begin
   if (reset) begin
     frame_counter <= 32'd0;
@@ -79,29 +79,7 @@ tempoFinder tf1(
    .beating(beating),
 	.beatHit(beatHit)
 	);
-/*
-always @(posedge aud_clk) begin
-  if(reset) begin
-    vga_tics <= 32'd0;
-  end
-  else if (beatHit) begin
-    vga_tics <= 32'd0;
-  end
-  else if (vga_tics > aud_clk_tics_per_beat) begin
-    vga_tics <= 32'd0;
-  end
-  else begin
-    vga_tics <= vga_tics + 32'd1;
-  end
-
-  if (vga_tics <= (aud_clk_tics_per_beat>>1)) begin
-    direction <= 1'b1;
-  end
-  else begin
-    direction <= 1'b0;
-  end
-end
-*/
+	
 
 always @(posedge beatHit) begin
 	 if(obruce_x  < (ibruce_x_init - MAX_TOL)) begin

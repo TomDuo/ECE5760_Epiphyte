@@ -1,5 +1,5 @@
 module tempoFinder #( 
-	parameter beatThreshold = 11'h80,
+	parameter beatThreshold = 11'h4C,
 	parameter minTicksPerBeat = 16'd12000, //4hz
 	parameter maxTicksPerBeat = 16'd48000 
 	)(
