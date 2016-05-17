@@ -6,9 +6,7 @@ sosSize = [2 6];
 fs=48e3;
 fc=10;
    % fprintf('\n%i: begin\n\n',fIndex-1);
-%[z,p,k] = butter(2,[1/fs fc/fs]);
-[z,p,k] = butter(4, fc/fs);
-
+[z,p,k] = butter(2,[1/fs fc/fs]);
 soshi = zp2sos(z,p,k);
 
 

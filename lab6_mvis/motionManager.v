@@ -10,6 +10,7 @@ module motionManager
   input frame_clk,
   input reset,
 
+  input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
   input [15:0] iAud,
   input [3:0] dancer_en, // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
 
@@ -35,37 +36,14 @@ module motionManager
   output reg [8:0] od1_y,
 
   output reg [9:0] od2_x,
-  output reg [8:0] od2_y,
-  
-  output reg signed [26:0] abs_lpf_out,
-  output reg signed [15:0] abs_iAud,
-  output wire signed [26:0] lpf_out
-
-
+  output reg [8:0] od2_y
 );
 
 
+reg signed [15:0] abs_iAud;
+wire signed [26:0] lpf_out;
 
-
-
-always @(posedge aud_clk) begin
-	if (iAud < 16'd0) begin
-		abs_iAud<=-iAud;
-	end
-	else begin
-	    abs_iAud <= iAud;
-	end
-	
-	if (lpf_out < 27'd0) begin
-		abs_lpf_out<=-lpf_out;
-	end
-	else begin
-	    abs_lpf_out <= lpf_out;
-	end
-	
-end
-//assign abs_lpf_out = lpf_out[26] ? -lpf_out : lpf_out;
-/*
+reg signed [26:0] abs_lpf_out;
 always @* begin
   if (iAud[15] == 1'b1) begin
     abs_iAud = -iAud;
@@ -74,7 +52,6 @@ always @* begin
     abs_iAud = iAud;
   end
 end
-
 always @* begin
   if (lpf_out[26] == 1'b1) begin
     abs_lpf_out = -lpf_out;
@@ -83,19 +60,19 @@ always @* begin
     abs_lpf_out = lpf_out;
   end
 end
-*/
+
 
 autoGen_LPF  abs_lpf (
 			.clk(clk),
 			.aud_clk(aud_clk),
 			.reset(reset),
-			.enable(|dancer_en),
+			.enable(1'b1),
 
 			.iAud(abs_iAud),
-   
-			.oAud(lpf_out)
+
+			.oAud(lpf_out),
 		);
-  
+
 
 
 //----------------------- BRUCE MOTION MANAGEMENT -----------------------------

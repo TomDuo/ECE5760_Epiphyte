@@ -23,8 +23,7 @@ module screenManager (
 	output wire [6:0] HEX4,
 	output wire [6:0] HEX5,
 	output wire [6:0] HEX6,
-	output wire [6:0] HEX7,
-	output reg  [7:0] LEDG_DRV
+	output wire [6:0] HEX7
 );
 
 // TEST SECTION FOR STROBING THROUGH BRIGHTNESS ---------------------------------------------------
@@ -101,17 +100,15 @@ endgenerate
 wire [15:0] tfAud;
 wire [10:0] tfPow;
 wire [31:0] aud_tics_per_beat;
-wire [15:0] abs_iAud;
-wire [26:0] abs_lpf_out;
-wire [26:0] lpf_out;
+
 
 motionManager  mm0 (
   .clk(clk),
   .aud_clk(aud_clk),
   .frame_clk(frame_clk),
   .reset(~KEY2),
-	
-  .iAud(iAud),
+
+  .aud_clk_tics_per_beat(16'd48000),
   .dancer_en(SW[17:14]), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
@@ -137,7 +134,6 @@ motionManager  mm0 (
   .id2_y_init(9'd100),
   .od2_x(shivaX),
   .od2_y(shivaY),
-  .abs_lpf_out(abs_lpf_out)
 );
 
 
@@ -169,9 +165,9 @@ drawBruce db0 (
 	 .oVal(layer[56]),
     .oR(R[56]),
     .oG(G[56]),
-    .oB(B[56])
+    .oB(B[56]),
   );
-/*
+
 drawConnor dc0 (
    .clk(clk),
    .reset(reset),
@@ -228,30 +224,21 @@ drawShiva ds0 (
     .oG(G[53]),
     .oB(B[53]),
   );
-*/
+
 msbOneHot msb0 (layer,layerOH);
 
 wire [10:0] pow3word = power[3];
 
 /*
-hex_7seg(abs_lpf_out[3:0],HEX0);
-hex_7seg(abs_lpf_out[7:4],HEX1);
-hex_7seg(abs_lpf_out[11:8],HEX2);
-hex_7seg(abs_lpf_out[15:12],HEX3);
-hex_7seg(abs_lpf_out[19:16],HEX4);
-hex_7seg(abs_lpf_out[23:20],HEX5);
-hex_7seg(abs_lpf_out[26:24],HEX6);
+hex_7seg(iAudL[3:0],HEX0);
+hex_7seg(iAudL[7:4],HEX1);
+hex_7seg(iAudL[11:8],HEX2);
+hex_7seg(iAudL[15:12],HEX3);
+hex_7seg(iAudR[3:0],HEX4);
+hex_7seg(iAudR[7:4],HEX5);
+hex_7seg(iAudR[11:8],HEX6);
+hex_7seg(iAudR[15:12],HEX7);
 */
-
-
-hex_7seg(lpf_out[3:0],HEX0);
-hex_7seg(lpf_out[7:4],HEX1);
-hex_7seg(lpf_out[11:8],HEX2);
-hex_7seg(lpf_out[15:12],HEX3);
-hex_7seg(lpf_out[19:16],HEX4);
-hex_7seg(lpf_out[23:20],HEX5);
-hex_7seg(lpf_out[26:24],HEX6);
-
 //hex7seg(pow3word[3:0],HEX3);
 
 // MATLAB  generated case statement
