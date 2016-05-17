@@ -363,7 +363,6 @@ wire signed [15:0] aud_out;
 screenManager sm0(
 	.clk(VGA_CTRL_CLK),
 	.aud_clk(AUD_DACLRCK),
-	.frame_clk(VGA_VS),
 	.reset(~KEY[0]),
 	.KEY2(KEY[2]),
 	.iVGA_X(VGA_X),

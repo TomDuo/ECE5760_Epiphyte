@@ -7,11 +7,11 @@ module motionManager
 (
   input clk,
   input aud_clk,
-  input frame_clk,
   input reset,
 
   input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
-  input [15:0] iAud,
+  input [15:0] beatSignalIn,
+  input beatHit,
   input [3:0] dancer_en, // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
 
   input [9:0] iVGA_X,
@@ -40,55 +40,81 @@ module motionManager
 );
 
 
-reg signed [15:0] abs_iAud;
-wire signed [26:0] lpf_out;
+//----------------------- FRAME COUNTER ---------------------------------------
+reg [31:0] frame_counter;
+reg        frame_clk;
+reg [15:0] vga_tics;
+reg        direction;
 
-reg signed [26:0] abs_lpf_out;
-always @* begin
-  if (iAud[15] == 1'b1) begin
-    abs_iAud = -iAud;
+always @(posedge clk) begin
+  if (reset) begin
+    frame_counter <= 32'd0;
+    frame_clk <= ~frame_clk; 	// have this keep moving so that we can reach reset 
+										// in other blocks
   end
-  else begin
-    abs_iAud = iAud;
+  else if ((iVGA_Y == 9'd0) && (iVGA_X == 10'd0) && ~frame_clk) begin
+    frame_clk <= 1'b1;
+    frame_counter <= frame_counter + 32'd1;
+  end
+  else if ((iVGA_Y != 9'd0) || (iVGA_X != 10'd0)) begin
+    frame_clk <= 1'b0;
   end
 end
-always @* begin
-  if (lpf_out[26] == 1'b1) begin
-    abs_lpf_out = -lpf_out;
+//----------------------- END FRAME COUNTER -----------------------------------
+
+//----------------------- BPM DIRECTION ---------------------------------------
+always @(posedge aud_clk) begin
+  if(reset) begin
+    vga_tics <= 32'd0;
+  end
+  else if (beatHit) begin
+    vga_tics <= 32'd0;
+  end
+  else if (vga_tics > aud_clk_tics_per_beat) begin
+    vga_tics <= 32'd0;
   end
   else begin
-    abs_lpf_out = lpf_out;
+    vga_tics <= vga_tics + 32'd1;
+  end
+
+  if (vga_tics <= (aud_clk_tics_per_beat>>1)) begin
+    direction <= 1'b1;
+  end
+  else begin
+    direction <= 1'b0;
   end
 end
-
-
-autoGen_LPF  abs_lpf (
-			.clk(clk),
-			.aud_clk(aud_clk),
-			.reset(reset),
-			.enable(1'b1),
-
-			.iAud(abs_iAud),
-
-			.oAud(lpf_out),
-		);
-
-
+//----------------------- END BPM DIRECTION -----------------------------------
 
 //----------------------- BRUCE MOTION MANAGEMENT -----------------------------
+reg [31:0] counter_snapshot;
+reg [9:0]  steps_counter;
 always @(posedge frame_clk) begin
    if (reset) begin
+    counter_snapshot <= frame_counter;
     obruce_x <= ibruce_x_init;
     obruce_y <= ibruce_y_init;
    end
-   else if (dancer_en[3] && abs_lpf_out >= 27'h3FFFFF) begin 
-    obruce_x <= obruce_x + lpf_out[26:23];
-    obruce_y <= obruce_y + lpf_out[26:23];
+   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin 
+     counter_snapshot <= frame_counter;
+     if (direction) begin
+       steps_counter <= steps_counter + 10'd1;
+       obruce_x <= obruce_x + 10'd1;
+       obruce_y <= obruce_y + 9'd1;
+     end
+     else if (~direction) begin
+       steps_counter <= steps_counter + 10'd1;
+       obruce_x <= obruce_x - 10'd1;
+       obruce_y <= obruce_y - 9'd1;
+     end
+     else begin
+       steps_counter <= 10'd0;
+     end
+
    end // end frame_counter
 end // end always block
 //----------------------- END BRUCE MOTION MANAGEMENT -------------------------
 
-/*
 //----------------------- D0 MOTION MANAGEMENT --------------------------------
 reg [31:0] counter_snapshotd0;
 reg [9:0]  steps_counterd0;
@@ -177,6 +203,5 @@ always @(posedge frame_clk) begin
 
    end // end frame_counter
 end // end always block
-*/
 //----------------------- END D2 MOTION MANAGEMENT ----------------------------
 endmodule
