@@ -38,9 +38,9 @@ shiva_headBlock  hb0
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
-  .topLeft_Y(current_topLeft_Y),
+  .topLeft_Y(current_topLeft_Y-9'd10),
   .init_X(init_topLeftX),
-  .init_Y(init_topLeftY),
+  .init_Y(init_topLeftY-9'd10),
   
   .oLayer(),
   .oVal(layer[4]),
@@ -48,7 +48,6 @@ shiva_headBlock  hb0
   .G(G[4]),
   .B(B[4])
 );
-
 tux_bodyBlock  bbb0
 (
   .clk(clk),
@@ -81,9 +80,9 @@ tux_arm_LBlock alb0
   .iVGA_X(iVGA_X),
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
-  .topLeft_Y(current_topLeft_Y+9'd105),
-  .init_X(init_topLeftX-10'd27),
-  .init_Y(init_topLeftY+9'd1050),
+  .topLeft_Y(current_topLeft_Y+9'd90),
+  .init_X(init_topLeftX-10'd17),
+  .init_Y(init_topLeftY+9'd90),
   
   .oLayer(),
   .oVal(layer[2]),
@@ -104,8 +103,8 @@ tux_arm_RBlock arb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_X(init_topLeftX+10'd80),
-  .init_Y(init_topLeftY+9'd10),
+  .init_X(init_topLeftX+10'd90),
+  .init_Y(init_topLeftY),
   
   .oLayer(),
   .oVal(layer[3]),
@@ -126,8 +125,8 @@ tux_pantsBlock  tpb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_X(init_topLeftX-10'd5),
-  .init_Y(init_topLeftY+9'd171),
+  .init_X(init_topLeftX+10'd5),
+  .init_Y(init_topLeftY+9'd156),
   
   .oLayer(),
   .oVal(layer[0]),
@@ -136,15 +135,16 @@ tux_pantsBlock  tpb0
   .B(B[0])
 );
 
+
 msbOneHot msb0 (layer,layerOH);
 
 always @(posedge clk) begin
-	if (layerOH>0) begin
-		oVal <= 1'b1;
-	end
-	else begin
-		oVal <= 1'b0;
-	end
+  if (layerOH>0) begin
+    oVal <= 1'b1;
+  end
+  else begin
+    oVal <= 1'b0;
+  end
   case(layerOH)
   (1<<4): begin
     oR <= R[4];
