@@ -4,13 +4,10 @@ clc;
 
 sosSize = [2 6];
 fs=48e3;
-fc=10;
+fc=40;
    % fprintf('\n%i: begin\n\n',fIndex-1);
-%[z,p,k] = butter(2,[1/fs fc/fs]);
-[z,p,k] = butter(4, fc/fs);
-
+[z,p,k] = ellip(4,2,40,fc/fs);
 soshi = zp2sos(z,p,k);
-
 
     sosSize = size(soshi);
     for y = 1:sosSize(1)
@@ -24,3 +21,4 @@ fprintf('endcase');
 h=fvtool(soshi);
 
 
+2
