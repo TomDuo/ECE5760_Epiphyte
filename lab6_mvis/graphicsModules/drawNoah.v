@@ -26,7 +26,6 @@ wire [7:0] R [0:4];
 wire [7:0] G [0:4];
 wire [7:0] B [0:4];
 
-/*
 noah_headBlock  hb0
 (
   .clk(clk),
@@ -134,7 +133,7 @@ tux_pantsBlock  tpb0
   .G(G[0]),
   .B(B[0])
 );
-*/
+
 
 msbOneHot msb0 (layer,layerOH);
 

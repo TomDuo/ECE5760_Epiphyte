@@ -10,9 +10,9 @@ module motionManager
   input reset,
 
   input [15:0] aud_clk_tics_per_beat, // #shoutouttotravis
-  input       beatHit,
+  input [15:0] beatSignalIn,
+  input beatHit,
   input [3:0] dancer_en, // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
-  input [2:0] motionType,
 
   input [9:0] iVGA_X,
   input [8:0] iVGA_Y,

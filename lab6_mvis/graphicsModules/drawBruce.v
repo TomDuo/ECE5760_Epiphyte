@@ -126,7 +126,7 @@ tux_pantsBlock  tpb0
   .iVGA_Y(iVGA_Y),
   .topLeft_X(current_topLeft_X),
   .topLeft_Y(current_topLeft_Y),
-  .init_X(init_topLeftX+10'd15),
+  .init_X(init_topLeftX+10'd22),
   .init_Y(init_topLeftY+9'd163),
   
   .oLayer(),

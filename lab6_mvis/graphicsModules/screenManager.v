@@ -57,14 +57,29 @@ wire [10:0] power [0:6];
 localparam ao_width = 13;
 wire signed [ao_width:0] audOutMatrix [0:6];
 
-//wire signed [ao_width:0] ao0 = audOutMatrix[0];
-//wire signed [ao_width:0] ao1 = audOutMatrix[1];
-//wire signed [ao_width:0] ao2 = audOutMatrix[2];
-//wire signed [ao_width:0] ao3 = audOutMatrix[3];
-//wire signed [ao_width:0] ao4 = audOutMatrix[4];
-//wire signed [ao_width:0] ao5 = audOutMatrix[5];
-//wire signed [ao_width:0] ao6 = audOutMatrix[6];
+reg signed [15:0] abs_iAud;
+wire signed [15:0] abs_out;
 
+always @* begin
+  if (iAud[15] == 1'b1) begin
+    abs_iAud = -iAud;
+  end
+  else begin
+    abs_iAud = iAud;
+  end
+end
+
+
+autoGen_BPF #(0,ao_width) abs_lpf (
+			.clk(clk),
+			.aud_clk(aud_clk),
+			.reset(reset),
+			.enable(1'b1),
+
+			.iAud(abs_iAud),
+
+			.oAud(abs_out),
+		);
 
 //assign audOut = ao0[ao_width:4] + ao1[ao_width:4] + ao2[ao_width:4] + ao3[ao_width:4] + ao4[ao_width:4] + ao5[ao_width:4] + ao6[ao_width:4]; 
 assign audOut = audOutMatrix[0] + audOutMatrix[1] +audOutMatrix[2] +audOutMatrix[3] +audOutMatrix[4] +audOutMatrix[5]+audOutMatrix[6];
@@ -133,12 +148,12 @@ motionManager  mm0 (
   .od0_x(connorX),
   .od0_y(connorY),
 
-  .id1_x_init(10'd340),
+  .id1_x_init(10'd300),
   .id1_y_init(9'd100),
   .od1_x(noahX),
   .od1_y(noahY),
 
-  .id2_x_init(10'd340),
+  .id2_x_init(10'd430),
   .id2_y_init(9'd100),
   .od2_x(shivaX),
   .od2_y(shivaY),
@@ -206,7 +221,7 @@ drawNoah dn0 (
 
     .current_topLeft_X(noahX),
     .current_topLeft_Y(noahY),
-    .init_topLeftX(10'd280),
+    .init_topLeftX(10'd300),
     .init_topLeftY(9'd100),
 	 .oVal(layer[54]),
     .oR(R[54]),
@@ -225,7 +240,7 @@ drawShiva ds0 (
 
     .current_topLeft_X(shivaX),
     .current_topLeft_Y(shivaY),
-    .init_topLeftX(10'd340),
+    .init_topLeftX(10'd430),
     .init_topLeftY(9'd80),
 	 .oVal(layer[53]),
     .oR(R[53]),
