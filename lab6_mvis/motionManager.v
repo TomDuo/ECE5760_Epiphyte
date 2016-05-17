@@ -46,7 +46,7 @@ reg [31:0] frame_counter;
 reg        frame_clk;
 reg [15:0] vga_tics;
 reg        direction;
-
+localparam MAX_TOL = 10'd20;
 always @(posedge clk) begin
   if (reset) begin
     frame_counter <= 32'd0;
@@ -103,6 +103,18 @@ always @(posedge aud_clk) begin
 end
 */
 
+always @(posedge beatHit) begin
+	 if(obruce_x  < (ibruce_x_init - MAX_TOL)) begin
+		direction <= 1'b1;
+	 end
+	 if(obruce_x  > (ibruce_x_init + MAX_TOL)) begin
+		direction <= 1'b0;
+	 end
+	 else begin
+		direction <= ~direction;
+	 end
+end
+/*
 always @(posedge aud_clk) begin
   if (reset) begin
       direction <= 1'b0;
@@ -110,7 +122,9 @@ always @(posedge aud_clk) begin
   else if (beatHit) begin
     direction <= ~direction;
   end
-end//----------------------- END BPM DIRECTION -----------------------------------
+end
+*/
+//----------------------- END BPM DIRECTION -----------------------------------
 
 //----------------------- BRUCE MOTION MANAGEMENT -----------------------------
 reg [31:0] counter_snapshot;
