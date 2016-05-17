@@ -216,6 +216,9 @@
 					<!-- Noah section -->
 					We learned a lot doing this lab. We were able to build on our experience from earlier in the semester working with fixed point math and gained some knowledge about how to implement very-low level graphics on the FPGA. Second order sections and numerical stability considerations in filter design for HDL are both widely applicable to many problems within the FPGA tradespace. In the process, we got to build a bruce-in-a-club simulator that we think is pretty cool.
 					</p>
+					<p>
+					There were some noteworthy mathematical considerations that are worth noting in terms of the infinite impulse response filters that we developed. While they are mathematically stable with infinite precision, when using the 4.23 fixed notation that we adapted to utilize the 9-bit hardware multipliers it is possible to generate sustained oscillation that can result from switching filters on and off while there is a large amount of spectral content in their passbands. Apart from this limitation and the effects of limited precision arithmetic, the filters that we designed are a good approximation of the infinite impulse response butterworth filters that they were designed to replicate. With this fixed point precision, we could not hear a difference in the unfiltered and filtered output and so these shortcomings were deemed acceptable.
+					</p>
 
 					<h3>Societal Impacts</h3>
 					 <p>
