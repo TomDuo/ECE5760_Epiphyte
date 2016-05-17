@@ -56,19 +56,34 @@ module autoGen_LPF
 			power  <= 11'd0;
 			power_accumulator <= 38'd0;
 			count <= 16'd0;
-			sosMat[0][0] <= 27'h1;
-sosMat[0][1] <= 27'h1;
-sosMat[0][2] <= 27'h1;
-sosMat[0][3] <= 27'h800000;
-sosMat[0][4] <= 27'h7001869;
-sosMat[0][5] <= 27'h7FE79A;
-sosMat[1][0] <= 27'h800000;
-sosMat[1][1] <= 27'h7000000;
-sosMat[1][2] <= 27'h800000;
-sosMat[1][3] <= 27'h800000;
-sosMat[1][4] <= 27'h70002E4;
-sosMat[1][5] <= 27'h7FFD1C;
-		end
+            /*
+            sosMat[0][0] <= 27'h9;
+            sosMat[0][1] <= 27'h12;
+            sosMat[0][2] <= 27'h9;
+            sosMat[0][3] <= 27'h800000;
+            sosMat[0][4] <= 27'h70F1AAA;
+            sosMat[0][5] <= 27'h7169A9;
+            sosMat[1][0] <= 27'h800000;
+            sosMat[1][1] <= 27'h1000000;
+            sosMat[1][2] <= 27'h800000;
+            sosMat[1][3] <= 27'h800000;
+            sosMat[1][4] <= 27'h706C91F;
+            sosMat[1][5] <= 27'h79BFC5;
+            */
+           sosMat[0][0] <= 27'h14762;
+           sosMat[0][1] <= 27'h7FD7142;
+           sosMat[0][2] <= 27'h14762;
+           sosMat[0][3] <= 27'h800000;
+           sosMat[0][4] <= 27'h7002F9B;
+           sosMat[0][5] <= 27'h7FD076;
+           sosMat[1][0] <= 27'h800000;
+           sosMat[1][1] <= 27'h7000080;
+           sosMat[1][2] <= 27'h800000;
+           sosMat[1][3] <= 27'h800000;
+           sosMat[1][4] <= 27'h7000D3D;
+           sosMat[1][5] <= 27'h7FF2FA;
+           end
+
 
 		else if (enable) begin
 			oAud <= y;
