@@ -4,7 +4,7 @@ clc;
 
 sosSize = [2 6];
 fs=48e3;
-fc=40;
+fc=20;
    % fprintf('\n%i: begin\n\n',fIndex-1);
 [z,p,k] = ellip(4,2,40,fc/fs);
 soshi = zp2sos(z,p,k);
