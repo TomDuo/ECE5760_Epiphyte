@@ -1,11 +1,14 @@
 module tempoFinder #( 
 	parameter beatThreshold = 11'h600
+	parameter minTicksPerBeat = 16'd12000 //4hz
+	parameter maxTicksPerBeat = 16'd48000 
 	)(
 	input aud_clk,
 	input reset,
 	input [10:0] iPow,
 
-	output reg [31:0] aud_tics_per_beat,
+	//output reg [31:0] aud_tics_per_beat,
+	output reg beating,
 	output reg beatHit
 	);
 

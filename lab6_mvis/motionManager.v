@@ -66,7 +66,7 @@ end
 wire [31:0] aud_clk_tics_per_beat;
 wire beatHit;
 
-tempoFinder #( 11'h040
+tempoFinder #(
 	) tf1(
 	.aud_clk(aud_clk),
 	.reset(reset),
