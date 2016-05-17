@@ -380,7 +380,8 @@ screenManager sm0(
 	.HEX4(HEX4),
 	.HEX5(HEX5),
 	.HEX6(HEX6),
-	.HEX7(HEX7)
+	.HEX7(HEX7),
+	.LEDG(LEDG)
 	
 );
 

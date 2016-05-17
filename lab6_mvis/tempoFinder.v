@@ -1,6 +1,6 @@
 module tempoFinder #( 
-	parameter beatThreshold = 11'h600
-	parameter minTicksPerBeat = 16'd12000 //4hz
+	parameter beatThreshold = 11'h30,
+	parameter minTicksPerBeat = 16'd12000, //4hz
 	parameter maxTicksPerBeat = 16'd48000 
 	)(
 	input aud_clk,
@@ -14,41 +14,29 @@ module tempoFinder #(
 
 	reg [31:0] tics_counter;
 	reg [10:0] prevPow;
-	reg signed [31:0] tics_delta;
+	reg signed [31:0] tics_at_last_beat;
 	reg        onBeat;
 	always @ (posedge aud_clk) begin
-		if ((iPow >= beatThreshold) && (prevPow < beatThreshold)) begin
-			if (tics_counter< 32'd160000) begin
-				if (tics_delta < 32'd20000) begin
-					aud_tics_per_beat <= tics_counter;
-					beatHit <= 1'b1;
-				end
-			end
-			prevPow <= iPow;
+		if (reset) begin
 			tics_counter <= 32'd0;
-		end
-		else if (iPow < beatThreshold) begin
+			tics_at_last_beat <= 32'd0;
+			beating <= 1'b0;
 			onBeat <= 1'b0;
-			tics_counter <= tics_counter + 32'd1;
-			beatHit <= 1'b0;
-			prevPow <= iPow;
-			if (aud_tics_per_beat > tics_counter) begin
-				tics_delta <= aud_tics_per_beat - tics_counter;
-			end
-			else begin
-				tics_delta <= tics_counter - aud_tics_per_beat;
-			end
+		end
+		if ((iPow >= beatThreshold) && (prevPow < beatThreshold) && (tics_counter-tics_at_last_beat) >= minTicksPerBeat) begin
+		//if ((tics_counter-tics_at_last_beat) >= minTicksPerBeat) begin
+			onBeat <= 1'b1;
+			beating <= 1'b1;
+			tics_at_last_beat <= tics_counter;
+		end
+		else if((tics_counter-tics_at_last_beat) >= maxTicksPerBeat) begin
+			beating <= 1'b0;
 		end
 		else begin
-			tics_counter <= tics_counter + 32'd1;
-			beatHit <= 1'b0;
-			prevPow <= iPow;
-			if (aud_tics_per_beat > tics_counter) begin
-				tics_delta <= aud_tics_per_beat - tics_counter;
-			end
-			else begin
-				tics_delta <= tics_counter - aud_tics_per_beat;
-			end
+			onBeat <= 1'b0;
 		end
+		tics_counter <= tics_counter + 32'd1;
+		prevPow <= iPow;
+			
 	end
 endmodule

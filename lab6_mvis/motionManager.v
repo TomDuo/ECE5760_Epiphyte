@@ -36,7 +36,8 @@ module motionManager
   output reg [8:0] od1_y,
 
   output reg [9:0] od2_x,
-  output reg [8:0] od2_y
+  output reg [8:0] od2_y,
+  output wire [7:0] LEDG
 );
 
 
@@ -65,17 +66,20 @@ end
 //----------------------- BPM DIRECTION ---------------------------------------
 wire [31:0] aud_clk_tics_per_beat;
 wire beatHit;
-
-tempoFinder #(
-	) tf1(
+assign LEDG[0] = beating;
+assign LEDG[1] = beatHit;
+assign LEDG[2] = direction;
+assign LEDG[3] = frame_clk;
+tempoFinder tf1(
 	.aud_clk(aud_clk),
 	.reset(reset),
 	.iPow(beatSignalIn),
 
-	.aud_tics_per_beat(aud_clk_tics_per_beat),
+	//.aud_tics_per_beat(aud_clk_tics_per_beat),
+   .beating(beating),
 	.beatHit(beatHit)
 	);
-
+/*
 always @(posedge aud_clk) begin
   if(reset) begin
     vga_tics <= 32'd0;
@@ -97,18 +101,28 @@ always @(posedge aud_clk) begin
     direction <= 1'b0;
   end
 end
-//----------------------- END BPM DIRECTION -----------------------------------
+*/
+
+always @(posedge aud_clk) begin
+  if (reset) begin
+      direction <= 1'b0;
+  end
+  else if (beatHit) begin
+    direction <= ~direction;
+  end
+end//----------------------- END BPM DIRECTION -----------------------------------
 
 //----------------------- BRUCE MOTION MANAGEMENT -----------------------------
 reg [31:0] counter_snapshot;
 reg [9:0]  steps_counter;
+wire beating;
 always @(posedge frame_clk) begin
    if (reset) begin
     counter_snapshot <= frame_counter;
     obruce_x <= ibruce_x_init;
     obruce_y <= ibruce_y_init;
    end
-   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360)) begin 
+   else if (dancer_en[3] && ((frame_counter - counter_snapshot) >= 32'd360) && beating) begin 
      counter_snapshot <= frame_counter;
      if (direction) begin
        steps_counter <= steps_counter + 10'd1;

@@ -22,7 +22,9 @@ module screenManager (
 	output wire [6:0] HEX4,
 	output wire [6:0] HEX5,
 	output wire [6:0] HEX6,
-	output wire [6:0] HEX7
+	output wire [6:0] HEX7,
+	
+	output wire [7:0] LEDG
 );
 
 // TEST SECTION FOR STROBING THROUGH BRIGHTNESS ---------------------------------------------------
@@ -132,7 +134,7 @@ motionManager  mm0 (
 
   //.aud_clk_tics_per_beat(16'd48000),
   //.beatHit(~KEY2), 
-  .beatSignalIn(power[0]),
+  .beatSignalIn(power[2]),
   .dancer_en(SW[17:14]), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
@@ -158,6 +160,7 @@ motionManager  mm0 (
   .id2_y_init(9'd100),
   .od2_x(shivaX),
   .od2_y(shivaY),
+  .LEDG(LEDG)
 );
 
 
@@ -251,12 +254,13 @@ drawBruce db0 (
 
 msbOneHot msb0 (layer,layerOH);
 
-wire [10:0] pow3word = power[3];
+wire [10:0] pow2word = power[2];
 
+
+hex_7seg(pow2word[3:0],HEX0);
+hex_7seg(pow2word[7:4],HEX1);
+hex_7seg(pow2word[10:8],HEX2);
 /*
-hex_7seg(iAudL[3:0],HEX0);
-hex_7seg(iAudL[7:4],HEX1);
-hex_7seg(iAudL[11:8],HEX2);
 hex_7seg(iAudL[15:12],HEX3);
 hex_7seg(iAudR[3:0],HEX4);
 hex_7seg(iAudR[7:4],HEX5);
