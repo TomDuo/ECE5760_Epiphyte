@@ -1,6 +1,7 @@
 module screenManager (
 	input clk,
 	input aud_clk,
+	input frame_clk,
 	input reset,
 	input KEY2,
 
@@ -57,30 +58,6 @@ wire [10:0] power [0:6];
 localparam ao_width = 13;
 wire signed [ao_width:0] audOutMatrix [0:6];
 
-reg signed [15:0] abs_iAud;
-wire signed [15:0] abs_out;
-
-always @* begin
-  if (iAud[15] == 1'b1) begin
-    abs_iAud = -iAud;
-  end
-  else begin
-    abs_iAud = iAud;
-  end
-end
-
-
-autoGen_BPF #(0,ao_width) abs_lpf (
-			.clk(clk),
-			.aud_clk(aud_clk),
-			.reset(reset),
-			.enable(1'b1),
-
-			.iAud(abs_iAud),
-
-			.oAud(abs_out),
-		);
-
 //assign audOut = ao0[ao_width:4] + ao1[ao_width:4] + ao2[ao_width:4] + ao3[ao_width:4] + ao4[ao_width:4] + ao5[ao_width:4] + ao6[ao_width:4]; 
 assign audOut = audOutMatrix[0] + audOutMatrix[1] +audOutMatrix[2] +audOutMatrix[3] +audOutMatrix[4] +audOutMatrix[5]+audOutMatrix[6];
 generate
@@ -128,10 +105,10 @@ wire [31:0] aud_tics_per_beat;
 motionManager  mm0 (
   .clk(clk),
   .aud_clk(aud_clk),
+  .frame_clk(frame_clk),
   .reset(~KEY2),
 
   .aud_clk_tics_per_beat(16'd48000),
-  .beatHit(~KEY2),
   .dancer_en(SW[17:14]), // [0] = d0_en, [1] = d1_en, [2] = d2_en, [3] = bruce_en
   .motionType(),
 
